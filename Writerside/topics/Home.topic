@@ -1,4 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  -     Copyright (c) 2025. ForteScarlet.
+  -
+  -     Project    https://github.com/simple-robot/simpler-robot
+  -     Email      ForteScarlet@163.com
+  -
+  -     This file is part of the Simple Robot Library (Alias: simple-robot, simbot, etc.).
+  -
+  -     This program is free software: you can redistribute it and/or modify
+  -     it under the terms of the GNU Lesser General Public License as published by
+  -     the Free Software Foundation, either version 3 of the License, or
+  -     (at your option) any later version.
+  -
+  -     This program is distributed in the hope that it will be useful,
+  -     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  -     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  -     Lesser GNU General Public License for more details.
+  -
+  -     You should have received a copy of the Lesser GNU General Public License
+  -     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -
+  -->
+
 <!DOCTYPE topic
         SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
 <topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -16,7 +39,7 @@
                 For other groups, try to keep the number between 2 and 6, but you can add more if necessary.-->
 
     <section-starting-page>
-        <title>Simple Robot 4</title>
+        <title>Simple Robot Framework</title>
         <description>
             🐱 Bot 风格的 Kotlin 多平台事件调度框架，异步高效、Java友好！😽
         </description>
