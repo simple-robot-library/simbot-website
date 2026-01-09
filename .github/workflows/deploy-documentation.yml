@@ -26,7 +26,7 @@ env:
   ARTIFACT: webHelpS42-all.zip
   # Writerside docker image version
   # see https://www.jetbrains.com/help/writerside/deploy-docs-to-github-pages.html
-  DOCKER_VERSION: '2025.04.8412'
+  DOCKER_VERSION: '2025.11.8530'
   # Add the variable below to upload Algolia indexes
   # Replace HI with the ID of the instance in capital letters
   ALGOLIA_ARTIFACT: algolia-indexes-S4.zip
