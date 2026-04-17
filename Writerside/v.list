@@ -24,6 +24,7 @@
 
 <!DOCTYPE vars SYSTEM "https://resources.jetbrains.com/writerside/1.0/vars.dtd">
 <vars>
+    <var name="bg-version" value="4.15" />
     <var name="version" value="4.15.0" />
     <var name="kt-version" value="2.2.20" />
     <!-- 组件版本 -->
