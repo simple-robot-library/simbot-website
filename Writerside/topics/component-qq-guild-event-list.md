@@ -101,6 +101,20 @@ API 模块所有的事件封装类型都在包 `love.forte.simbot.qguild.event` 
 触发场景	用户在群聊@机器人发送消息
 
 </def>
+<def title="GroupMessageCreate" id="love_forte_simbot_qguild_event_GroupMessageCreate">
+
+`love.forte.simbot.qguild.event.GroupMessageCreate`
+
+事件类型名: `"GROUP_MESSAGE_CREATE"`
+
+<note>
+自 <code>4.3.0</code> 开始支持。
+</note>
+
+<a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/send-receive/event.html#群聊全量消息">群聊全量消息</a>
+触发场景	群主设定允许机器人接收群内全部消息后，群内成员发送消息
+
+</def>
 <def title="ChannelDispatch" id="love_forte_simbot_qguild_event_ChannelDispatch">
 
 `love.forte.simbot.qguild.event.ChannelDispatch`
@@ -674,6 +688,7 @@ API 模块事件封装可以使用在 **标准库模块 (stdlib)** 中，使用 
 <def title="QGOpenForumReplyCreateEvent">"开放"回复创建事件</def>
 <def title="QGOpenForumReplyDeleteEvent">"开放"回复删除事件</def>
 <def title="QGGroupAtMessageCreateEvent">群at消息事件</def>
+<def title="QGGroupMessageCreateEvent">群聊全量消息事件，自 <code>4.3.0</code> 开始支持</def>
 <def title="QGGroupAddRobotEvent">机器人加入群聊事件</def>
 <def title="QGGroupDelRobotEvent">机器人退出群聊事件</def>
 <def title="QGGroupMsgRejectEvent">群聊拒绝机器人主动消息事件</def>

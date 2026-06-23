@@ -229,6 +229,7 @@ GROUP_AND_C2C_EVENT (1 << 25)
   - C2C_MSG_REJECT          // 用户在机器人资料卡手动关闭"主动消息"推送
   - C2C_MSG_RECEIVE         // 用户在机器人资料卡手动开启"主动消息"推送开关
   - GROUP_AT_MESSAGE_CREATE // 用户在群里@机器人时收到的消息
+  - GROUP_MESSAGE_CREATE    // 群聊全量消息
   - GROUP_ADD_ROBOT         // 机器人被添加到群聊
   - GROUP_DEL_ROBOT         // 机器人被移出群聊
   - GROUP_MSG_REJECT        // 群管理员主动在机器人资料页操作关闭通知
@@ -355,6 +356,7 @@ PUBLIC_GUILD_MESSAGES (1 << 30) // 消息事件，此为公域的消息事件
 <li>用户在机器人资料卡手动关闭"主动消息"推送</li>
 <li>用户在机器人资料卡手动开启"主动消息"推送开关</li>
 <li>用户在群里@机器人时收到的消息</li>
+<li>群聊全量消息</li>
 <li>机器人被添加到群聊</li>
 <li>机器人被移出群聊</li>
 <li>群管理员主动在机器人资料页操作关闭通知</li>
