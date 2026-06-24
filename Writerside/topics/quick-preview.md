@@ -197,8 +197,9 @@ open class MyHandles {
 @Component
 public class MyHandles {
     @Listener
-    public void onEvent(Event event) {
+    public CompletableFuture<?> onEvent(Event event) {
         System.out.println("收到事件: " + event)
+        return CompletableFuture.completedFuture(42);
     }
 }
 ```
@@ -208,9 +209,8 @@ public class MyHandles {
 @Component
 public class MyHandles {
     @Listener
-    public CompletableFuture<?> onEvent(Event event) {
+    public void onEvent(Event event) {
         System.out.println("收到事件: " + event)
-        return CompletableFuture.completedFuture(42);
     }
 }
 ```
@@ -335,8 +335,9 @@ class MyHandles1 {
 @Component
 public class MyHandles {
     @Listener
-    public void onEvent(ChatGroupMessageEvent event) {
+    public CompletableFuture<?> onEvent(ChatGroupMessageEvent event) {
         System.out.println("收到事件: " + event)
+        return CompletableFuture.completedFuture(42);
     }
 }
 ```
@@ -346,9 +347,8 @@ public class MyHandles {
 @Component
 public class MyHandles {
     @Listener
-    public CompletableFuture<?> onEvent(ChatGroupMessageEvent event) {
+    public void onEvent(ChatGroupMessageEvent event) {
         System.out.println("收到事件: " + event)
-        return CompletableFuture.completedFuture(42);
     }
 }
 ```

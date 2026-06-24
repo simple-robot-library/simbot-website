@@ -18,9 +18,34 @@ simbot Spring Boot starter 基于核心库实现，提供对 Spring Boot 应用�
 启动器是一组方便的依赖描述符，你可以将它包含在你的应用程序中。
 
 而 simbot Spring Boot starter 便是这样一组描述符：允许你将 simbot 的核心功能更快捷、简单地集成进你的 Spring 应用程序中。
-除了核心功能的实现，simbot starter 还实现了 
-<a href="advanced-quantcat.md"></a> ，
+除了核心功能的实现，simbot starter 还实现了
+<a href="advanced-quantcat.md"></a>，
 你可以通过各类注解API更快速高效的编写你的事件处理逻辑 —— 与 Spring 应用一起。
+
+## 模块关系
+
+目前 Spring Boot 集成主要由下面三个模块组成：
+
+<deflist>
+<def title="simbot-core-spring-boot-starter-common">
+
+Starter 2 / 3 共用的通用支持模块。
+承载 <code>love.forte.simbot.spring.common</code> 下的公共类型、配置模型与异常定义。
+
+</def>
+<def title="simbot-core-spring-boot-starter">
+
+面向 Spring Boot 3 / Java 17+ 的主 Starter。
+主要包名前缀为 <code>love.forte.simbot.spring</code>。
+
+</def>
+<def title="simbot-core-spring-boot-starter-v2">
+
+面向 Spring Boot 2 / Java 11+ 的兼容 Starter。
+主要包名前缀为 <code>love.forte.simbot.spring2</code>。
+
+</def>
+</deflist>
 
 ## 安装
 
@@ -89,7 +114,7 @@ _开放源码软件支持(OSS support)_ ，并会在 2026 年之前彻底结束�
 </li>
 </list>
 
-`simbot-spring-boot-starter-v2`
+`simbot-core-spring-boot-starter-v2`
 是用来兼容 Spring Boot v2 的，Java版本最低仅需Java11。
 但是此模块**不保证**未来会持续维护、更新，也**不保证**其稳定性。
 
@@ -104,8 +129,7 @@ _开放源码软件支持(OSS support)_ ，并会在 2026 年之前彻底结束�
 <step><control>添加组件及其要求的其他内容</control>
 
 simbot的组件是功能的主要提供者，是**重要**的核心概念之一。
-你可以前往 
-<a href="components-intro.md"></a>
+你可以前往 <a href="components-intro.md">组件库</a>
 选择你所需要的组件并添加它们，而它们的手册通常都会有各自相应的**快速开始**或**安装**章节。
 
 <note>
@@ -205,10 +229,10 @@ public class MyEventHandlers {
 <tip title="更多参考">
 <list>
 <li>
-有关注解API的详情与描述，可参考 <a href="advanced-quantcat.md" />
+有关注解 API 的详情与描述，可参考 <a href="advanced-quantcat.md">量子猫</a>。
 </li>
 <li>
-有关标准的事件类型都有哪些，可参考 <a href="basic-event.md" />
+有关标准的事件类型都有哪些，可参考 <a href="basic-event.md">事件基础</a>。
 </li>
 </list>
 </tip>
@@ -603,7 +627,7 @@ bot的配置文件路径默认为
   "component": "simbot.onebot11",
   "authorization": {
     "botUniqueId": "123456",
-    "apiServerHost": "http://localhost:3000",
+    "apiServerHost": "http://localhost:3001",
     "eventServerHost":"ws://localhost:3001"
   }
 }

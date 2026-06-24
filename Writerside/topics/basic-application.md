@@ -149,10 +149,45 @@ var application = Applications.launchApplicationBlocking(Simple.INSTANCE, appCon
 ```
 {switcher-key="%jb%"}
 
+```Java
+var applicationAsync = Applications.launchApplicationAsync(Simple.INSTANCE, appConfigurer -> {
+    appConfigurer.config(appConfig -> {
+        appConfig.setCoroutineContext(ExecutorsKt.from(Executors.newCachedThreadPool()));
+    });
+
+    appConfigurer.eventDispatcher(dispatcherConfig -> {
+        dispatcherConfig.addInterceptor(EventInterceptors.async(context -> {
+            var listenerContext = context.getSource().getEventListenerContext();
+            var plainText = listenerContext.getPlainText();
+            listenerContext.setPlainText(plainText == null ? null : plainText.trim());
+
+            return context.invoke();
+        }));
+
+        appConfigurer.install(...);
+        appConfigurer.install(..., config -> {
+            // 配置...
+        });
+    });
+});
+
+Mono.fromFuture(applicationAsync.asFuture())
+        .flatMap(app -> app.joinReserve().transform(SuspendReserves.mono()))
+        .block();
+```
+{switcher-key="%jr%"}
+
 </tab>
 </tabs>
 
 构建完 `Application` 便可以开始注册事件处理器和 `Bot` 了。
+
+<note>
+
+<code>Application.join()</code> 在 JVM 上除了 <code>joinBlocking()</code> 以外，
+异步桥接名称是 <code>asFuture()</code>，而不是 <code>joinAsync()</code>。
+
+</note>
 
 ## 事件处理器的注册
 

@@ -12,53 +12,57 @@
 
 ## 安装 Application 实现
 
-首先, 添加某个基于 `simbot-api` 实现了 `Application` 完整功能的库, 然后根据它们的要求配置或使用。
+先添加一个基于 `simbot-api`、实现了完整 `Application` 能力的库，再按它的要求配置或使用。
 
 ### 官方实现
 
-simbot4 提供了两个这样的库：`simbot-core` (也就是 **“核心库”** ), 以及 Spring Boot 的 starter 实现。
+simbot4 提供了两个这样的库：`simbot-core`（也就是 **“核心库”**）和 Spring Boot 的 starter 实现。
 
 <list>
 <li>
 
-前往 
-<a href="start-use-core.md" />
-来了解如何添加并使用 `simbot-core` 以及它提供的 `Application` 实现: `Simple`。
+前往 <a href="start-use-core.md">核心库</a>
+了解如何添加并使用 <code>simbot-core</code> 以及它提供的 <code>Application</code> 实现：<code>Simple</code>。
 
 </li>
 <li>
 
-前往
-<a href="start-use-spring-boot-3.md" />
-了解如何添加并使用 `simbot-core-spring-boot-starter` 以及它提供的 `Application` 实现。
+前往 <a href="start-use-spring-boot-3.md">Spring Boot 3</a>
+了解如何添加并使用 <code>simbot-core-spring-boot-starter</code> 以及它提供的 <code>Application</code> 实现。
+
+</li>
+<li>
+
+如果你仍在使用 Spring Boot 2.x，
+前往 <a href="start-use-spring-boot-2.md">Spring Boot 2</a>
+了解如何添加并使用 <code>simbot-core-spring-boot-starter-v2</code>。
 
 </li>
 </list>
 
 <note>
 
-一般来讲, 尽管会需要添加组件库, 但是核心库（或其他 Application 实现库）的依赖依然是**必须的**。
-因为组件库对核心库（或者标准库）的依赖通常**仅在编译期**。
+通常来说，虽然也需要添加组件库，但核心库（或其他 Application 实现库）的依赖依然是**必须的**。
+因为组件库对核心库（或者标准库）的依赖通常**只在编译期**。
 
 </note>
 
 ## 安装组件、插件
 
-`Application` 提供了 `simbot-api`（也就是**“标准库”**）所定义的诸多功能, 比如组件、插件的安装、事件的调度等等, 
-但是它没有 **具体的平台实现** , 比如QQ频道、KOOK、大别野等 **特定平台** 的事件、消息等。
+`Application` 提供了 `simbot-api`（也就是**“标准库”**）定义的诸多能力，比如组件、插件安装和事件调度，
+但它不包含 **具体的平台实现**，比如 QQ 频道、KOOK、大别野等 **特定平台** 的事件和消息。
 
-这些**特定平台**的实现, 便是一个个不同的**组件或插件**, 它们一般都是在各自独立的仓库中维护、发版, 
-依赖于标准库, 但各自独立。
-下文会将它们称为 **“组件库”** 。
+这些**特定平台**的实现，就是一个个不同的**组件或插件**。它们一般在各自独立的仓库中维护、发版，
+依赖标准库，但彼此独立。
+下文将它们称为 **“组件库”** 。
 
-以我们 [**官方维护的组件库**](components-intro.md) 为例, 它们都会有各自的应用手册, 
-手册中也会各自提供类似于“快速开始”的章节, 会提供如何进行配置, 如何搭建一个项目。
+以我们 [**官方维护的组件库**](components-intro.md) 为例，它们都有各自的应用手册，
+手册里也会提供类似“快速开始”的章节，说明如何配置、如何搭建项目。
 
-你接下来所要做的, 便是选择你希望使用的组件库(们), 将它们所需的依赖也添加下来, 然后进行配置就好了。
-甚至, 如果你只需要使用一个单独的组件库, 也可以只参阅对应组件库的“快速开始”, 
-里面会同时(简单地)介绍如何安装核心库和组件库实现。
+接下来只要选择要用的组件库，把依赖加上，再完成配置就行。
+如果只用一个组件库，也可以直接看对应的“快速开始”，里面会一起介绍核心库和组件库实现的安装。
 
-举一个简单的添加依赖的**伪例子**:
+下面是一个简单的添加依赖的**伪例子**：
 
 <tabs group="build">
 <tab title="Gradle (Kotlin DSL)" group-key="kts">
@@ -110,12 +114,12 @@ implementation 'io.github.Jojo.cp:bar2-impl:x.xx'
 
 ### 官方组件
 
-- 前往 [**组件库**](components-intro.md) 寻找你所需的组件, 并根据引导或手册添加依赖并使用。
+- 前往 [**组件库**](components-intro.md) 找到需要的组件，再按引导或手册添加依赖并使用。
 
 ### 社区组件
 
-- 前往 [**社区组件**](community-components.md) 寻找你所需的组件, 或自行开发组件、插件, 然后使用。
+- 前往 [**社区组件**](community-components.md) 找到需要的组件，或者自行开发组件、插件再使用。
 
 ### 组件开发
 
-- 前往 [**组件开发**](component-dev.md) 了解开发一个组件库的方式与步骤。
+- 前往 [**组件开发**](component-dev.md) 了解开发组件库的方式与步骤。

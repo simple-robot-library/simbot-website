@@ -21,6 +21,13 @@ simbot的核心功能由实现了 simbot-api 模块的内容提供。
 
 <include from="refers.md" element-id="simbot-core-build"></include>
 
+<tip>
+
+如果你还不清楚 <code>simbot-api</code>、<code>simbot-core</code>、组件核心模块和公共库之间的区别，
+可以先阅读 <a href="module-libraries.md">模块一览</a>。
+
+</tip>
+
 ## 使用 Spring Boot
 
 参考
@@ -125,4 +132,3 @@ dependencies {
 
 比如：[`simbot-core` 的快照版本列表](https://oss.sonatype.org/content/repositories/snapshots/love/forte/simbot/simbot-core/)
 以及它的 [maven-metadata.xml](https://oss.sonatype.org/content/repositories/snapshots/love/forte/simbot/simbot-core/maven-metadata.xml)。
-

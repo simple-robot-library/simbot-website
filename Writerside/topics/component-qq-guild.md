@@ -18,22 +18,73 @@
 是一个 [Kotlin 多平台](https://kotlinlang.org/docs/multiplatform.html) 的 [**QQ机器人官方API**][qg bot doc] SDK实现库，
 也是 Simple Robot 标准API下实现的组件库，异步高效、Java友好！
 
-现在支持的事件范围有：
+QQ 组件主要分成三个层次：
 
-- 频道所有**公域**事件
-- 论坛相关的私域事件
-- QQ群聊相关  (从4.0.0-beta6开始)
-- C2C单聊相关 (从4.0.0-beta6开始)
+<list>
+<li><control>simbot-component-qq-guild-api</control>
 
-私域相关的事件由于时间有限、且这方面的反馈与需求几乎没有，
-因此优先级不高。
-如果您有需要或希望协助，
-可前往 [反馈](https://github.com/simple-robot/simbot-component-qq-guild/issues) 或 [协助](https://github.com/simple-robot/simbot-component-qq-guild/pulls) 了解更多~
+对 QQ 开放平台 API、模型、网关事件体的原始封装。
+</li>
+<li><control>simbot-component-qq-guild-stdlib</control>
+
+在 API 之上提供较低封装的 Bot、鉴权与事件接收实现。
+</li>
+<li><control>simbot-component-qq-guild-core</control>
+
+面向 simbot 的组件实现，也是大多数业务项目真正直接依赖的模块。
+</li>
+</list>
+
+从当前源码可见，核心能力覆盖：
+
+- 频道公域消息、频道/成员相关事件
+- 论坛相关事件
+- 频道私聊 `DMS`
+- QQ群与 `C2C` 单聊能力
+
+其中 QQ 群与 `C2C` 单聊能力自 `4.0.0-beta6` 起加入。
+更细粒度的事件与对象范围，请以 <a href="component-qq-guild-event-list.md">事件列表</a> 和相邻对象章节为准。
 
 > 序列化和网络请求相关分别基于 [Kotlin serialization](https://github.com/Kotlin/kotlinx.serialization)
 > 和 [Ktor](https://ktor.io/).
 
 - 前往**QQ机器人组件**的 [ GitHub 仓库](https://github.com/simple-robot/simbot-component-qq-guild)
+
+## 模块
+
+QQ 组件主要分为下面几层：
+
+<deflist>
+<def title="simbot-component-qq-guild-api">
+
+QQ 机器人官方 API 的底层封装模块。
+
+- 定义 API 请求类型
+- 定义原始事件模型
+- 定义部分消息模型与构建器
+
+</def>
+<def title="simbot-component-qq-guild-stdlib">
+
+基于 `api` 的低限度 Bot 实现与事件接收处理模块。
+
+如果你希望保留更接近原始协议的事件流程，
+或者正在做更底层的集成，可以关注它。
+
+</def>
+<def title="simbot-component-qq-guild-core">
+
+真正作为 simbot 组件使用的核心模块。
+
+普通应用开发时，通常直接依赖它即可。
+
+</def>
+<def title="simbot-component-qq-guild-internal-ed25519">
+
+内部签名支持模块，一般不需要手动直接依赖。
+
+</def>
+</deflist>
 
 ## 命名说明
 
@@ -53,12 +104,14 @@ QQ机器人组件命名为 `simbot-component-qq-guild`，
 
 ### 事件订阅方式
 
-官方在文档中提供了两种接收/订阅事件的方式：webhook 和 websocket 。
-根据官方文档的描述，在2024年底左右会逐步放弃 websocket 的方式，因此目前来看，官方推荐使用 **webhook** 的事件订阅方式。
+官方提供了 `webhook` 与 `websocket` 两种事件订阅方式。
 
-你可以在你的机器人后台中查看、配置你自己的回调服务地址。
+目前，这两种接入路径都有对应实现或示例：
 
-有关组件中 Webhook 的配置方式，前往 [](component-qq-guild-Webhook.md) 了解更多。
+- 如果你要接入 `webhook` 回调，前往 [](component-qq-guild-Webhook.md)
+- 如果你要使用 `websocket` 收事件，则继续参考本页与 [](component-qq-guild-start-using.md)
+
+你可以在机器人后台中查看、配置自己的回调地址与订阅范围。
 
 ## 安装
 
@@ -129,7 +182,8 @@ QQ机器人组件使用 [Ktor](https://ktor.io) 作为 HTTP 客户端实现，
 
 <warning>
 
-注意，你需要选择一个支持 **WebSocket** 的引擎。
+如果你使用 `websocket` 订阅事件，需要选择一个支持 **WebSocket** 的引擎。
+如果你只做 `webhook` 回调并自行处理服务端接入，则只需要满足 HTTP 客户端侧的依赖要求。
 
 </warning>
 

@@ -21,10 +21,7 @@ public interface Event : IDContainer {
 可以看到，`Event` 的接口中约束还是蛮少的：一个唯一标识，以及一个时间戳。
 
 但这并非全部。simbot标准库提供了一些常见的、拥有更进一步含义的事件子类型定义，例如 `BotEvent`、`ChannelEvent` 等，
-你可以在 [API 文档](https://docs.simbot.forte.love)、
-或文档章节:
-<a href="basic-event.md" />
-中找到更全面的列举与说明，此处不再赘述。
+你可以在 [API 文档](https://docs.simbot.forte.love) 或 [](basic-event.md) 章节中找到更全面的列举与说明，此处不再赘述。
 
 ## 实现事件 {id="event-impl"}
 
@@ -54,6 +51,14 @@ interface FooEvent : ContentEvent {
 
 当然，你也可以选择手动在每个挂起函数上标记它。
 
+如果只想看最小形态，可以把它理解成：
+
+```Kotlin
+interface FooEvent : ContentEvent {
+    override suspend fun content(): String
+}
+```
+
 </note>
 
 
@@ -66,10 +71,45 @@ internal class FooEventImpl(
 ): FooEvent {
     /** 假设事件戳就是这个类实例被构建的事件 */
     override val time: Timestamp = Timestamp.now()
-    
+
     /** 让 '事件主体' 返回 '名称' */
     override suspend fun content(): String = name
 }
 ```
 
 至此为止，一个普通且常见的事件类型便实现完成了。
+
+如果你只需要最小实现，通常就是“接口暴露挂起属性，内部类持有原始字段”这一层，不必再额外包一层转换对象。
+
+如果 `FooEvent` 作为公开事件类型对外暴露，
+那么 Java 使用者最终看到的通常会是 `@STP` 生成的 getter 风格桥接：
+
+<tabs group="code">
+<tab title="Java" group-key="Java">
+
+```Java
+FooEvent event = ...;
+
+event.getContentAsync()
+        .thenAccept(content -> { });
+```
+{switcher-key="%ja%"}
+
+```Java
+FooEvent event = ...;
+
+var content = event.getContentBlocking();
+```
+{switcher-key="%jb%"}
+
+```Java
+FooEvent event = ...;
+
+event.getContentReserve()
+        .transform(SuspendReserves.mono())
+        .subscribe(content -> { });
+```
+{switcher-key="%jr%"}
+
+</tab>
+</tabs>

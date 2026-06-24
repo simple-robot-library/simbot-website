@@ -53,6 +53,7 @@ OneBot组件为所有协议实现的模块提供了一些共享内容的模块�
 <li><control>simbot-component-onebot-v11-core</control>
 
 OneBot11协议作为一个simbot组件的实现模块。通常会是你**真正使用**的模块。
+当前组件标识为 `simbot.onebot11`。
 </li>
 <li><control>simbot-component-onebot-v11-event</control>
 
@@ -78,6 +79,13 @@ OneBot11协议作为一个simbot组件的实现模块。通常会是你**真正�
 </li>
 </list>
 
+<tip>
+
+对于普通应用开发者来说，通常直接依赖 `simbot-component-onebot-v11-core` 即可。
+其余模块更多用于协议模型、底层封装或扩展实现。
+
+</tip>
+
 
 ## 安装
 
@@ -87,15 +95,19 @@ OneBot11协议作为一个simbot组件的实现模块。通常会是你**真正�
 <step>
 <control>准备OneBot11协议服务端</control>
 
-OneBot组件是一个OneBot协议的**客户端**实现，
-因此在使用之前，你需要安装、下载、启动一个支持OneBot11协议的**服务端** ，
+OneBot组件是一个 OneBot 协议的**客户端**实现，
+因此在使用之前，你需要准备一个支持 OneBot11 的**服务端**，
 例如 `NapCat`, `Language.OneBot` 等。
 
 <warning>
 
-鉴于OneBot协议的主要应用场景的特殊性，
-大多数服务端的实现库都**不建议、不允许**公开讨论、宣传有关它们的信息，
-因此此处不列举或提供它们的相关链接，你可以自行通过GitHub等途径搜索它们。
+鉴于 OneBot 生态的特殊性，
+此处不对具体服务端实现作更多展开说明。
+你只需要确保它：
+
+- 支持 OneBot11
+- 提供 HTTP API
+- 如需事件订阅，则提供正向 WebSocket
 
 </warning>
 </step>
@@ -169,6 +181,3 @@ OneBot11组件使用 [Ktor](https://ktor.io) 作为 HTTP 客户端实现，
 <include from="refers.md" element-id="engine-choose"/>
 </step>
 </procedure>
-
-
-

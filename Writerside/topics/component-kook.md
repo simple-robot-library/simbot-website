@@ -24,6 +24,37 @@ SDK实现库，
 
 - 前往**KOOK组件**的 [GitHub 仓库](https://github.com/simple-robot/simbot-component-kook)
 
+## 模块
+
+KOOK 组件主要分为下面三层：
+
+<deflist>
+<def title="simbot-component-kook-api">
+
+KOOK API 的底层封装模块。
+
+- 定义各类 API 请求
+- 定义事件模型、对象模型与消息结构
+- 适合仅需要原始 API 能力的场景
+
+</def>
+<def title="simbot-component-kook-stdlib">
+
+基于 `api` 模块的 Bot 基础实现与事件处理模块。
+
+适合想保留更接近原始 KOOK 事件流程、但又不想从零处理鉴权与订阅逻辑的场景。
+
+</def>
+<def title="simbot-component-kook-core">
+
+完整的 simbot KOOK 组件模块。
+
+普通开发者通常直接使用它，并通过 `useKook()`、`KookBotManager`、
+`KookBot` 等 API 进行集成。
+
+</def>
+</deflist>
+
 ## 安装
 ### 安装组件库
 
@@ -37,7 +68,7 @@ SDK实现库，
 <control>安装组件的核心库依赖</control>
 
 `simbot-component-kook-core`
-即为QQ机器人组件的核心库，
+即为 KOOK 组件的核心库，
 也就是作为simbot组件所使用的
 <tooltip term="组件">组件库</tooltip> 。
 
@@ -91,13 +122,11 @@ KOOK组件使用 [Ktor](https://ktor.io) 作为 HTTP 客户端实现，
 
 <warning>
 
-注意，你需要选择一个支持 **WebSocket** 的引擎。
+如果你使用 `stdlib` / `core` 中的 Bot 接收事件，
+那么你需要选择一个支持 **WebSocket** 的引擎。
 
 </warning>
 
 <include from="refers.md" element-id="engine-choose"/>
 </step>
 </procedure>
-
-
-

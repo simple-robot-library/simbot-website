@@ -1,11 +1,11 @@
 # API定义列表
 
-此处会列举 `API 模块` 中、`love.forte.simbot.kook.api` 包下定义的所有 `KookApi` 实现。
+这里列出 `API 模块` 中、`love.forte.simbot.kook.api` 包下定义的所有 `KookApi` 实现。
 
-> 对于一个具体的API的详细说明，我们建议你前往 [API 文档](https://docs.simbot.forte.love/) 或源码注释查阅，
-> 因为那是最贴合真实情况且最全面的。
+> 具体 API 的说明，可以前往 [API 文档](https://docs.simbot.forte.love/) 或文档注释查看，
+> 这两处通常更贴近实际，也更完整。
 >
-> 此处的列表是自动生成的，会不定期更新。
+> 这里的列表是自动生成的，会随着版本更新。
 
 <deflist>
 <def title="GetGatewayApi" id="love_forte_simbot_kook_api_GetGatewayApi">
@@ -464,4 +464,3 @@
 </def>
 
 </deflist>
-

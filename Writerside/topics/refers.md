@@ -100,10 +100,10 @@ implementation 'love.forte.simbot:simbot-core-spring-boot-starter-v2:%version%'
 
 <snippet id="pre-component-install">
 <note>
-在安装组件库之前，确保你已经安装了可用的核心库实现，比如 
-<a href="start-use-core.md">核心库</a>
-或 
-<a href="Spring-Boot.md">Spring Boot starter</a>
+在安装组件库之前，确保你已经安装了可用的核心库实现，比如
+ <a href="start-use-core.md">核心库</a>
+ 或
+ <a href="Spring-Boot.md">Spring Boot starter</a>
 。
 </note>
 
@@ -112,20 +112,28 @@ implementation 'love.forte.simbot:simbot-core-spring-boot-starter-v2:%version%'
 <include from="refers.md" element-id="simbot-core-build"></include>
 
 <tip>
-前往
-<a href="start-use-core.md">核心库</a>
-了解更多内容。
+前往 <a href="start-use-core.md">核心库</a> 了解更多内容。
 </tip>
 
 </tab>
 <tab title="Spring Boot starter">
+<tabs>
+<tab title="Spring Boot 3">
 <include from="refers.md" element-id="simbot-spring-3-build"></include>
 
 <tip>
-前往
-<a href="Spring-Boot.md">集成Spring Boot</a>
-了解更多内容。
+前往 <a href="start-use-spring-boot-3.md">使用 Spring Boot 3</a>
+或 <a href="Spring-Boot.md">集成Spring Boot</a> 了解更多内容。
 </tip>
+</tab>
+<tab title="Spring Boot 2">
+<include from="refers.md" element-id="simbot-spring-2-build"></include>
+
+<tip>
+前往 <a href="start-use-spring-boot-2.md">使用 Spring Boot 2</a> 了解更多内容。
+</tip>
+</tab>
+</tabs>
 </tab>
 </tabs>
 
@@ -138,7 +146,7 @@ implementation 'love.forte.simbot:simbot-core-spring-boot-starter-v2:%version%'
 处选择一个对应所用平台下合适的 `Client Engine`。
 这里会根据不同平台提供几个示例，你可以选择其他可用目标。
 
-> 注意应选择使用 `v2.x` 版本的 Ktor。
+> 注意应选择使用 `v2.x` 版本的 Ktor。5.0 后的版本会更新到 Ktor 3。
 
 <tabs group="Platform">
 <tab title="JVM" group-key="JVM">

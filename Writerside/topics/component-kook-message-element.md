@@ -30,11 +30,14 @@ simbot 标准库提供了一些常见的标准消息元素实现，例如 `At`�
 <def title="At">
 
 提及一个用户、提及一个角色或提及一个子频道。
-提及目标根据 `At.type` 决定:
+提及目标根据 `At.type` 决定：
 
 - `user`(默认) 或其他未知: 提及一个用户
 - `role`: 提及一个角色
 - `channel`: 提及一个子频道
+
+如果你希望直接构建这三种 `At`，
+可使用 `KookMessages.atUser(...)` 、`KookMessages.atRole(...)` 、`KookMessages.atChannel(...)` 。
 
 </def>
 <def title="AtAll">
@@ -91,30 +94,95 @@ simbot 标准库提供了一些常见的标准消息元素实现，例如 `At`�
 
 ## KOOK 组件消息元素实现
 
-KOOK 组件进行特殊实现的 `Message.Element` 均继承自 `love.forte.simbot.component.kook.message.KookMessageElement`。
+KOOK 组件进行特殊实现的 `Message.Element`
+均继承自 `love.forte.simbot.component.kook.message.KookMessageElement`。
+
+其中一部分“仅用于发送”的元素会被 `@KookSendOnlyMessage` 标记，
+意味着它们通常不会原样出现在接收事件里。
 
 <deflist>
-<def title="KookAssetMessage"></def>
-<def title="KookKMarkdownMessage"></def>
-<def title="KookCardMessage"></def>
-<def title="KookAtAllHere"></def>
-<def title="KookAttachmentMessage"></def>
+<def title="KookKMarkdownMessage">
+
+将 `love.forte.simbot.kook.objects.kmd.KMarkdown`
+包装为消息元素。
+
+常用入口：
+
+- `KMarkdown.asMessage()`
+- `kookKMarkdown { ... }`
+
+</def>
+<def title="KookCardMessage">
+
+将 KOOK Card Message 包装为消息元素。
+
+常用入口：
+
+- `CardMessage.asMessage()`
+- `kookCard { ... }`
+
+</def>
+<def title="KookAssetMessage">
+
+表示“已经通过 `CreateAssetApi` 上传完成”的资产消息。
+这是典型的**发送型**消息元素。
+
+主要子类型：
+
+- `KookAsset`: 任意资产 + 指定消息类型
+- `KookAssetImage`: 资产图片，同时可视为 `RemoteImage`
+
+常见来源：
+
+- `KookBot.uploadAsset(...)`
+- `KookBot.uploadAssetImage(...)`
+- `Asset.asMessage(...)`
+- `Asset.asImage()`
+
+</def>
+<def title="KookAtAllHere">
+
+通知当前**在线成员**，语义接近 “@在线成员”。
+
+</def>
+<def title="KookAttachmentMessage 子类型">
+
+表示从接收消息中解析出来的附件消息。
+这类类型通常更偏向“接收侧”。
+
+</def>
 <def title="KookAttachmentMessage">
 
 <deflist>
-<def title="KookAttachment"></def>
-<def title="KookAttachmentFile"></def>
-<def title="KookAttachmentImage"></def>
-<def title="KookAttachmentVideo"></def>
+<def title="KookAttachment">
+
+普通附件。
+
+</def>
+<def title="KookAttachmentFile">
+
+文件附件。
+
+</def>
+<def title="KookAttachmentImage">
+
+图片附件，同时可作为 `Image` 使用。
+
+</def>
+<def title="KookAttachmentVideo">
+
+视频附件。
+
+</def>
 </deflist>
 
 </def>
-<def title="KookAssetImage"></def>
 <def title="KookQuote">
 
 > 添加自 `4.0.0-beta5`
 
 通过 `MessageContent.reference()` 查询得到的消息引用信息。
+它也可以直接作为发送时的引用目标使用，语义等同于 `MessageIdReference`。
 
 
 </def>

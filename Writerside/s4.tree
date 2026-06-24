@@ -1,4 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  -     Copyright (c) 2026. ForteScarlet.
+  -
+  -     Project    https://github.com/simple-robot/simpler-robot
+  -     Email      ForteScarlet@163.com
+  -
+  -     This file is part of the Simple Robot Library (Alias: simple-robot, simbot, etc.).
+  -
+  -     This program is free software: you can redistribute it and/or modify
+  -     it under the terms of the GNU Lesser General Public License as published by
+  -     the Free Software Foundation, either version 3 of the License, or
+  -     (at your option) any later version.
+  -
+  -     This program is distributed in the hope that it will be useful,
+  -     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  -     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  -     Lesser GNU General Public License for more details.
+  -
+  -     You should have received a copy of the Lesser GNU General Public License
+  -     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -
+  -->
+
 <!DOCTYPE instance-profile
         SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
 
@@ -8,6 +31,7 @@
     <toc-element topic="Home.topic"/>
     <toc-element topic="outline.md">
         <toc-element topic="features.md"/>
+        <toc-element topic="module-libraries.md"/>
         <toc-element topic="semantic-versioning.md"/>
         <toc-element topic="java-friendly.md"/>
         <toc-element topic="use-kotlin.md"/>
@@ -18,6 +42,7 @@
         <toc-element toc-title="使用">
             <toc-element topic="start-use-core.md"/>
             <toc-element topic="start-use-spring-boot-3.md"/>
+            <toc-element topic="start-use-spring-boot-2.md"/>
         </toc-element>
         <toc-element topic="start-use-components.md"/>
         <toc-element topic="codegen.md"/>

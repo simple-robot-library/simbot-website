@@ -29,7 +29,7 @@ switcher-label: JavaAPI风格
 <tabs group="simbot4impl">
 <tab group-key="core" title="核心库">
 
-在 `simbot-core` 中，提供了一个基础的 `Application` 实现类型：`SimpleApplication`。
+`simbot-core` 提供了一个基础的 `Application` 实现类型：`SimpleApplication`。
 
 <tabs group="code">
 <tab title="Kotlin" group-key="Kotlin">
@@ -117,7 +117,7 @@ mono.block();
 在 Spring Boot 中，不需要你手动构建 `Application`。
 你只需要在你的启动类上标记 `@EnableSimbot` 来启用 simbot 即可。
 
-OneBot组件支持SPI自动加载，因此默认情况下不需要手动安装
+OneBot 组件支持 SPI 自动加载，因此默认不需要手动安装
 `OneBot11Component` 和 `OneBotBotManager` 。
 
 <tabs group="code">
@@ -184,7 +184,7 @@ suspend fun Application.configure() {
             // 这几个是必选属性
             /// 在OneBot组件中用于区分不同Bot的唯一ID， 建议可以直接使用QQ号。
             botUniqueId = "11112222"
-            apiServerHost = Url("http://127.0.0.1:3000")
+            apiServerHost = Url("http://127.0.0.1:3001")
             eventServerHost = Url("ws://127.0.0.1:3001")
             // 其他配置, 一般都是可选属性
             /// token
@@ -192,7 +192,7 @@ suspend fun Application.configure() {
             /// ...
         }
     )
-    
+
     // 启动你的bot
     bot.start()
 }
@@ -245,8 +245,8 @@ public static void configure(Application application) {
     // 这几个是必选属性
     /// 在OneBot组件中用于区分不同Bot的唯一ID， 建议可以直接使用QQ号。
     botConfiguration.setBotUniqueId("11112222");
-    /// API 的服务地址。默认localhost:3000
-    botConfiguration.setApiServerHost(URLUtilsKt.Url("http://localhost:3000"));
+    /// API 的服务地址。默认localhost:3001
+    botConfiguration.setApiServerHost(URLUtilsKt.Url("http://localhost:3001"));
     /// 连接事件的服务地址。默认localhost:3001
     botConfiguration.setEventServerHost(URLUtilsKt.Url("ws://localhost:3001"));
     // 其他配置, 一般都是可选属性
@@ -310,8 +310,8 @@ public static void configure(Application application) {
     // 这几个是必选属性
     /// 在OneBot组件中用于区分不同Bot的唯一ID， 建议可以直接使用QQ号。
     botConfiguration.setBotUniqueId("11112222");
-    /// API 的服务地址。默认localhost:3000
-    botConfiguration.setApiServerHost(URLUtilsKt.Url("http://localhost:3000"));
+    /// API 的服务地址。默认localhost:3001
+    botConfiguration.setApiServerHost(URLUtilsKt.Url("http://localhost:3001"));
     /// 连接事件的服务地址。默认localhost:3001
     botConfiguration.setEventServerHost(URLUtilsKt.Url("ws://localhost:3001"));
     // 其他配置, 一般都是可选属性
@@ -376,8 +376,8 @@ public static void configure(Application application) {
     // 这几个是必选属性
     /// 在OneBot组件中用于区分不同Bot的唯一ID， 建议可以直接使用QQ号。
     botConfiguration.setBotUniqueId("11112222");
-    /// API 的服务地址。默认localhost:3000
-    botConfiguration.setApiServerHost(URLUtilsKt.Url("http://localhost:3000"));
+    /// API 的服务地址。默认localhost:3001
+    botConfiguration.setApiServerHost(URLUtilsKt.Url("http://localhost:3001"));
     /// 连接事件的服务地址。默认localhost:3001
     botConfiguration.setEventServerHost(URLUtilsKt.Url("ws://localhost:3001"));
     // 其他配置, 一般都是可选属性
@@ -401,8 +401,8 @@ public static void configure(Application application) {
                 ex
             );
         })
-        // 你也可以选择返回Mono然后做进一步处理
-        // 此处直接使其在异步中运行。
+        // 也可以返回 Mono 继续处理
+        // 这里直接让它在异步中运行。
         .subscribe();
 }
 ```
@@ -416,14 +416,11 @@ public static void configure(Application application) {
 在 Spring 中，通常可以选择使用 `.bot.json` 格式的配置文件来快速、自动地批量注册bot。
 
 默认情况下，在你的项目的资源目录
-<path>resource</path> 
-中创建目录 
+<path>resource</path>
+中创建目录
 <path>/simbot-bots/</path> ，
-然后前往参考
-<b>
-<a href="component-onebot-v11-bot-config.md" />
-</b> 
-并配置你的 JSON 格式的配置文件，例如 `abc.bot.json`。
+再参考 [Bot 配置](component-onebot-v11-bot-config.md)
+并配置 JSON 格式的配置文件，例如 `abc.bot.json`。
 
 默认情况下starter会自动扫描上述资源目录并加载、自动启动它们，这一切是在**异步**中进行的。
 
@@ -522,7 +519,7 @@ public static void configure(Application application) {
 
 public static void configure(Application application) {
     // bot相关内容省略....
-    
+
     final var eventDispatcher = application.getEventDispatcher();
 
     // 监听一个OneBot组件中的专属类型：OneBot的好友消息事件
@@ -586,7 +583,7 @@ public static void configure(Application application) {
 
 在 Spring 中，使用注解 `@Listener` 注册一个监听函数。
 可监听到的事件即为参数中的事件类型。
-也因此，参数中的事件类型的参数应当**最多**只有1个。
+因此，方法参数里的事件类型最多只能有 1 个。
 
 <tip>
 
@@ -607,7 +604,7 @@ class MyHandles {
     suspend fun onGroupMessage(event: ChatGroupMessageEvent) {
         println("ChatGroupMessageEvent: $event")
     }
-    
+
     /**
      * 此处监听的是OneBot组件中的专属类型：OneBot的好友消息事件
      * 并且过滤消息：消息中的文本消息去除前后空字符后，等于 '你好'

@@ -16,18 +16,15 @@ simbot4 现已基于 [KMP](https://kotlinlang.org/docs/multiplatform.html) 全�
 贯彻一直以来的特点，simbot4也同样是Java友好的，
 包括对所有挂起函数API的非挂起桥接、Spring Boot支持等。
 
-更多内容参考
-<a href="java-friendly.md" />
-。
+更多内容参考 <a href="java-friendly.md">Java友好</a>。
 
-## Kotlin 2.0 与 K2 编译器
+## Kotlin 2.x 与 K2 编译器
 
-simbot4 的目标是构建在 **Kotlin 2.0** (与**K2 编译器**) 之上的。
+simbot4 当前构建已全面建立在 **Kotlin 2.x** 与 **K2 编译器** 之上。
 
 <note>
 
-已经自 [v4.0.0-RC1](https://github.com/simple-robot/simpler-robot/releases/tag/v4.0.0-RC1)
-版本起更新至 Kotlin 2.0~ 🎉
+当前示例与构建说明以 Kotlin 2.x 时代的工具链为准。
 
 </note>
 
@@ -36,8 +33,12 @@ simbot4 的目标是构建在 **Kotlin 2.0** (与**K2 编译器**) 之上的。
 JVM 平台中，Java最低要求为 **Java11**，
 并且所有模块都提供相应的模块化信息支持。
 
-JVM 平台中，Spring Boot starter 的实现最低要求使用 Spring Boot 3，
-也因此在使用 starter 的时候 Java 需要确保版本为 **Java17+** 。
+JVM 平台中，Spring Boot starter 默认推荐使用 Spring Boot 3，
+也因此在使用 `simbot-core-spring-boot-starter` 的时候 Java 需要确保版本为 **Java17+** 。
+
+如果你仍停留在 Spring Boot 2.x，
+则可以使用兼容模块 `simbot-core-spring-boot-starter-v2`，
+其 Java 基线为 **Java11+** 。
 
 ## 过滤器的概念
 
@@ -146,4 +147,3 @@ interface GuildEvent : OrganizationEvent {
 <a href="feedback-and-support.md">贡献与支持</a>
 ，非常感谢！
 </note>
-

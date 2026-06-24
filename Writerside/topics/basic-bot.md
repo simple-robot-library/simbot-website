@@ -39,6 +39,54 @@ bot.startBlocking(); // 启动它
 ```
 {switcher-key="%jb%"}
 
+```Java
+var bot = botManager.register(...);
+bot.startReserve()
+        .transform(SuspendReserves.mono())
+        .block();
+```
+{switcher-key="%jr%"}
+
+
+</tab>
+</tabs>
+
+## 等待关闭
+
+如果你希望在启动后继续等待 `Bot` 被关闭，
+可以使用 `join()` 及其 JVM 桥接形式：
+
+<tabs group="Code">
+<tab title="Kotlin" group-key="Kotlin">
+
+```Kotlin
+bot.start()
+bot.join()
+```
+
+</tab>
+<tab title="Java" group-key="Java">
+
+```Java
+bot.startAsync()
+        .thenCompose(($) -> bot.asFuture())
+        .join();
+```
+{switcher-key="%ja%"}
+
+```Java
+bot.startBlocking();
+bot.joinBlocking();
+```
+{switcher-key="%jb%"}
+
+```Java
+bot.startReserve()
+        .transform(SuspendReserves.mono())
+        .then(bot.joinReserve().transform(SuspendReserves.mono()))
+        .block();
+```
+{switcher-key="%jr%"}
 
 </tab>
 </tabs>
@@ -88,6 +136,8 @@ bot.startBlocking(); // 启动它
 <def title="join(...)">
    
 挂起 `Bot`, 直到它被关闭。
+
+在 JVM 中，异步桥接名称是 `asFuture()`。
 
 </def>
 <def title="cancel(...)">

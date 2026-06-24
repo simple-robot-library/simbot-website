@@ -15,7 +15,7 @@ switcher-label: JavaAPI风格
 <include from="installation.md" element-id="prepare-simbot-core-snippet"></include>
 
 > 也可前往
-> <a href="installation.md#prepare-simbot-core"></a>
+> <a href="installation.md#prepare-simbot-core">安装章节的准备部分</a>
 > 参考更多。
 
 ## 安装
@@ -23,7 +23,7 @@ switcher-label: JavaAPI风格
 <include from="refers.md" element-id="simbot-core-build"></include>
 
 > 也可前往
-> <a href="installation.md#安装核心库"></a>
+> <a href="installation.md#安装核心库">安装章节的安装部分</a>
 > 参考更多。
 
 ## 使用
@@ -60,10 +60,10 @@ var applicationAsync = Applications.launchApplicationAsync(Simple.INSTANCE, appC
     });
 
 // 异步结果可转化为 CompletableFuture
-var future = applicationAsync.asFuture();
-// ...
+var future = applicationAsync.asFuture()
+        .thenCompose(Application::asFuture);
 
-// 阻塞当前线程直到被关闭
+// 阻塞当前线程直到应用被关闭
 future.join();
 ```
 {switcher-key="%ja%"}
@@ -73,7 +73,6 @@ var application = Applications.launchApplicationBlocking(Simple.INSTANCE, appCon
         // 配置 Application...
 
     });
-});
 
 // 注册事件处理器、注册bot等
 
@@ -81,6 +80,18 @@ var application = Applications.launchApplicationBlocking(Simple.INSTANCE, appCon
 application.joinBlocking();
 ```
 {switcher-key="%jb%"}
+
+```Java
+var applicationAsync = Applications.launchApplicationAsync(Simple.INSTANCE, appConfigurer -> {
+        // 配置 Application...
+
+    });
+
+Mono.fromFuture(applicationAsync.asFuture())
+        .flatMap(app -> app.joinReserve().transform(SuspendReserves.mono()))
+        .block();
+```
+{switcher-key="%jr%"}
 
 </tab>
 </tabs>

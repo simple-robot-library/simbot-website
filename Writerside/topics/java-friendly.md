@@ -15,12 +15,12 @@ switcher-label: JavaAPI风格
 simbot4 中相比于 simbot3, 对于部分 lambda 的场景进行了简单的优化,
 在 Java 中需要手写返回 `return Unit.INSTANCE;` 的地方大大减少了。
 
-## 阻塞与异步
+## 阻塞、异步与预处理
 
 simbot4
 借助编译器插件
 [kotlin-suspend-transform-compiler-plugin][kstcp]
-为 Java 和其他可能的平台提供阻塞、异步以及 `Reserve` 风格的API（`Reserce` 后续小节会讲）。
+为 Java 和其他可能的平台提供阻塞、异步以及 `Reserve` 风格的 API（`Reserve` 后续小节会讲）。
 
 [kstcp]: https://github.com/ForteScarlet/kotlin-suspend-transform-compiler-plugin
 
@@ -34,7 +34,7 @@ suspend fun run(): Int {
 
 在 Java 中是难以调用的, 因为挂起函数在编译后会经过“编译魔法”而产生一些变化。
 
-通过编译器插件, 它便会为这个 `run()` 方法产生那么几个新的、可供 Java 直接使用的 API：
+通过编译器插件, 它便会为这个 `run()` 方法产生几个新的、可供 Java 直接使用的 API：
 
 ```Java
 /** 阻塞桥接, 等待(阻塞)挂起函数完成后返回结果 */
@@ -45,7 +45,67 @@ public CompletableFuture<? extends Integer> runAsync() { ... }
 
 /** Reserve 预处理桥接, 返回一个预处理结果 Reserve */
 public SuspendReserve<? extends Integer> runReserve() { ... }
+
+/** Reactive 桥接, 返回某种发布者类型 */
+public Publisher<? extends Integer> runReactive() { ... }
 ```
+
+## 真实命名规则
+
+最常见的 JVM 侧桥接风格可以粗略理解为下面四类：
+
+<deflist>
+<def title="Blocking">
+
+阻塞调用，通常是 `xxxBlocking()`。
+
+例如：
+
+- `bot.startBlocking()`
+- `application.joinBlocking()`
+
+</def>
+<def title="Async">
+
+异步调用，通常是 `xxxAsync()` 并返回 `CompletableFuture`。
+
+例如：
+
+- `bot.startAsync()`
+- `event.replyAsync(...)`
+
+也有少数 API 会显式改名，例如 `join()` 在 JVM 上的异步桥接是 `asFuture()`：
+
+- `application.asFuture()`
+- `bot.asFuture()`
+
+</def>
+<def title="Reserve">
+
+预处理调用，通常是 `xxxReserve()` 并返回 `SuspendReserve<T>`。
+
+例如：
+
+- `bot.startReserve()`
+- `application.joinReserve()`
+
+</def>
+<def title="Reactive">
+
+有些 API 还会生成 `Reactive` 风格桥接。
+在文档里通常更常展示 `Reserve + transform(...)` 的写法，
+因为它更容易映射到 Reactor、RxJava 等具体响应式类型。
+
+如果某个 API 开启了对应 transformer，
+你也可能直接看到 `xxxReactive()` 或 `getXxxReactive()` 这类桥接名称。
+只是由于它的具体返回类型取决于所启用的 transformer 与运行时依赖，
+因此手册中的多数页面仍优先展示 `Reserve + transform(...)`。
+
+</def>
+</deflist>
+
+对于属性式、getter 风格的挂起 API，桥接命名会进一步偏向 getter。
+例如 `content()`、`guildCount()` 这类 API 在 JVM 上更常看到 `getContent()`、`getGuildCount()` 这样的名称。
 
 
 ### 💡文档表现
@@ -161,5 +221,3 @@ simbot 提供 Spring Boot starter 模块，具有对 Spring Boot 的集成能力
 Spring Boot starter 模块也实现了 [量子猫](advanced-quantcat.md) 模块, 提供基于**注解**的高效开发方案。
 
 有关集成SpringBoot的更多信息可以前往 [**集成SpringBoot**](Spring-Boot.md) 。
-
-

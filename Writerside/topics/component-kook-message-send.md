@@ -17,7 +17,7 @@ switcher-label: Java API 风格
 </li>
 </list>
 
-本章将主要介绍第 **1** 种方式: 使用 API 发送消息。而与**消息元素**相关的内容可前往参考
+本章将主要介绍第 **1** 种方式: 使用 API 发送消息。而与 **消息元素** 相关的内容可前往参考
 <a href="component-kook-message-element.md"/>。
 
 ## 使用 API
@@ -30,13 +30,28 @@ KOOK API 中用于发送消息的 API 主要就是 **向子频道发送消息** 
 
 <note>
 
-它们可以在
-<a href="component-kook-api-list.md" />
-中找到。
+它们可以在 <a href="component-kook-api-list.md" /> 中找到。
 
 </note>
 
-这两个 API 的大致使用方式很类似，因此此处只选其一 `SendChannelMessageApi` 作为实例。
+这两个 API 的用法非常接近，但仍有两个区别需要先记住：
+
+<deflist>
+<def title="SendChannelMessageApi">
+
+面向频道消息。
+支持 `quote`、`nonce`、`tempTargetId`，并在 `4.2.0` 起支持 `templateId`。
+
+</def>
+<def title="SendDirectMessageApi">
+
+面向私聊消息。
+可通过 `targetId` 或 `chatCode` 两条路径构建请求。
+
+</def>
+</deflist>
+
+下面以 `SendChannelMessageApi` 为主说明。
 
 ### 仅在API模块使用  {id="only_api"}
 
@@ -46,20 +61,71 @@ KOOK API 中用于发送消息的 API 主要就是 **向子频道发送消息** 
 <tabs group="code">
 <tab title="Kotlin" group-key="Kotlin">
 
-TODO
-
 ```Kotlin
-// TODO
+val client = HttpClient()
+val authorization = "Bot xxxxx"
+
+val api = SendChannelMessageApi.create(
+    targetId = "1234567890",
+    content = "Hello KOOK"
+)
+
+val result = api.requestData(client, authorization)
 ```
 
 </tab>
 <tab title="Java" group-key="Java">
 
-TODO
+```Java
+var client = ApiRequests.createHttpClient();
+var authorization = "Bot xxxxx";
+
+var api = SendChannelMessageApi.create(
+        null,
+        "1234567890",
+        "Hello KOOK"
+);
+
+ApiRequests.requestDataAsync(api, client, authorization)
+        .thenAccept(result -> {
+            // 发送成功
+        });
+```
+{switcher-key="%ja%"}
 
 ```Java
-// TODO
+var client = ApiRequests.createHttpClient();
+var authorization = "Bot xxxxx";
+
+var api = SendChannelMessageApi.create(
+        null,
+        "1234567890",
+        "Hello KOOK"
+);
+
+var result = ApiRequests.requestDataBlocking(
+        api,
+        client,
+        authorization
+);
 ```
+{switcher-key="%jb%"}
+
+```Java
+var client = ApiRequests.createHttpClient();
+var authorization = "Bot xxxxx";
+
+var api = SendChannelMessageApi.create(
+        null,
+        "1234567890",
+        "Hello KOOK"
+);
+
+ApiRequests.requestDataReserve(api, client, authorization)
+        .transform(SuspendReserves.mono())
+        .block();
+```
+{switcher-key="%jr%"}
 
 </tab>
 </tabs>
@@ -73,20 +139,63 @@ TODO
 <tabs group="code">
 <tab title="Kotlin" group-key="Kotlin">
 
-TODO
-
 ```Kotlin
-// TODO
+val bot: Bot = ...
+
+val api = SendChannelMessageApi.create(
+    targetId = "1234567890",
+    content = "Hello KOOK"
+)
+
+val result = api.requestDataBy(bot)
 ```
 
 </tab>
 <tab title="Java" group-key="Java">
 
-TODO
+```Java
+Bot bot = ...;
+
+var api = SendChannelMessageApi.create(
+        null,
+        "1234567890",
+        "Hello KOOK"
+);
+
+BotRequests.requestDataByAsync(api, bot)
+        .thenAccept(result -> {
+            // 发送成功
+        });
+```
+{switcher-key="%ja%"}
 
 ```Java
-// TODO
+Bot bot = ...;
+
+var api = SendChannelMessageApi.create(
+        null,
+        "1234567890",
+        "Hello KOOK"
+);
+
+var result = BotRequests.requestDataByBlocking(api, bot);
 ```
+{switcher-key="%jb%"}
+
+```Java
+Bot bot = ...;
+
+var api = SendChannelMessageApi.create(
+        null,
+        "1234567890",
+        "Hello KOOK"
+);
+
+BotRequests.requestDataByReserve(api, bot)
+        .transform(SuspendReserves.mono())
+        .block();
+```
+{switcher-key="%jr%"}
 
 </tab>
 </tabs>
@@ -104,8 +213,64 @@ TODO
 
 </warning>
 
-其实在组件库中，`KookBot` 类型可以直接提供它内部包含的标准库 `Bot`，
-因此你可以获取到 `KookBot.sourceBot` 后，直接用 [标准库的方式](#use_in_stdlib) 进行请求。
+在 `simbot-component-kook-core` 中有两种常见做法：
+
+<list>
+<li>
+
+继续使用原始 API：`KookBot.requestData(api)`、`api.requestDataBy(bot)`
+
+</li>
+<li>
+
+直接使用对象上的发送能力：`KookChatCapableChannel.send(...)`、`KookUserChat.send(...)`
+
+</li>
+</list>
+
+后者通常更贴近 simbot 的使用方式。
+
+<tabs group="code">
+<tab title="Kotlin" group-key="Kotlin">
+
+```Kotlin
+suspend fun send(channel: KookChatCapableChannel) {
+    channel.send("hello from kook core")
+    channel.send("reply message", quote = null, tempTargetId = null)
+}
+```
+
+</tab>
+<tab title="Java" group-key="Java">
+
+```Java
+KookChatCapableChannel channel = ...;
+
+channel.sendAsync("hello from kook core")
+        .thenAccept(receipt -> { });
+```
+{switcher-key="%ja%"}
+
+```Java
+KookChatCapableChannel channel = ...;
+
+var receipt = channel.sendBlocking("hello from kook core");
+```
+{switcher-key="%jb%"}
+
+```Java
+KookChatCapableChannel channel = ...;
+
+channel.sendReserve("hello from kook core")
+        .transform(SuspendReserves.mono())
+        .subscribe(receipt -> { });
+```
+{switcher-key="%jr%"}
+
+</tab>
+</tabs>
+
+如果你只是需要把 `KookBot` 当作 stdlib 的 Bot 使用，也可以直接拿到 `sourceBot`：
 
 <tabs>
 <tab title="Kotlin" group-key="Kotlin">
@@ -125,3 +290,15 @@ Bot bot = kookBot.getSourceBot(); // 得到标准库的 Bot
 
 </tab>
 </tabs>
+
+<tip>
+
+如果你的目标只是“正常发一条消息”，
+更推荐优先使用 simbot 的消息元素与 `send` / `reply` 能力；
+直接操作原始 API 更适合：
+
+- 需要用到平台专属字段
+- 需要发送模板消息、卡片消息等原始结构
+- 正在编写更底层封装
+
+</tip>

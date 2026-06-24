@@ -41,6 +41,7 @@ var time = Timestamp.ofMilliseconds(123456L);
 ## 使用
 
 `Timestamp` 通常用于获取各种单位下的时间戳数值结果。
+它是对“时间戳值”的统一包装，不负责日期格式化、时区转换或字符串解析。
 
 <tabs group="Code">
 <tab title="Kotlin" group-key="Kotlin">
@@ -60,3 +61,11 @@ long seconds = timestamp.timeAs(TimeUnit.SECONDS);
 
 </tab>
 </tabs>
+
+<note>
+
+如果你需要的是日期时间格式化、时区换算等能力，
+请在具体平台上配合对应日期 API 使用，
+例如 JVM 上的 `java.time`。
+
+</note>

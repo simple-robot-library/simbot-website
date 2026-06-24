@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  -     Copyright (c) 2025. ForteScarlet.
+  -     Copyright (c) 2025-2026. ForteScarlet.
   -
   -     Project    https://github.com/simple-robot/simpler-robot
   -     Email      ForteScarlet@163.com
@@ -90,10 +90,13 @@
                 <a href="component-kook.md" summary="对接官方API的KOOK组件">
                     KOOK组件
                 </a>
-                <a href="component-telegram.md" summary="对接官方API的Telegram组件">
+            </cards>
+            <cards>
+                <title>预留方向🚧</title>
+                <a href="component-telegram.md" summary="当前手册范围内仅作为占位入口的 Telegram 组件页">
                     🚧Telegram组件
                 </a>
-                <a href="component-discord.md" summary="对接官方API的Discord组件">
+                <a href="component-discord.md" summary="当前手册范围内仅作为占位入口的 Discord 组件页">
                     🚧Discord组件
                 </a>
             </cards>

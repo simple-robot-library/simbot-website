@@ -6,28 +6,64 @@ switcher-label: Java API 风格
 
 ## API模块
 
-所有的 [**QQ频道API**](https://bot.q.qq.com/wiki/develop/api/) 封装与实现都在
-API 模块 (`simbot-component-qq-guild-api`) 中，
-这些实现均在包路径 `love.forte.simbot.qguild.api` 下，
-并实现接口 `love.forte.simbot.qguild.api.QQGuildApi`。
+所有对 QQ 开放平台 API 的原始封装都在
+API 模块 `simbot-component-qq-guild-api` 中。
+
+这一层主要包含：
+
+<list>
+<li><control>love.forte.simbot.qguild.api</control>
+
+各类 `QQGuildApi<T>` 实现，以及 Java 侧 `ApiRequests` 辅助函数。
+</li>
+<li><control>love.forte.simbot.qguild.model</control>
+
+与开放平台响应结构对应的数据模型，例如 `Message`、`Guild` 等。
+</li>
+<li><control>love.forte.simbot.qguild.event</control>
+
+网关事件体、`opcode`、`intent` 与分发结构。
+</li>
+<li><control>love.forte.simbot.qguild.message</control>
+
+消息模型、内嵌格式编码器与若干构建辅助类型。
+</li>
+</list>
 
 ## API定义
 
-你可以前往
-<a href="component-qq-guild-api-list.md" />
-或 
-[API文档](%api-doc%) 
-来寻找所有的 API 实现。
+可前往 <a href="component-qq-guild-api-list.md">API 类型总览</a>
+或 <a href="%api-doc%">API 文档</a> 查看所有 API 实现。
+
+消息发送相关的几个常用 API 需要特别区分：
+
+<deflist>
+<def title="MessageSendApi">
+
+频道子频道发消息。
+
+</def>
+<def title="DmsSendApi">
+
+频道私聊 `DMS` 发消息。
+
+</def>
+<def title="GroupMessageSendApi / UserMessageSendApi">
+
+QQ群与 `C2C` 单聊发消息。
+
+</def>
+</deflist>
 
 ## 使用API
 
-在 API模块、stdlib模块和核心组件模块中都可以 '使用' API。
+在 API 模块、stdlib 模块和核心组件模块中都可以使用 API。
 
-首先何为 '使用API'? 即提供一些所需参数，对此API发起请求并得到预期的结果或错误。
+所谓“使用 API”，就是提供所需参数，向 API 发起请求，并拿到预期的结果或错误。
 
 ### API模块中使用
 
-在API模块中直接使用API，通常需要提供如下参数：
+在 API 模块中直接使用 API，通常需要这些参数：
 
 - `HttpClient`: 用于发起请求的 Ktor `HttpClient` 对象。
 - `token`: QQ频道API中用于鉴权的客户端 `access_token`。
@@ -36,13 +72,16 @@ API 模块 (`simbot-component-qq-guild-api`) 中，
 - `server`: _可选_ 。QQ频道API有正式频道和沙箱频道之分，可通过此参数选择不同的服务器地址。在一些特殊需求下，也可以通过此方式自定义一个第三方服务器地址。
 - `appId`: _可选_ 。如果提供，会将其添加到请求头 `X-Union-Appid` 中。这是新的 `access_token` 访问方式所要求的。
 
-对 API 的请求是以扩展函数提供的(Java 中可以使用 `ApiRequests` 提供的静态方法)：
+对 API 的请求在 Kotlin 中以挂起扩展函数提供；
+在 Java 中可通过 `ApiRequests` 使用阻塞、异步与 `SuspendReserve` 三种桥接形式。
+
+API 层常用入口有：
 
 - `request`: 直接返回原始的 `HttpResponse` 结果，几乎不做校验
 - `requestText`: 返回请求到的原始JSON字符串，会校验HTTP响应状态是否为 `2xx`。
 - `requestData`: 会解析响应值为对应的实体对象后返回。会校验是否成功。
 
-以 `GetGuildApi` (获取频道服务器详情) 为例：
+以 `GetGuildApi`（获取频道服务器详情）为例：
 
 <tabs group="code">
 <tab title="Kotlin" group-key="Kotlin">
@@ -57,7 +96,6 @@ val api = GetGuildApi.create("频道ID")
 val response = api.request(client, token)
 val text = api.requestText(client, token)
 val data = api.requestData(client, token)
-
 ```
 
 </tab>
@@ -66,7 +104,7 @@ val data = api.requestData(client, token)
 ```Java
 // 准备必要信息
 var token = "...";
-var client = HttpClientJvmKt.HttpClient($ -> Unit.INSTANCE);
+var client = ApiRequests.newHttpClient();
 // 准备API对象
 final var api = GetGuildApi.create("频道ID");
 // 发起请求
@@ -83,12 +121,12 @@ ApiRequests.requestDataAsync(api, client, token)
 
 ```Java
 var token = "...";
-var client = HttpClientJvmKt.HttpClient($ -> Unit.INSTANCE);
+var client = ApiRequests.newHttpClient();
 // 准备API对象
 final var api = GetGuildApi.create("频道ID");
 // 发起请求
 var response = ApiRequests.requestBlocking(api, client, token);
-var text = ApiRequests.requestTextBlocking(api, client, token);
+var rawText = ApiRequests.requestTextBlocking(api, client, token);
 var data = ApiRequests.requestDataBlocking(api, client, token);
 ```
 {switcher-key="%jb%"}
@@ -97,7 +135,7 @@ var data = ApiRequests.requestDataBlocking(api, client, token);
 ```Java
 // 准备必要信息
 var token = "...";
-var client = HttpClientJvmKt.HttpClient($ -> Unit.INSTANCE);
+var client = ApiRequests.newHttpClient();
 // 准备API对象
 final var api = GetGuildApi.create("频道ID");
 // 发起请求
@@ -123,7 +161,8 @@ ApiRequests.requestDataReserve(api, client, token)
 
 ### Stdlib模块中使用
 
-在stdlib模块下，一个 `Bot` 类型中已经包括了上面我们提到的那些必要信息，
+在 `simbot-component-qq-guild-stdlib` 中，一个 `love.forte.simbot.qguild.stdlib.Bot`
+已经包含了客户端、鉴权与服务器地址等信息，
 因此你可以使用 `Bot.requestXxx(api)` 或 `api.requestXxxBy(bot)` 来简化你的请求
 (Java中可以使用 `BotRequests` 提供的静态方法)。
 
@@ -209,10 +248,11 @@ BotRequests.requestDataReserve(bot, api)
 
 ### 核心模块中使用
 
-核心模块提供的 `QGBot` 可以直接使用属性 `source` 获取到stdlib模块中的 `Bot`，
-因此获取后如同
-<a href="#stdlib模块中使用">Stdlib模块中使用</a>
-中的方式一致即可。
+核心模块中的 `QGBot` 提供了 `source`，
+它对应 stdlib 层的 `Bot`。
+
+- 如果你想继续走 stdlib 风格，使用 `bot.source`
+- 如果你正在发送消息，通常更推荐优先参考 [](component-qq-guild-messages.md) 与各对象上的 `send(...)`
 
 <tabs group="code">
 <tab title="Kotlin" group-key="Kotlin">
@@ -237,13 +277,13 @@ var sourceBot = bot.getSource();
 
 ## 日志
 
-你可以通过开启名称前缀为 `love.forte.simbot.qguild.api` 的 DEBUG 级别日志来查看所有API在进行请求过程的部分详细信息，
-例如出入参等。
+开启名称前缀为 `love.forte.simbot.qguild.api` 的 DEBUG 级别日志，
+可以看到 API 请求过程中的部分详细信息，例如出入参。
 
-在 JVM 中，日志系统委托给了 `SLF4J2 API`，在native平台中，可以通过 `LoggerFactory.defaultLoggerLevel` 修改全局的默认日志级别。
+在 JVM 中，日志系统委托给 `SLF4J2 API`；在 native 平台中，可通过 `LoggerFactory.defaultLoggerLevel` 修改全局默认日志级别。
 
-JVM中默认会为日志中的部分片段染色。
-如果希望关闭日志中的染色，添加JVM参数：
+JVM 中默认会为日志中的部分片段染色。
+如果需要关闭，添加 JVM 参数：
 
 ```
 -Dsimbot.qguild.api.logger.color.enable=false

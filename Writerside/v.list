@@ -37,6 +37,6 @@
     <var name="kstcpVersion" value="2.3.0-0.13.2" />
     <var name="jb" value="阻塞"/>
     <var name="ja" value="异步"/>
-    <var name="jr" value="响应式"/>
+    <var name="jr" value="预处理"/>
     <var name="copyright-year" value="2021-2026" />
 </vars>
