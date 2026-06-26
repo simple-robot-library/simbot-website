@@ -70,7 +70,8 @@ private const val TIMESTAMP_HEAD = "X-Signature-Timestamp"
 /**
  * 处理所有qq机器人的回调请求的处理器。
  */
-@RestController("/callback")
+@RestController
+@RequestMapping("/callback")
 class CallbackHandler(
     private val application: Application
 ) {
@@ -136,7 +137,8 @@ class CallbackHandler(
 /**
  * 处理所有qq机器人的回调请求的处理器。
  */
-@RestController("/callback")
+@RestController
+@RequestMapping("/callback")
 public class CallbackHandler {
     private static final String SIGNATURE_HEAD = "X-Signature-Ed25519";
     private static final String TIMESTAMP_HEAD = "X-Signature-Timestamp";
@@ -225,7 +227,8 @@ private const val TIMESTAMP_HEAD = "X-Signature-Timestamp"
 /**
  * 处理所有qq机器人的回调请求的处理器。
  */
-@RestController("/callback")
+@RestController
+@RequestMapping("/callback")
 class CallbackHandler(
     private val application: Application
 ) {
@@ -285,7 +288,8 @@ class CallbackHandler(
 /**
  * 处理所有qq机器人的回调请求的处理器。
  */
-@RestController("/callback")
+@RestController
+@RequestMapping("/callback")
 public class CallbackHandler {
     private static final String SIGNATURE_HEAD = "X-Signature-Ed25519";
     private static final String TIMESTAMP_HEAD = "X-Signature-Timestamp";
