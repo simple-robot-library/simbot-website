@@ -614,6 +614,65 @@
 - 申请消息按钮组件模板需要提供响应的 json，具体格式参考 <a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api/openapi/message/message_keyboard.html#inlinekeyboard">InlineKeyboard</a>。
 - 仅 `markdown` 消息支持消息按钮。
 
+自 `4.4.0` 起，群聊和单聊消息发送体使用 `MessageKeyboards` 表示消息按钮内容。
+它支持 `content.rows[].buttons[]` 形式的多行、多按钮结构，并在请求 JSON 中继续序列化为官方的 `keyboard` 字段。
+旧的 `MessageKeyboard` 入口只能表达单个按钮，已废弃；组件消息元素中对应使用 `QGKeyboards`。
+
+<warning>
+`GroupAndC2CSendBody.keyboard`、`GroupMessageSendApi.createMarkdown(..., MessageKeyboard?)`、
+`UserMessageSendApi.createMarkdown(..., MessageKeyboard?)` 自 `4.4.0` 起废弃，编译期会以 `ERROR` 级别提示。
+请使用 `GroupAndC2CSendBody.keyboards` 和参数类型为 `MessageKeyboards` 的 `createMarkdown` 重载替代。
+</warning>
+
+<tabs group="code">
+<tab title="Kotlin" group-key="Kotlin">
+
+```Kotlin
+val keyboards = MessageKeyboards {
+    content {
+        row {
+            button {
+                renderData("确认", visitedLabel = "已确认", style = 1)
+                action {
+                    type = 1
+                    data = "confirm"
+                    unsupportTips = "当前客户端暂不支持"
+                    permissionAllAccessible()
+                }
+            }
+        }
+        row {
+            addButton(MessageKeyboard.create("template-id"))
+        }
+    }
+}
+```
+
+</tab>
+<tab title="Java" group-key="Java">
+
+```Java
+var keyboards = MessageKeyboards.create(List.of(
+        MessageKeyboard.create("template-a"),
+        MessageKeyboard.create("template-b")
+));
+
+var groupApi = GroupMessageSendApi.createMarkdown(
+        "群ID",
+        "请选择",
+        keyboards
+);
+
+var userApi = UserMessageSendApi.createMarkdown(
+        "用户openid",
+        "请选择",
+        keyboards
+);
+```
+
+</tab>
+</tabs>
+
 更多参考 <a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api/openapi/message/post_keyboard_messages.html">文档</a>
 
 
@@ -732,6 +791,47 @@
 <a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/send-receive/send.html#群聊">发送消息到群</a>
 
 
+
+</def>
+<def title="InteractionResponseApi" id="love_forte_simbot_qguild_api_interaction_InteractionResponseApi">
+
+`love.forte.simbot.qguild.api.interaction.InteractionResponseApi`
+
+<a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/trans/msg-btn.html#点击回调按钮">回应互动事件</a>
+
+自 `4.4.0` 起支持。用于回应 `INTERACTION_CREATE` 互动事件，例如消息按钮点击回调。
+
+响应码常量：
+
+- `CODE_SUCCESS`: 成功
+- `CODE_FAILED`: 操作失败
+- `CODE_FREQUENT`: 操作频繁
+- `CODE_DUPLICATE`: 重复操作
+- `CODE_NO_PERMISSION`: 没有权限
+- `CODE_ADMIN_ONLY`: 仅管理员操作
+
+<tabs group="code">
+<tab title="Kotlin" group-key="Kotlin">
+
+```Kotlin
+val api = InteractionResponseApi.create(
+    interactionId = "互动事件ID",
+    code = InteractionResponseApi.CODE_SUCCESS
+)
+```
+
+</tab>
+<tab title="Java" group-key="Java">
+
+```Java
+var api = InteractionResponseApi.create(
+        "互动事件ID",
+        InteractionResponseApi.CODE_SUCCESS
+);
+```
+
+</tab>
+</tabs>
 
 </def>
 <def title="GetMessageSettingApi" id="love_forte_simbot_qguild_api_message_setting_GetMessageSettingApi">
@@ -865,6 +965,3 @@
 </def>
 
 </deflist>
-
-
-

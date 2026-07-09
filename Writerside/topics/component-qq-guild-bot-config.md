@@ -235,6 +235,10 @@ GROUP_AND_C2C_EVENT (1 << 25)
   - GROUP_MSG_REJECT        // 群管理员主动在机器人资料页操作关闭通知
   - GROUP_MSG_RECEIVE       // 群管理员主动在机器人资料页操作开启通知
 
+GROUP_MEMBERS (1 << 24)
+  - GROUP_MEMBER_ADD       // 群成员加入群聊
+  - GROUP_MEMBER_REMOVE    // 群成员退出群聊
+
 INTERACTION (1 << 26)
   - INTERACTION_CREATE     // 互动事件创建时
 
@@ -363,9 +367,15 @@ PUBLIC_GUILD_MESSAGES (1 << 30) // 消息事件，此为公域的消息事件
 <li>群管理员主动在机器人资料页操作开启通知</li>
 </list>
 </def>
+<def title="GROUP_MEMBERS">
+<list>
+<li>群成员加入群聊，自 <code>4.4.0</code> 开始支持</li>
+<li>群成员退出群聊，自 <code>4.4.0</code> 开始支持</li>
+</list>
+</def>
 <def title="INTERACTION">
 <list>
-<li>互动事件创建时</li>
+<li>互动事件创建时，自 <code>4.4.0</code> 开始支持按钮点击回调解析与回应</li>
 </list>
 </def>
 <def title="MESSAGE_AUDIT">

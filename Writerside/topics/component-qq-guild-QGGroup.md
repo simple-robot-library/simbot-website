@@ -76,8 +76,11 @@ intents += EventIntents.GroupAndC2CEvent.intents
 </def>
 </deflist>
 
-通过群消息事件得到的 `QGGroupMember` 也只包含成员的 `member_openid`。
+通过群相关事件得到的 `QGGroupMember` 也只包含成员的 `member_openid`。
 它不能用于主动发送私聊消息，调用 `send(...)` 会抛出 `UnsupportedOperationException`。
+
+自 `4.4.0` 起，群消息事件的 `author()` 返回 `QGGroupAuthor`。
+它在 `QGGroupMember` 的基础上额外提供 `memberRole` 与 `isBot`，可用于判断消息发送者的群内身份和是否为机器人。
 
 ## 发送与回复 {id="send-and-reply"}
 

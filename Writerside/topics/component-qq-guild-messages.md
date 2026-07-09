@@ -55,6 +55,22 @@ switcher-label: JavaAPI风格
 > 仅用于发送。添加自 `4.0.0-beta6` 。
 
 </def>
+<def title="QGKeyboards">
+
+> 仅用于群聊/单聊发送。添加自 `4.4.0` 。
+
+对 API 模块中 `MessageKeyboards` 的包装体，可用来发送包含多行、多按钮的 Markdown 消息按钮。
+旧的 `QGKeyboard` 只包装单个 `MessageKeyboard`，自 `4.4.0` 起应改用 `QGKeyboards`。
+
+</def>
+<def title="QGKeyboard">
+
+> 仅用于群聊/单聊发送。自 `4.4.0` 起废弃。
+
+旧的单按钮包装体，只能包装单个 `MessageKeyboard`，无法完整表达官方 `keyboard.content.rows[].buttons[]` 结构。
+请使用 `QGKeyboards` 替代。
+
+</def>
 </deflist>
 
 ## 发送消息 {id='message-usage'}
@@ -130,3 +146,106 @@ channel.sendReserve(Messages.of(
 </tab>
 </tabs>
 
+## Markdown 消息按钮 {id='message-keyboards'}
+
+自 `4.4.0` 起，群聊和单聊 Markdown 消息按钮使用 `QGKeyboards` / `MessageKeyboards` 表示。
+它支持按行组织多个按钮，并在发送体中仍序列化为官方 API 的 `keyboard` 字段。
+
+
+<warning>
+
+旧的 `QGKeyboard` 与直接使用 `MessageKeyboard` 的发送入口仅能表达单个按钮，且结构不完整无法直接被 API 使用，已经被废弃。
+
+`QGKeyboard` 自 `4.4.0` 起废弃，编译期会以 `ERROR` 级别提示。
+原本使用 `QGKeyboard.create(...)` 的位置，应替换为 `QGKeyboards.create(...)` 或 `QGKeyboards { ... }`。
+
+</warning>
+
+<tabs group="code">
+<tab title="Kotlin" group-key="Kotlin">
+
+```Kotlin
+val keyboards = QGKeyboards {
+    content {
+        row {
+            button {
+                renderData("确认", visitedLabel = "已确认", style = 1)
+                action {
+                    type = 1
+                    data = "confirm"
+                    unsupportTips = "当前客户端暂不支持"
+                    permissionAllAccessible()
+                }
+            }
+        }
+        row {
+            addButton(MessageKeyboard.create("template-id"))
+        }
+    }
+}
+
+group.send(QGMarkdown.create("请选择") + keyboards)
+
+// 只有一行按钮时，也可以直接包装 MessageKeyboards。
+val singleRow = MessageKeyboards.create(
+    listOf(
+        MessageKeyboard.create("template-a"),
+        MessageKeyboard.create("template-b")
+    )
+)
+
+group.send(QGMarkdown.create("请选择") + QGKeyboards.create(singleRow))
+```
+
+</tab>
+<tab title="Java" group-key="Java">
+
+<if switcher-key="%ja%">
+
+```Java
+var keyboards = MessageKeyboards.create(List.of(
+        MessageKeyboard.create("template-a"),
+        MessageKeyboard.create("template-b")
+));
+
+var sendTask = group.sendAsync(Messages.of(
+        QGMarkdown.create("请选择"),
+        QGKeyboards.create(keyboards)
+));
+```
+
+</if>
+
+<if switcher-key="%jb%">
+
+```Java
+var keyboards = MessageKeyboards.create(List.of(
+        MessageKeyboard.create("template-a"),
+        MessageKeyboard.create("template-b")
+));
+
+group.sendBlocking(Messages.of(
+        QGMarkdown.create("请选择"),
+        QGKeyboards.create(keyboards)
+));
+```
+
+</if>
+
+<if switcher-key="%jr%">
+
+```Java
+var keyboards = MessageKeyboards.create(List.of(
+        MessageKeyboard.create("template-a"),
+        MessageKeyboard.create("template-b")
+));
+
+group.sendReserve(Messages.of(
+        QGMarkdown.create("请选择"),
+        QGKeyboards.create(keyboards)
+)).transform(SuspendReserves.mono()).subscribe(receipt -> { ... });
+```
+
+</if>
+</tab>
+</tabs>

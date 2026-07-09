@@ -337,6 +337,60 @@ channel相关的事件类型。 `data` 类型为 `EventChannel` 。
 触发场景	群管理员主动在机器人资料页操作开启通知
 
 </def>
+<def title="GroupMemberManagementDispatch" id="love_forte_simbot_qguild_event_GroupMemberManagementDispatch">
+
+`love.forte.simbot.qguild.event.GroupMemberManagementDispatch`
+
+群成员进退群聊事件。
+`data` 类型为 `GroupMemberManagementData`。
+
+<note>
+自 <code>4.4.0</code> 开始支持。
+</note>
+
+</def>
+<def title="GroupMemberAdd" id="love_forte_simbot_qguild_event_GroupMemberAdd">
+
+`love.forte.simbot.qguild.event.GroupMemberAdd`
+
+事件类型名: `"GROUP_MEMBER_ADD"`
+
+<note>
+自 <code>4.4.0</code> 开始支持。需要订阅 <code>EventIntents.GroupMembers (1<<24)</code> 。
+</note>
+
+<a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/group/manage/event.html#群成员加入-退出群聊">群成员加入群聊</a>
+触发场景	成员加入群聊
+
+</def>
+<def title="GroupMemberRemove" id="love_forte_simbot_qguild_event_GroupMemberRemove">
+
+`love.forte.simbot.qguild.event.GroupMemberRemove`
+
+事件类型名: `"GROUP_MEMBER_REMOVE"`
+
+<note>
+自 <code>4.4.0</code> 开始支持。需要订阅 <code>EventIntents.GroupMembers (1<<24)</code> 。
+</note>
+
+<a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/group/manage/event.html#群成员加入-退出群聊">群成员退出群聊</a>
+触发场景	成员退出群聊
+
+</def>
+<def title="InteractionCreate" id="love_forte_simbot_qguild_event_InteractionCreate">
+
+`love.forte.simbot.qguild.event.InteractionCreate`
+
+事件类型名: `"INTERACTION_CREATE"`
+
+<note>
+自 <code>4.4.0</code> 开始支持。需要订阅 `EventIntents.Interaction`。
+</note>
+
+互动事件创建时。消息按钮点击回调的 `type` 为 `11`，单聊快捷菜单的 `type` 为 `12`。
+解析后的按钮数据在 `data.resolved.buttonData` 与 `data.resolved.buttonId` 中。
+
+</def>
 <def title="EventGuildDispatch" id="love_forte_simbot_qguild_event_EventGuildDispatch">
 
 `love.forte.simbot.qguild.event.EventGuildDispatch`
@@ -693,6 +747,9 @@ API 模块事件封装可以使用在 **标准库模块 (stdlib)** 中，使用 
 <def title="QGGroupDelRobotEvent">机器人退出群聊事件</def>
 <def title="QGGroupMsgRejectEvent">群聊拒绝机器人主动消息事件</def>
 <def title="QGGroupMsgReceiveEvent">群聊接受机器人主动消息事件</def>
+<def title="QGGroupMemberAddEvent">群成员加入群聊事件，自 <code>4.4.0</code> 开始支持</def>
+<def title="QGGroupMemberRemoveEvent">群成员退出群聊事件，自 <code>4.4.0</code> 开始支持</def>
+<def title="QGInteractionCreateEvent">互动事件创建事件，自 <code>4.4.0</code> 开始支持，可用于处理消息按钮点击回调</def>
 <def title="QGC2CMessageCreateEvent">C2C单聊消息事件</def>
 <def title="QGFriendAddEvent">用户添加机器人事件</def>
 <def title="QGFriendDelEvent">用户删除机器人事件</def>
@@ -702,3 +759,144 @@ API 模块事件封装可以使用在 **标准库模块 (stdlib)** 中，使用 
 特殊的事件类型，用于包装兼容那些尚未被封装支持的 API 模块的事件封装类型。
 </def>
 </deflist>
+
+### 互动事件 {id="interaction-events"}
+
+`QGInteractionCreateEvent` 对应 API 模块事件 `InteractionCreate`。
+收到消息按钮点击回调后，需要回应互动事件，否则客户端按钮会持续处于 loading 状态直到超时。
+
+<tabs group="code">
+<tab title="Kotlin" group-key="Kotlin">
+
+```Kotlin
+listen<QGInteractionCreateEvent> { event ->
+    val buttonData = event.resolved.buttonData
+    val buttonId = event.resolved.buttonId
+
+    if (buttonData == "confirm") {
+        event.respond(InteractionResponseApi.CODE_SUCCESS)
+    } else {
+        event.respond(InteractionResponseApi.CODE_FAILED)
+    }
+}
+```
+
+</tab>
+<tab title="Java" group-key="Java">
+
+```Java
+application.getEventDispatcher().register(EventListeners.async(
+        QGInteractionCreateEvent.class,
+        (context, event) -> {
+            var buttonData = event.getResolved().getButtonData();
+            var buttonId = event.getResolved().getButtonId();
+
+            if ("confirm".equals(buttonData)) {
+                return event.respondAsync(InteractionResponseApi.CODE_SUCCESS)
+                        .thenApply(result -> EventResult.empty());
+            }
+
+            return event.respondAsync(InteractionResponseApi.CODE_FAILED)
+                    .thenApply(result -> EventResult.empty());
+        }
+));
+```
+{switcher-key="%ja%"}
+
+```Java
+application.getEventDispatcher().register(EventListeners.block(
+        QGInteractionCreateEvent.class,
+        (context, event) -> {
+            var buttonData = event.getResolved().getButtonData();
+            var buttonId = event.getResolved().getButtonId();
+
+            if ("confirm".equals(buttonData)) {
+                event.respondBlocking(InteractionResponseApi.CODE_SUCCESS);
+            } else {
+                event.respondBlocking(InteractionResponseApi.CODE_FAILED);
+            }
+
+            return EventResult.empty();
+        }
+));
+```
+{switcher-key="%jb%"}
+
+```Java
+application.getEventDispatcher().register(EventListeners.nonBlock(
+        QGInteractionCreateEvent.class,
+        (context, event) -> {
+            var buttonData = event.getResolved().getButtonData();
+            var buttonId = event.getResolved().getButtonId();
+
+            var response = "confirm".equals(buttonData) ?
+                    event.respondReserve(InteractionResponseApi.CODE_SUCCESS) :
+                    event.respondReserve(InteractionResponseApi.CODE_FAILED);
+
+            return EventResult.of(response.transform(SuspendReserves.mono()).then());
+        }
+));
+```
+{switcher-key="%jr%"}
+
+</tab>
+</tabs>
+
+`QGGroupMemberAddEvent` 与 `QGGroupMemberRemoveEvent` 对应 API 模块事件 `GroupMemberAdd` 与 `GroupMemberRemove`。
+这两个事件的 `content()` 是发生变更的群，`member()` 是加入或退出的群成员。
+
+<tabs group="code">
+<tab title="Kotlin" group-key="Kotlin">
+
+```Kotlin
+listen<QGGroupMemberAddEvent> { event ->
+    val group = event.content()
+    val member = event.member()
+    println("${member.id} joined ${group.id}")
+}
+```
+
+</tab>
+<tab title="Java" group-key="Java">
+
+```Java
+application.getEventDispatcher().register(EventListeners.async(
+        QGGroupMemberAddEvent.class,
+        (context, event) -> event.getMemberAsync()
+                .thenApply(member -> {
+                    System.out.println(member.getId());
+                    return EventResult.empty();
+                })
+));
+```
+{switcher-key="%ja%"}
+
+```Java
+application.getEventDispatcher().register(EventListeners.block(
+        QGGroupMemberAddEvent.class,
+        (context, event) -> {
+            var member = event.getMemberBlocking();
+            System.out.println(member.getId());
+            return EventResult.empty();
+        }
+));
+```
+{switcher-key="%jb%"}
+
+```Java
+application.getEventDispatcher().register(EventListeners.nonBlock(
+        QGGroupMemberAddEvent.class,
+        (context, event) -> {
+            var member = event.getMemberReserve()
+                    .transform(SuspendReserves.mono())
+                    .doOnNext(value -> System.out.println(value.getId()))
+                    .then();
+
+            return EventResult.of(member);
+        }
+));
+```
+{switcher-key="%jr%"}
+
+</tab>
+</tabs>
