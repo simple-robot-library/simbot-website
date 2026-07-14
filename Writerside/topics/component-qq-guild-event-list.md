@@ -345,7 +345,9 @@ channel相关的事件类型。 `data` 类型为 `EventChannel` 。
 `data` 类型为 `GroupMemberManagementData`。
 
 <note>
-自 <code>4.4.0</code> 开始支持。
+
+自 `4.4.0` 开始支持。
+
 </note>
 
 </def>
@@ -356,7 +358,9 @@ channel相关的事件类型。 `data` 类型为 `EventChannel` 。
 事件类型名: `"GROUP_MEMBER_ADD"`
 
 <note>
-自 <code>4.4.0</code> 开始支持。需要订阅 <code>EventIntents.GroupMembers (1<<24)</code> 。
+
+自 `4.4.0` 开始支持。需要订阅 `EventIntents.GroupMembers (1<<24)`。
+
 </note>
 
 <a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/group/manage/event.html#群成员加入-退出群聊">群成员加入群聊</a>
@@ -370,7 +374,9 @@ channel相关的事件类型。 `data` 类型为 `EventChannel` 。
 事件类型名: `"GROUP_MEMBER_REMOVE"`
 
 <note>
-自 <code>4.4.0</code> 开始支持。需要订阅 <code>EventIntents.GroupMembers (1<<24)</code> 。
+
+自 `4.4.0` 开始支持。需要订阅 `EventIntents.GroupMembers (1<<24)`。
+
 </note>
 
 <a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/group/manage/event.html#群成员加入-退出群聊">群成员退出群聊</a>
