@@ -55,8 +55,17 @@
       "transmit": null,
       "dynamic": null,
       "dispatcher": null
+    },
+    "disableWs": false,
+    "contentAsMarkdownAll": false,
+    "contentAsMarkdown": {
+      "CHANNEL": true
+    },
+    "retry": {
+      "maxRetries": 2,
+      "exponentialDelay": true,
+      "retryOnServerErrors": true
     }
-    "disableWs": false
   }
 }
 ```
@@ -544,6 +553,74 @@ API请求中的超时请求配置。参考 [HttpTimeout][HttpTimeout] 中的相�
   "config": {
     "disableWs": false
   }
+}
+```
+
+</def>
+
+<def title="contentAsMarkdownAll">
+
+`Boolean?`，自 `4.5.0` 起可用。
+
+为频道子频道、频道私信、QQ群和 C2C 单聊四种发送目的地统一指定：是否将普通文本放入 Markdown 的 `content` 字段发送。默认不启用。
+
+</def>
+<def title="contentAsMarkdown">
+
+`Map<MessageDestination, Boolean>?`，自 `4.5.0` 起可用。
+
+按目的地覆盖 `contentAsMarkdownAll` 的设置。可用键为 `CHANNEL`、`DMS`、`GROUP` 和 `USER`，分别对应频道子频道、频道私信、QQ群与 C2C 单聊。
+
+```json
+{
+  "config": {
+    "contentAsMarkdownAll": true,
+    "contentAsMarkdown": {
+      "DMS": false,
+      "USER": false
+    }
+  }
+}
+```
+
+上述配置会让频道子频道和 QQ 群的普通文本按 Markdown 发送，而两类私信仍按普通文本发送。
+
+</def>
+<def title="retry">
+
+`RetryConfig?`，自 `4.5.0` 起可用。用于为 API HTTP 客户端启用 Ktor 的 <a href="https://ktor.io/docs/client-request-retry.html">HttpRequestRetry</a> 插件。
+
+<deflist type="wide">
+<def title="maxRetries">
+
+`Int?`。最大重试次数；只有此项非 `null` 时才会启用重试。
+
+</def>
+<def title="exponentialDelay">
+
+`Boolean`，默认 `false`。为 `true` 时使用 Ktor 默认的指数退避策略。
+
+</def>
+<def title="retryOnServerErrors">
+
+`Boolean`，默认 `false`。为 `true` 时重试服务器错误响应。
+
+</def>
+</deflist>
+
+如果需要自定义重试条件、超时、日志或拦截器，请在代码配置 `ConfigurableBotConfiguration` 时调用 `apiClientAdditionalConfiguration { ... }`，其中接收的是 Ktor `HttpClientConfig`。
+
+```kotlin
+val configuration = ConfigurableBotConfiguration().apply {
+    contentAsMarkdownAll()
+    contentAsMarkdown[MessageDestination.DMS] = false
+
+    apiClientAdditionalConfiguration {
+        install(HttpRequestRetry) {
+            maxRetries = 2
+            retryOnServerErrors()
+        }
+    }
 }
 ```
 

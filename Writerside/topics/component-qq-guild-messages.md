@@ -146,6 +146,12 @@ channel.sendReserve(Messages.of(
 </tab>
 </tabs>
 
+## 按目的地将普通文本作为 Markdown 发送
+
+自 `4.5.0` 起，可以通过 [Bot 配置文件](component-qq-guild-bot-config.md) 的 `contentAsMarkdownAll` 和 `contentAsMarkdown`，分别为 `CHANNEL`、`DMS`、`GROUP`、`USER` 四种目的地控制普通文本的发送载荷。
+
+启用后，普通 `Text`、文本消息链以及其中的 @、表情等文本内容会写入 Markdown 的 `content`。这不会替代显式构造 `QGMarkdown`：当你需要发送模板 Markdown 或自行指定 Markdown 内容时，仍应使用 `QGMarkdown`。
+
 ## Markdown 消息按钮 {id='message-keyboards'}
 
 自 `4.4.0` 起，群聊和单聊 Markdown 消息按钮使用 `QGKeyboards` / `MessageKeyboards` 表示。
