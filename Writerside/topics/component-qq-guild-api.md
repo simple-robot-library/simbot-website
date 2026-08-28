@@ -68,8 +68,8 @@ QQ群与 `C2C` 单聊发消息。
 - `HttpClient`: 用于发起请求的 Ktor `HttpClient` 对象。
 - `token`: QQ频道API中用于鉴权的客户端 `access_token`。
    它通过API定期刷新，可在 `Bot` 中获取。
-   如果API还支持旧格式，那么可以在[官方文档](https://bot.q.qq.com/wiki/develop/api/)中找到，比如 `Bot 100000.aaaabbbbccccdddd`。
-- `server`: _可选_ 。QQ频道API有正式频道和沙箱频道之分，可通过此参数选择不同的服务器地址。在一些特殊需求下，也可以通过此方式自定义一个第三方服务器地址。
+   如果API还支持旧格式，那么可以在[官方文档](https://bot.q.qq.com/wiki/develop/api-v2/)中找到，比如 `Bot 100000.aaaabbbbccccdddd`。
+- `server`: _可选_ 。默认使用 QQ 开放平台统一接口域名 `https://api.bot.qq.com`；如需使用代理等自定义地址，可通过此参数覆盖。
 - `appId`: _可选_ 。如果提供，会将其添加到请求头 `X-Union-Appid` 中。这是新的 `access_token` 访问方式所要求的。
 
 对 API 的请求在 Kotlin 中以挂起扩展函数提供；

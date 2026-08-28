@@ -44,9 +44,6 @@ val ticket = Bot.Ticket(botId, botSecret, botToken)
 // 构建一个 Bot，并可选地进行一些配置。
 val bot = BotFactory.create(ticket) {
     // 各种配置...
-    // 比如切换服务地址为沙箱频道的服务地址
-    useSandboxServerUrl()
-
     // 指定需要订阅的事件的 intents，默认会订阅：
     // - 频道相关事件
     // - 频道成员相关事件
@@ -107,9 +104,6 @@ var ticket = new Bot.Ticket(botId, botSecret, botToken);
 // 构建一个 Bot，并可选地进行一些配置。
 var bot = BotFactory.create(ticket, config -> {
     // 各种配置...
-    // 比如切换服务地址为沙箱频道的服务地址
-    config.useSandboxServerUrl();
-
     // 指定需要订阅的事件的 intents，默认会订阅：
     // - 频道相关事件
     // - 频道成员相关事件

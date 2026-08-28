@@ -121,14 +121,17 @@ bot开发配置中的 `Token`。
 
 目标服务器地址。默认为 `null`。
 
-当值为特殊值：`"SANDBOX"` 时会选择使用 `QQGuild.SANDBOX_URL_STRING`，
-也就是沙箱服务器地址。
+QQ 开放平台自 `2026-08-10` 起将接口调用域名统一为
+`https://api.bot.qq.com`，不再提供独立的沙箱接口域名。
 
 | 配置值         | 实际值                                   |
 |-------------|---------------------------------------|
-| `null`      | `"https://api.sgroup.qq.com"`         |
+| `null`      | `"https://api.bot.qq.com"`            |
 | `"SANDBOX"` | `"https://sandbox.api.sgroup.qq.com"` |
 | 其他          | 与配置值一致                                |
+
+`"SANDBOX"` 仅为兼容已有配置而保留，现已弃用，使用时会输出警告；
+新配置不应继续使用它。需要使用代理等自定义地址时，直接填写对应 URL。
 
 
 </def>

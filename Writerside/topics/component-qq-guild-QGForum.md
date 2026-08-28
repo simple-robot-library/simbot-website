@@ -29,8 +29,8 @@ val token = "Bot xxx"
 val client = HttpClient()
 
 // 请求的服务器地址
-// 此处为沙箱地址，也可选择正式地址或其他第三方代理地址
-val server = QQGuild.SANDBOX_URL
+// 默认统一正式地址；如有需要也可使用其他第三方代理地址
+val server = QQGuild.URL
 
 val api = GetThreadListApi.create("channel ID")
 val result = api.requestData(client, server, token)
@@ -54,8 +54,8 @@ String token = "Bot xxx";
 HttpClient client = HttpClientJvmKt.HttpClient(config -> Unit.INSTANCE);
 
 // 请求的服务器地址
-// 此处为沙箱地址，也可选择正式地址或其他第三方代理地址
-Url server = QQGuild.SANDBOX_URL;
+// 默认统一正式地址；如有需要也可使用其他第三方代理地址
+Url server = QQGuild.URL;
 
 GetThreadListApi api = GetThreadListApi.create("channel ID");
 CompletableFuture<? extends ThreadListResult> result = ApiRequests.requestDataAsync(api, client, token, server);
@@ -79,8 +79,8 @@ String token = "Bot xxx";
 HttpClient client = HttpClientJvmKt.HttpClient(config -> Unit.INSTANCE);
 
 // 请求的服务器地址
-// 此处为沙箱地址，也可选择正式地址或其他第三方代理地址
-Url server = QQGuild.SANDBOX_URL;
+// 默认统一正式地址；如有需要也可使用其他第三方代理地址
+Url server = QQGuild.URL;
 
 GetThreadListApi api = GetThreadListApi.create("channel ID");
 ThreadListResult result =.requestDataBlocking(api, client, token, server);
@@ -363,7 +363,6 @@ API模块实现了与论坛相关的事件类型，它们的类型（与继承�
 ```kotlin
 // 配置并创建bot
 val bot = BotFactory.create("app id", "sec", "token") {
-    useSandboxServerUrl()
     // 为了示例，增加对 OpenForumsEvent 事件的支持
     intents += EventIntents.OpenForumsEvent.intents
 }
@@ -382,7 +381,6 @@ bot.join()
 
 ```java
 Bot bot = BotFactory.create("appid", "sec", "token", (config) -> {
-        config.useSandboxServerUrl();
         // 追加对 OpenForumsEvent 事件的订阅：OpenForumsEvent 与默认订阅合并
         config.setIntentsValue(
                 config.getIntentsValue() | EventIntents.OpenForumsEvent.getIntents()
@@ -401,7 +399,6 @@ bot.startAsync().thenCompose((v) -> bot.joinAsync()).join();
 
 ```java
 Bot bot = BotFactory.create("appid", "sec", "token", (config) -> {
-        config.useSandboxServerUrl();
         // 追加对 OpenForumsEvent 事件的订阅：OpenForumsEvent 与默认订阅合并
         config.setIntentsValue(
                 config.getIntentsValue() | EventIntents.OpenForumsEvent.getIntents()
@@ -485,7 +482,6 @@ app.eventDispatcher.apply {
 app.qqGuildBots {
   val bot = register("appid", "sec", "token") {
     botConfig {
-      useSandboxServerUrl()
       // 追加事件订阅
       intents += EventIntents.OpenForumsEvent.intents + EventIntents.ForumsEvent.intents
     }
@@ -521,7 +517,6 @@ var future = Applications.launchApplicationAsync(Simple.INSTANCE, configurer -> 
       if (botManager instanceof QQGuildBotManager qqGuildBotManager) {
         var bot = qqGuildBotManager.register("appid", "sec", "token", (qgBotConfig) -> {
           qgBotConfig.botConfig(botConfig -> {
-            botConfig.useSandboxServerUrl();
             // 追加对 OpenForumsEvent 事件的订阅：OpenForumsEvent 与默认订阅合并
             botConfig.setIntentsValue(
                     botConfig.getIntentsValue() | EventIntents.OpenForumsEvent.getIntents()
@@ -563,7 +558,6 @@ for (var botManager : application.getBotManagers()) {
     if (botManager instanceof QQGuildBotManager qqGuildBotManager) {
         var bot = qqGuildBotManager.register("appid", "sec", "token", (qgBotConfig) -> {
             qgBotConfig.botConfig(botConfig -> {
-                botConfig.useSandboxServerUrl();
                 // 追加对 OpenForumsEvent 事件的订阅：OpenForumsEvent 与默认订阅合并
                 botConfig.setIntentsValue(
                         botConfig.getIntentsValue() | EventIntents.OpenForumsEvent.getIntents()

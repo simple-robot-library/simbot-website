@@ -14,61 +14,15 @@ switcher-label: JavaAPI风格
 
 ## 使用
 
-### 启用沙箱
+### API 服务地址
 
-如果你的机器人尚未发布为正式版，那么你可能需要启用沙箱地址。
+QQ 开放平台自 `2026-08-10` 起将接口调用域名统一为
+`https://api.bot.qq.com`，不再提供独立的沙箱接口域名。
+组件默认使用此统一地址，无需额外配置。
 
-<tabs>
-<tab title="代码配置">
-
-<tabs>
-<tab title="Kotlin" group-key="Kotlin">
-
-```kotlin
-botManager.register("..", "..", "..") {
-    botConfig {
-        // 启用沙箱地址
-        useSandboxServerUrl()
-    }
-}
-```
-
-</tab>
-<tab title="Java" group-key="Java">
-
-```java
-QQGuildBotManager manager = ...;
-botManager.register("..", "..", "..", qgBotConfig -> {
-    qgBotConfig.botConfig(botConfig -> {
-        botConfig.useSandboxServerUrl();
-    });
-});
-```
-
-</tab>
-</tabs>
-
-</tab>
-<tab title="配置文件(在Spring中)">
-
-```json
-{
-  "component": "simbot.qqguild",
-  "ticket": {
-    "appId": "...",
-    "secret": "...",
-    "token": "..."
-  },
-  "config": {
-    "serverUrl": "SANDBOX"
-  }
-}
-```
-
-> 有关配置文件更多内容和属性说明，参考 [](component-qq-guild-bot-config.md) 。
-
-</tab>
-</tabs>
+旧的 `useSandboxServerUrl()` 和配置值 `"SANDBOX"` 仅为兼容已有项目而保留，
+现已弃用，不应在新配置中继续使用。需要使用代理等自定义地址时，
+可通过 `serverUrl` 显式配置。有关配置文件的完整说明，参考 [](component-qq-guild-bot-config.md) 。
 
 ### 事件监听配置
 
@@ -302,8 +256,6 @@ suspend fun Application.configure() {
             // - 频道成员相关事件
             // - 公域消息相关事件
             intents += EventIntents.GroupAndC2CEvent.intents
-            // 比如切换服务地址为沙箱频道的服务地址
-            useSandboxServerUrl()
             // 如果要使用 [[[Webhook|component-qq-guild-Webhook.md]]] 的订阅方式，
             // 通过此属性取消 ws 的连接
             disableWs = true
@@ -892,4 +844,3 @@ public class MyHandles {
 
 </tab>
 </tabs>
-
