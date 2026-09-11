@@ -111,6 +111,11 @@ process<QGGroupMessageCreateEvent> { event ->
 在群消息事件中使用 `content().send(...)` 或 `reply(...)` 时，QQ 平台可能会自动添加 `@目标` 效果。
 </note>
 
+群消息事件的 `messageContent` 自 `5.0` 起支持撤回当前收到的消息，
+而 `content().send(...)` 与 `reply(...)` 返回的消息回执也可以撤回对应的机器人消息。
+消息时效、群成员权限以及不支持场景的处理方式，参见
+[消息撤回](component-qq-guild-messages.md#message-delete)。
+
 ## 上传群聊媒体 {id="upload-media"}
 
 `QGGroup.uploadMedia(...)` 可上传用于向 QQ 群发送的 `QGMedia`。

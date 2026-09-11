@@ -90,6 +90,14 @@ API 模块所有的事件封装类型都在包 `love.forte.simbot.qguild.event` 
 <a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/send-receive/event.html#单聊消息">单聊消息</a>
 触发场景	用户在单聊发送消息给机器人
 
+**自 `5.0` 起**，事件数据还可能提供 `messageType` 和 `messageScene`。
+
+`messageScene` 包含消息来源 `source` 与场景扩展 `ext`；`ext` 是 `key=value` 形式的字符串列表，
+
+自定义菜单开关操作的结果位于其中。
+上游未提供这些字段时，对应值为 `null`。
+
+
 </def>
 <def title="GroupAtMessageCreate" id="love_forte_simbot_qguild_event_GroupAtMessageCreate">
 
@@ -393,8 +401,11 @@ channel相关的事件类型。 `data` 类型为 `EventChannel` 。
 自 <code>4.4.0</code> 开始支持。需要订阅 `EventIntents.Interaction`。
 </note>
 
-互动事件创建时。消息按钮点击回调的 `type` 为 `11`，单聊快捷菜单的 `type` 为 `12`。
-解析后的按钮数据在 `data.resolved.buttonData` 与 `data.resolved.buttonId` 中。
+互动事件创建时。消息按钮点击回调的 `type` 为 `11`，自定义菜单操作的 `type` 为 `12`。
+
+消息按钮的解析数据在 `data.resolved.buttonData` 与 `data.resolved.buttonId` 中。
+
+自定义菜单项的标识在 `data.resolved.featureId` 中。
 
 </def>
 <def title="EventGuildDispatch" id="love_forte_simbot_qguild_event_EventGuildDispatch">
@@ -755,7 +766,7 @@ API 模块事件封装可以使用在 **标准库模块 (stdlib)** 中，使用 
 <def title="QGGroupMsgReceiveEvent">群聊接受机器人主动消息事件</def>
 <def title="QGGroupMemberAddEvent">群成员加入群聊事件，自 <code>4.4.0</code> 开始支持</def>
 <def title="QGGroupMemberRemoveEvent">群成员退出群聊事件，自 <code>4.4.0</code> 开始支持</def>
-<def title="QGInteractionCreateEvent">互动事件创建事件，自 <code>4.4.0</code> 开始支持，可用于处理消息按钮点击回调</def>
+<def title="QGInteractionCreateEvent">互动事件创建事件，自 <code>4.4.0</code> 开始支持，可用于处理消息按钮和自定义菜单操作回调</def>
 <def title="QGC2CMessageCreateEvent">C2C单聊消息事件</def>
 <def title="QGFriendAddEvent">用户添加机器人事件</def>
 <def title="QGFriendDelEvent">用户删除机器人事件</def>
@@ -766,10 +777,21 @@ API 模块事件封装可以使用在 **标准库模块 (stdlib)** 中，使用 
 </def>
 </deflist>
 
+### C2C 消息元数据 {id="c2c-message-metadata"}
+<primary-label ref="P_qg-5.0"/>
+
+自 `5.0` 起，`QGC2CMessageCreateEvent` 暴露原始 C2C 消息中的 `messageType` 与 `messageScene`。
+两个字段都可能为 `null`；`messageScene.source` 表示消息来源，`messageScene.ext` 为场景扩展信息列表，
+其中每项使用 `key=value` 表示。自定义菜单开关操作的结果也会通过 `ext` 提供。
+
 ### 互动事件 {id="interaction-events"}
 
 `QGInteractionCreateEvent` 对应 API 模块事件 `InteractionCreate`。
-收到消息按钮点击回调后，需要回应互动事件，否则客户端按钮会持续处于 loading 状态直到超时。
+收到消息按钮或自定义菜单操作回调后，需要回应互动事件，否则客户端会持续处于 loading 状态直到超时。
+
+当 `event.type` 为 `11` 时，可通过 `event.resolved.buttonData` 和 `event.resolved.buttonId` 读取消息按钮数据；
+当 `event.type` 为 `12` 时，表示 C2C 自定义菜单操作（`event.scene` 为 `c2c`），
+可通过 `event.resolved.featureId` 读取菜单项标识。
 
 <tabs group="code">
 <tab title="Kotlin" group-key="Kotlin">

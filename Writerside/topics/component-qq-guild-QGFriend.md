@@ -90,6 +90,11 @@ friend.sendReserve("你好，这是一条 C2C 单聊消息")
 </tab>
 </tabs>
 
+`send(...)` 或 `reply(...)` 返回的消息回执自 `5.0` 起支持撤回对应的机器人消息。
+QQ 平台只允许撤回机器人发送给用户、且发送时间不超过两分钟的消息；
+相关回执与不支持场景的处理方式，参见
+[消息撤回](component-qq-guild-messages.md#message-delete)。
+
 ## 上传媒体
 
 目前公开了两组上传函数：

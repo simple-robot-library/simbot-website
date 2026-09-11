@@ -146,6 +146,42 @@ channel.sendReserve(Messages.of(
 </tab>
 </tabs>
 
+## 消息撤回 {id='message-delete'}
+<primary-label ref="P_qg-5.0"/>
+
+自 `5.0` 起，QQ 群消息事件的 `messageContent` 也支持撤回当前收到的群消息：
+
+```Kotlin
+process<QGGroupMessageCreateEvent> { event ->
+    event.messageContent.delete()
+}
+```
+
+`QGGroupAtMessageCreateEvent` 的 `messageContent` 也具有相同能力。
+C2C 单聊消息虽然同样提供 `messageContent`，但其中没有可用于撤回的目标消息上下文，
+因此调用 `delete()` 时仍不支持撤回。频道消息使用频道消息撤回接口，具体参见
+[`DeleteChannelMessageApi`](component-qq-guild-api-list.md#love_forte_simbot_qguild_api_message_DeleteChannelMessageApi)；
+旧的 `DeleteMessageApi` 仅为兼容保留。
+
+从 `QGGroup` 或 `QGFriend` 发送、回复消息得到的 `QGMessageReceipt` 会保留目标 OpenID，
+因此可以撤回机器人刚发送的消息。消息链被拆分为多条消息时，聚合回执的 `delete()` 会依次撤回其中的消息：
+
+```Kotlin
+val groupReceipt = group.send("临时提示")
+groupReceipt.delete()
+
+val friendReceipt = friend.send("C2C 临时消息")
+friendReceipt.delete()
+```
+
+群消息与 C2C 单聊消息通常只能撤回发送时间不超过两分钟的消息。
+群管理员可以撤回机器人自身和普通成员的消息，普通成员只能撤回机器人自身发送的消息；
+C2C 单聊撤回接口只能撤回机器人发送给用户的消息。
+
+如果当前实现没有撤回上下文，默认会抛出 `UnsupportedOperationException`；
+可以传入 `StandardDeleteOption.IGNORE_ON_UNSUPPORTED` 忽略不支持的场景。
+QQ 服务端拒绝撤回时默认继续抛出异常，也可以使用 `StandardDeleteOption.IGNORE_ON_FAILURE` 忽略失败。
+
 ## 按目的地将普通文本作为 Markdown 发送
 
 自 `4.5.0` 起，可以通过 [Bot 配置文件](component-qq-guild-bot-config.md) 的 `contentAsMarkdownAll` 和 `contentAsMarkdown`，分别为 `CHANNEL`、`DMS`、`GROUP`、`USER` 四种目的地控制普通文本的发送载荷。

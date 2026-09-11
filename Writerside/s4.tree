@@ -90,6 +90,7 @@
                     <toc-element topic="component-qq-guild-QGFriend.md"/>
                 </toc-element>
                 <toc-element topic="component-qq-guild-ApiPermission.md"/>
+                <toc-element topic="component-qq-guild-menu-panel.md"/>
                 <toc-element topic="component-qq-guild-messages.md">
                     <toc-element topic="component-qq-guild-messages-tips-send-image.md"/>
                     <toc-element topic="component-qq-guild-messages-embed.md"/>

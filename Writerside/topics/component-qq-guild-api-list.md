@@ -530,10 +530,30 @@
 
 <a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api/openapi/message/delete_message.html">撤回消息</a>
 
+> 此类型已废弃，请使用 `DeleteChannelMessageApi`。
+{style="warning"}
+
 用于撤回子频道 `channel_id` 下的消息 `message_id`。
 
 - 管理员可以撤回普通成员的消息。
 - 频道主可以撤回所有人的消息。
+
+
+
+</def>
+<def title="DeleteChannelMessageApi" id="love_forte_simbot_qguild_api_message_DeleteChannelMessageApi">
+
+`love.forte.simbot.qguild.api.message.DeleteChannelMessageApi`
+
+<a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api/openapi/message/delete_message.html">撤回频道消息</a>
+
+用于撤回子频道 `channel_id` 下的消息 `message_id`。
+
+- 管理员可以撤回普通成员的消息。
+- 频道主可以撤回所有人的消息。
+- 可选参数 `hidetip` 用于控制是否隐藏提示小灰条。
+
+自 `5.0` 起提供。原 `DeleteMessageApi` 保留用于兼容已有代码。
 
 
 
@@ -793,13 +813,136 @@ var userApi = UserMessageSendApi.createMarkdown(
 
 
 </def>
+<def title="GroupMessageDeleteApi" id="love_forte_simbot_qguild_api_message_group_GroupMessageDeleteApi">
+
+`love.forte.simbot.qguild.api.message.group.GroupMessageDeleteApi`
+
+<a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_messages_message_id.delete.html">撤回群聊消息</a>
+
+> 自 `v5.0` 起提供。
+
+用于撤回群 `group_openid` 中的消息 `message_id`。发送超过两分钟的消息不可撤回。
+群管理员可撤回机器人自身和普通群成员的消息；普通成员只能撤回机器人自身发送的消息。
+
+
+
+
+</def>
+<def title="GetCustomMenuApi" id="love_forte_simbot_qguild_api_menu_GetCustomMenuApi">
+
+`love.forte.simbot.qguild.api.menu.GetCustomMenuApi`
+
+<a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/menu-panel/menu/get.html">获取自定义菜单</a>
+
+> 自 `5.0` 起提供。
+
+获取 C2C 单聊窗口底部当前生效的全局自定义菜单。返回结果包含菜单版本；从未设置菜单时菜单内容为空。
+
+
+
+
+</def>
+<def title="ModifyCustomMenuApi" id="love_forte_simbot_qguild_api_menu_ModifyCustomMenuApi">
+
+`love.forte.simbot.qguild.api.menu.ModifyCustomMenuApi`
+
+<a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/menu-panel/menu/put.html">设置自定义菜单</a>
+
+> 自 `5.0` 起提供。
+
+整体覆盖当前 C2C 自定义菜单配置，并返回更新后的菜单版本。组件不会在本地校验菜单类型与字段组合。
+
+
+
+
+</def>
+<def title="CreateCommandPanelApi" id="love_forte_simbot_qguild_api_panel_CreateCommandPanelApi">
+
+`love.forte.simbot.qguild.api.panel.CreateCommandPanelApi`
+
+<a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/menu-panel/panel/post.html">创建指令面板</a>
+
+> 自 `5.0` 起提供。
+
+创建一个在指定会话场景中生效的指令面板。创建结果只返回新面板 ID。
+
+
+
+
+</def>
+<def title="DeleteCommandPanelApi" id="love_forte_simbot_qguild_api_panel_DeleteCommandPanelApi">
+
+`love.forte.simbot.qguild.api.panel.DeleteCommandPanelApi`
+
+<a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/menu-panel/panel/delete.html">删除指令面板</a>
+
+> 自 `5.0` 起提供。
+
+根据 `panel_id` 删除指令面板。
+
+
+
+
+</def>
+<def title="GetCommandPanelApi" id="love_forte_simbot_qguild_api_panel_GetCommandPanelApi">
+
+`love.forte.simbot.qguild.api.panel.GetCommandPanelApi`
+
+<a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/menu-panel/panel/get.html">获取指令面板详情</a>
+
+> 自 `5.0` 起提供。
+
+根据 `panel_id` 获取指令面板详情。
+
+
+
+
+</def>
+<def title="GetCommandPanelListApi" id="love_forte_simbot_qguild_api_panel_GetCommandPanelListApi">
+
+`love.forte.simbot.qguild.api.panel.GetCommandPanelListApi`
+
+<a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/menu-panel/panel/get-list.html">获取指令面板列表</a>
+
+> 自 `5.0` 起提供。
+
+按 `scope` 查询指令面板列表，支持使用 `cursor` 和 `limit` 分页。首次请求不传游标，后续请求使用响应中的 `next_cursor`。
+`limit` 默认 20，最大 50。
+
+
+</def>
+<def title="ModifyCommandPanelApi" id="love_forte_simbot_qguild_api_panel_ModifyCommandPanelApi">
+
+`love.forte.simbot.qguild.api.panel.ModifyCommandPanelApi`
+
+<a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/menu-panel/panel/put.html">修改指令面板</a>
+
+> 自 `5.0` 起提供。
+
+整体覆盖面板元素与备注，不修改面板关联对象，并返回更新后的面板版本。
+
+
+</def>
+<def title="ModifyCommandPanelTargetApi" id="love_forte_simbot_qguild_api_panel_ModifyCommandPanelTargetApi">
+
+`love.forte.simbot.qguild.api.panel.ModifyCommandPanelTargetApi`
+
+<a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/menu-panel/panel/put-target.html">修改指令面板关联对象</a>
+
+> 自 `5.0` 起提供。
+
+向指令面板添加或删除关联的 C2C 用户或 QQ 群目标。操作类型使用 `add` 或 `del`。
+
+</def>
 <def title="InteractionResponseApi" id="love_forte_simbot_qguild_api_interaction_InteractionResponseApi">
 
 `love.forte.simbot.qguild.api.interaction.InteractionResponseApi`
 
 <a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/trans/msg-btn.html#点击回调按钮">回应互动事件</a>
 
-自 `4.4.0` 起支持。用于回应 `INTERACTION_CREATE` 互动事件，例如消息按钮点击回调。
+> 自 `4.4.0` 起支持。
+
+用于回应 `INTERACTION_CREATE` 互动事件，例如消息按钮或自定义菜单操作回调。
 
 响应码常量：
 
@@ -852,6 +995,18 @@ var api = InteractionResponseApi.create(
 
 单独发动消息给用户。
 
+
+
+</def>
+<def title="UserMessageDeleteApi" id="love_forte_simbot_qguild_api_message_user_UserMessageDeleteApi">
+
+`love.forte.simbot.qguild.api.message.user.UserMessageDeleteApi`
+
+<a ignore-vars="true" href="https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_users_user_openid_messages_message_id.delete.html">撤回单聊消息</a>
+
+> 自 `5.0` 起提供。
+
+用于撤回机器人发送给用户 `user_openid` 的消息 `message_id`。发送超过两分钟的消息不可撤回。
 
 
 </def>

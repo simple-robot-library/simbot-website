@@ -682,6 +682,14 @@ app.joinBlocking();
 </tab>
 </tabs>
 
+### 自定义菜单与指令面板 {id='qgbot-menu-panel'}
+<primary-label ref="P_qg-5.0"/>
+
+自 `5.0` 起，`QGBot` 还提供 `customMenus` 与 `commandPanels` 管理器，
+分别用于 C2C 全局自定义菜单和 C2C、QQ群、频道及频道私信场景的指令面板。
+详细的模型、分页查询、目标关联与互动事件处理方式，参见
+[自定义菜单与指令面板](component-qq-guild-menu-panel.md)。
+
 ### 频道操作 {id='qgbot-guild'}
 
 对频道 (`QGGuild`) 以及之下的子频道(`QGChannel`)、频道成员(`QGMember`) 的操作，

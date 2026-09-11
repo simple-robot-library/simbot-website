@@ -53,6 +53,23 @@ API 模块 `simbot-component-qq-guild-api` 中。
 QQ群与 `C2C` 单聊发消息。
 
 </def>
+<def title="DeleteChannelMessageApi / GroupMessageDeleteApi / UserMessageDeleteApi">
+
+> 自 `5.0` 起废弃，请使用 `DeleteChannelMessageApi`。
+{style="warning"}
+
+分别用于撤回频道、QQ群和 C2C 单聊中的消息。
+`DeleteMessageApi` 是频道消息撤回的旧名称。
+
+</def>
+<def title="CustomMenu 与 CommandPanel API">
+
+> 自 `5.0` 起
+
+API 模块提供 C2C 自定义菜单和多场景指令面板的模型与请求类型。
+详细说明请参考 [](component-qq-guild-menu-panel.md) 和 <a href="component-qq-guild-api-list.md">API 类型总览</a>。
+
+</def>
 </deflist>
 
 ## 使用API
