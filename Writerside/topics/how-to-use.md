@@ -1,7 +1,7 @@
 # 开始使用
 
 <tldr>
-本章节介绍开始使用 simbot4 的基本步骤。
+本章节介绍开始使用 simbot 的基本步骤。
 </tldr>
 
 <procedure>
@@ -16,7 +16,7 @@
 
 ### 官方实现
 
-simbot4 提供了两个这样的库：`simbot-core`（也就是 **“核心库”**）和 Spring Boot 的 starter 实现。
+simbot 提供了两个这样的库：`simbot-core`（也就是 **“核心库”**）和 Spring Boot 的 starter 实现。
 
 <list>
 <li>

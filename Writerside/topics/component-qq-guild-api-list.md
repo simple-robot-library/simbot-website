@@ -5,6 +5,43 @@
 > 对于一个具体的API的详细说明，我们建议你前往 [API 文档](https://docs.simbot.forte.love/) 或源码注释查阅，
 > 因为那是最贴合真实情况且最全面的。
 
+## 群管理
+
+<secondary-label ref="since-5.0"/>
+
+以下 API 位于 `love.forte.simbot.qguild.api.group`。
+平台权限或网络请求失败时抛出相应异常；核心组件中的操作入口参见 [](component-qq-guild-QGGroup.md)。
+
+### GetGroupInfoApi {id="love_forte_simbot_qguild_api_group_GetGroupInfoApi"}
+
+查询指定 QQ 群的基本信息，返回 `GroupInfo`，包括群名称、简介、分类、标签和成员人数。
+
+### GetGroupBotStateApi {id="love_forte_simbot_qguild_api_group_GetGroupBotStateApi"}
+
+查询机器人在指定群内的 `GroupBotState`，包括群成员 OpenID、角色、加入时间、
+主动消息开关和消息接收设置。
+
+### GetGroupJoinRequestListApi {id="love_forte_simbot_qguild_api_group_GetGroupJoinRequestListApi"}
+
+按游标查询入群申请，返回 `GroupJoinRequestPage`。
+申请中包含申请 ID、成员 OpenID、昵称、申请时间、来源和验证信息等字段。
+
+### ApproveGroupJoinRequestApi {id="love_forte_simbot_qguild_api_group_ApproveGroupJoinRequestApi"}
+
+审批指定成员的入群申请。请求中可携带申请 ID、接受或拒绝结果、拒绝理由，
+以及拒绝时是否加入群黑名单的设置。
+
+### GetGroupMuteSettingApi {id="love_forte_simbot_qguild_api_group_GetGroupMuteSettingApi"}
+
+查询群禁言信息，返回 `GroupMuteSetting`，包含全员禁言模式、定时规则、周期规则和成员单独禁言记录。
+
+### SetGroupMuteSettingApi {id="love_forte_simbot_qguild_api_group_SetGroupMuteSettingApi"}
+
+提交成员禁言设置，成员禁言变更使用 `SetMemberMuteState` 表示，支持增加、更新和解除。
+核心组件的 `setMemberMutes(...)` 提供批量操作入口。
+
+## 其他 API
+
 <deflist>
 <def title="GatewayApis" id="love_forte_simbot_qguild_api_GatewayApis">
 

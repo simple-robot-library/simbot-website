@@ -10,14 +10,14 @@ switcher-label: JavaAPI风格
 
 ## API?
 
-在 API 模块 (`simbot-component-qq-guild-api`) 中，你可能找不到太多有关 `Bot` 的身影。
+在 API 模块 (`simbot-component-qq-api`) 中，你可能找不到太多有关 `Bot` 的身影。
 毕竟 API 模块仅是针对QQ频道中的 API 的封装与实现，本身是不包括对 `Bot` 的描述的。
 
 ## 标准库 Bot {id='stdlib-bot' collapsible="true" default-state="collapsed"}
 
 <include from="refers.md" element-id="qg-stdlib-will-be-removed" />
 
-在标准库模块 (`simbot-component-qq-guild-stdlib`) 中，
+在标准库模块 (`simbot-component-qq-stdlib`) 中，
 你可以发现一个类型 `love.forte.simbot.qguild.Bot`，它便是对一个**QQ频道机器人**的描述，
 可以用来订阅并处理事件等。
 
@@ -329,7 +329,7 @@ bot.cancel(reason); // 或可以提供一个 Throwable reason
 
 ## 组件库 QGBot
 
-当你在配合 simbot 使用组件库(`simbot-component-qq-guild-core`)的时候，
+当你在配合 simbot 使用组件库(`simbot-component-qq-core`)的时候，
 你可能会更需要了解 `love.forte.simbot.component.qguild.bot.QGBot`。
 它是作为一个 simbot 组件库的 `Bot` 的实现
 (simbot标准API中的 `Bot` 接口，不是上面提到的 stdlib bot)。
@@ -683,12 +683,21 @@ app.joinBlocking();
 </tabs>
 
 ### 自定义菜单与指令面板 {id='qgbot-menu-panel'}
-<primary-label ref="P_qg-5.0"/>
+<secondary-label ref="since-5.0"/>
 
-自 `5.0` 起，`QGBot` 还提供 `customMenus` 与 `commandPanels` 管理器，
+`QGBot` 提供 `customMenus` 与 `commandPanels` 管理器，
 分别用于 C2C 全局自定义菜单和 C2C、QQ群、频道及频道私信场景的指令面板。
 详细的模型、分页查询、目标关联与互动事件处理方式，参见
 [自定义菜单与指令面板](component-qq-guild-menu-panel.md)。
+
+### QQ 群管理 {id="qgbot-group"}
+
+<secondary-label ref="since-5.0"/>
+
+通过 `groupRelation` 查询群资料、机器人在群内的状态、入群申请与禁言信息，
+也可以审批申请和操作成员禁言。
+`groupRelation.group(id)` 仍只根据 OpenID 包装为 `QGGroup`，不校验目标是否存在。
+详细说明见 [](component-qq-guild-QGGroup.md)。
 
 ### 频道操作 {id='qgbot-guild'}
 

@@ -6,7 +6,7 @@ switcher-label: JavaAPI风格
 
 <tldr>
 
-在 JVM 平台下使用 Spring Boot 2 配合 simbot4 进行
+在 JVM 平台下使用 Spring Boot 2 配合 simbot 进行
 <control>兼容集成</control> 。
 
 </tldr>

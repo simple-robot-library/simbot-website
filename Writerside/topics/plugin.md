@@ -13,7 +13,22 @@ public interface Plugin
 
 是的, `Plugin` 接口的定义**没有任何约束**, 因此 `Plugin` 可以由实现者自由定义。
 
+## 可取消插件 {id="cancellable-plugin"}
+
+<secondary-label ref="since-5.0"/>
+
+`CancellablePlugin` 描述可取消的插件，提供 `isActive`、`isCanceled` 和 `cancel(cause)`。
+
+调用 `cancel(cause)` 后，`isActive` 应立即变为 `false`，插件开始停止工作、取消子任务并释放资源。
+取消流程完成后，`isCanceled` 变为 `true`。
+`cancel` 应支持重复调用，并尽可能快速、避免阻塞。
+
+取消后的插件不能恢复活跃状态；继续调用会产生副作用的操作时，应抛出 `PluginAlreadyCancelledException`。
+原有的 `CloseablePlugin` 已移除，实现方应使用 `CancellablePlugin` 描述取消行为。
+
 ## 使用插件
+
+插件的安装与配置由 `PluginFactory` 完成，插件本身通过 `Plugin` 接口描述。
 
 插件用于构建 `Application` 的过程中, 注册后根据 `Application` 对其工厂所提供的各种信息来实现其功能。
 

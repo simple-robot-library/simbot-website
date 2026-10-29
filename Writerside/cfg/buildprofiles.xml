@@ -53,7 +53,7 @@
             <noindex-content>false</noindex-content>
         </variables>
         <sitemap priority="0.45" change-frequency="weekly" />
-        <llms-txt />
+        <llms-txt>true</llms-txt>
     </build-profile>
 
     <footer>

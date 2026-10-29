@@ -284,3 +284,13 @@ bot.startReserve()
 ### 额外扩展
 
 `Bot` 的具体实现可能会根据平台的实际情况提供更多额外的、专属的API。
+
+## 实现 Bot
+
+<secondary-label ref="changed-5.0"/>
+
+实现或继承 `Bot`、`JobBasedBot` 等类型需要明确选择加入 `InheritanceBotApi`。
+该标记用于继承方，使用已有 Bot 的调用方不受影响。
+组件库也可能提供自己的继承限制标记。
+
+更多实现说明参见 [](component-dev-impl-bot-and-manager-impl-bot.md)。

@@ -6,14 +6,14 @@ switcher-label: JavaAPI风格
 
 <tldr>
 
-本页用于从模块层面快速理解 simbot4 的生态：
+本页用于从模块层面快速理解 simbot 的生态：
 标准 API、核心实现、公共库、扩展库，以及官方组件库分别负责什么。
 
 </tldr>
 
 ## 分层理解
 
-从使用视角看，simbot4 的模块通常可以分为下面几层：
+从使用视角看，simbot 的模块通常可以分为下面几层：
 
 <list type="decimal">
 <li>
@@ -52,8 +52,8 @@ switcher-label: JavaAPI风格
 
 组件库
 
-平台能力由组件库提供。官方组件通常都在各自独立仓库维护与发布，
-这里只按它们的模块结构介绍职责边界。
+平台能力由组件库提供。自 `5.0` 起，QQ、KOOK、OneBot 组件在主仓库中维护，
+随标准库统一版本发布。
 
 </li>
 </list>
@@ -126,6 +126,9 @@ Spring Boot 2 Starter。
 - `Services`
 - 文本、弱引用、属性容器等
 
+> 自 `5.0` 起还提供 `Dispatchers.IOOrUnconfined`：JVM、Native 使用 `Dispatchers.IO`，
+> 其他平台使用 `Dispatchers.Unconfined`；`runCatchingCancellable(...)` 在捕获其他异常的同时继续传播 `CancellationException`。
+
 </def>
 <def title="simbot-common-time">
 
@@ -133,6 +136,9 @@ Spring Boot 2 Starter。
 
 - `Timestamp`
 - 多平台时间实现
+
+> 自 `5.0` 起，这些时间类型从 `simbot-common-core` 迁入本模块，包名保持不变，
+> 并新增基于 `kotlin.time.Instant` 的 `StandardInstantTimestamp`。参见 [](basic-timestamp.md)。
 
 </def>
 <def title="simbot-common-collection">
@@ -216,30 +222,40 @@ Java 友好桥接相关支持。
 
 ## 官方组件库
 
-官方组件一般各自独立发版。
+<secondary-label ref="changed-5.0"/>
+
+以下 QQ、KOOK、OneBot 模块统一使用版本 `%version%`。
+
 普通应用开发者最常直接依赖的是它们的 `*-core` 模块。
 
 ### QQ 组件
 
-仓库：`simple-robot/simbot-component-qq-guild`
+源码目录：[simbot-component-qq](https://github.com/simple-robot/simpler-robot/tree/dev/simbot-component-qq)
 
 <deflist>
-<def title="simbot-component-qq-guild-api">
+<def title="simbot-component-qq-common">
+
+> since 5.0
+
+共享常量、模型标记与选择加入注解，例如 `QQ`、`ApiModel`、`QGInternalInheritanceApi`。
+
+</def>
+<def title="simbot-component-qq-api">
 
 QQ 机器人官方 API 的底层封装。
 
 </def>
-<def title="simbot-component-qq-guild-stdlib">
+<def title="simbot-component-qq-stdlib">
 
 基于 API 的低限度 Bot 实现与事件处理支持。
 
 </def>
-<def title="simbot-component-qq-guild-core">
+<def title="simbot-component-qq-core">
 
 真正作为 simbot 组件使用的核心模块，通常也是普通开发者应直接使用的模块。
 
 </def>
-<def title="simbot-component-qq-guild-internal-ed25519">
+<def title="simbot-component-qq-internal-ed25519">
 
 内部签名支持模块，一般无需直接使用。
 
@@ -248,7 +264,7 @@ QQ 机器人官方 API 的底层封装。
 
 ### KOOK 组件
 
-仓库：`simple-robot/simbot-component-kook`
+源码目录：[simbot-component-kook](https://github.com/simple-robot/simpler-robot/tree/dev/simbot-component-kook)
 
 <deflist>
 <def title="simbot-component-kook-api">
@@ -270,7 +286,7 @@ Bot 基础实现与事件处理支持。
 
 ### OneBot 组件
 
-仓库：`simple-robot/simbot-component-onebot`
+源码目录：[simbot-component-onebot](https://github.com/simple-robot/simpler-robot/tree/dev/simbot-component-onebot)
 
 <deflist>
 <def title="simbot-component-onebot-common">
@@ -302,9 +318,7 @@ OneBot v11 的核心组件实现，也是普通开发者最常用的模块。
 
 ### Telegram 与 Discord
 
-它们仍属于早期或预告性质的组件页。
-如果没有明确的源码模块、`Module.md`、构建脚本与 API 定义作为依据，
-则应当把它们视为占位入口，而不是已经完整可用的官方组件实现说明。
+Telegram 与 Discord 仍处于开发或预告阶段。
 
 ## 如何选模块
 

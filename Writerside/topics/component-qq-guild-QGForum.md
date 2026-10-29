@@ -30,7 +30,7 @@ val client = HttpClient()
 
 // 请求的服务器地址
 // 默认统一正式地址；如有需要也可使用其他第三方代理地址
-val server = QQGuild.URL
+val server = Url(QQ.URL)
 
 val api = GetThreadListApi.create("channel ID")
 val result = api.requestData(client, server, token)
@@ -55,7 +55,7 @@ HttpClient client = HttpClientJvmKt.HttpClient(config -> Unit.INSTANCE);
 
 // 请求的服务器地址
 // 默认统一正式地址；如有需要也可使用其他第三方代理地址
-Url server = QQGuild.URL;
+Url server = URLUtilsKt.Url(QQ.URL);
 
 GetThreadListApi api = GetThreadListApi.create("channel ID");
 CompletableFuture<? extends ThreadListResult> result = ApiRequests.requestDataAsync(api, client, token, server);
@@ -80,10 +80,10 @@ HttpClient client = HttpClientJvmKt.HttpClient(config -> Unit.INSTANCE);
 
 // 请求的服务器地址
 // 默认统一正式地址；如有需要也可使用其他第三方代理地址
-Url server = QQGuild.URL;
+Url server = URLUtilsKt.Url(QQ.URL);
 
 GetThreadListApi api = GetThreadListApi.create("channel ID");
-ThreadListResult result =.requestDataBlocking(api, client, token, server);
+ThreadListResult result = ApiRequests.requestDataBlocking(api, client, token, server);
 
 for (Thread thread : result.getThreads()) {
 // 遍历结果

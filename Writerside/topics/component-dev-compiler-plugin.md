@@ -29,9 +29,9 @@ plugins {
 
 ### 安装 simbot 编译器插件辅助库
 
-在你 Gradle 项目的 `buildSrc/build.gradle(.kts)` 中添加 simbot4 提供的辅助模块: `simbot-gradle-suspendtransforms`。
+在你 Gradle 项目的 `buildSrc/build.gradle(.kts)` 中添加 simbot 提供的辅助模块: `simbot-gradle-suspendtransforms`。
 
-> 暂时没有将它直接作为 Gradle 插件, 因此目前只能在 `buildSrc` 中添加。未来也许会直接作为一个 Gradle Plugin 提供。
+也可以将它添加到 `build-logic` 等 included build 中，在构建逻辑中复用。
 
 ```Kotlin
 implementation("love.forte.simbot.gradle:simbot-gradle-suspendtransforms:%version%")
@@ -40,33 +40,33 @@ implementation("love.forte.simbot.gradle:simbot-gradle-suspendtransforms:%versio
 ### 配置编译器插件
 
 ```Kotlin
+import love.forte.simbot.gradle.suspendtransforms.addSimbotJvmTransforms
+
 // 配置编译器插件
-suspendTransform {
+suspendTransformPlugin {
     // runtime 和 注解都由 simbot 标准库定制，不需要添加
     includeRuntime = false
     includeAnnotation = false
     
-    // SuspendTransforms 以及它的这些信息都是辅助模块 `simbot-gradle-suspendtransforms` 提供的。
-    addJvmTransformers(
-        // @JvmBlocking
-        SuspendTransforms.jvmBlockingTransformer,
-        // @JvmAsync
-        SuspendTransforms.jvmAsyncTransformer,
-
-        // @JvmSuspendTrans
-        SuspendTransforms.suspendTransTransformerForJvmBlocking,
-        SuspendTransforms.suspendTransTransformerForJvmAsync,
-        SuspendTransforms.suspendTransTransformerForJvmReserve,
-
-        // @JvmSuspendTransProperty
-        SuspendTransforms.jvmSuspendTransPropTransformerForBlocking,
-        SuspendTransforms.jvmSuspendTransPropTransformerForAsync,
-        SuspendTransforms.jvmSuspendTransPropTransformerForReserve,
-    )
+    // 使用 simbot 的注解与运行时配置 JVM 桥接。
+    addSimbotJvmTransforms()
 }
 ```
 
+旧的 `suspendTransform { ... }` / `addSimbotJvmTransformers()` 配置入口已废弃，
+应迁移到上面的 `suspendTransformPlugin` 与 `addSimbotJvmTransforms()`。
+
 ## 使用
+
+### 响应式桥接
+
+<primary-label ref="experimental"/>
+<secondary-label ref="since-5.0"/>
+
+`addSimbotJvmTransforms()` 的配置包含响应式转换器，
+为 `@ST` / `@STP` 生成返回 `org.reactivestreams.Publisher` 的桥接方法。
+标准 API 生成的响应式方法使用 `ExperimentalReactiveBridgingApi` 标记，
+调用示例见 [](java-friendly.md#reactive-bridging)。
 
 ### 标记注解
 目前, 编译器插件的标记注解有两个：
@@ -197,7 +197,7 @@ interface Foo {
 
 ### 实现挂起函数时
 
-当你实现 `Event`、`Bot` 等 simbot4 标准库中具有挂起函数的类型时，它们基本上都已经通过此插件做了转化。
+当你实现 `Event`、`Bot` 等 simbot 标准库中具有挂起函数的类型时，它们基本上都已经通过此插件做了转化。
 
 你需要观察：
 

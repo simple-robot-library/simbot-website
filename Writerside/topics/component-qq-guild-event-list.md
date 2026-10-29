@@ -3,7 +3,7 @@
 QQ频道组件中的**事件类型**包含两个层面：
 
 1. **API 模块** 中，对 QQ频道 API 中官方定义的事件结构的基本封装与实现。
-2. **核心模块** 中，基于 API 模块中的事件封装，对 simbot4 标准库中的 `Event` 事件类型的实现。
+2. **核心模块** 中，基于 API 模块中的事件封装，对 simbot 标准库中的 `Event` 事件类型的实现。
 
 
 ## API 模块事件封装 {id="api-events"}
@@ -12,6 +12,10 @@ API 模块所有的事件封装类型都在包 `love.forte.simbot.qguild.event` 
 并且基本上命名与官网API中的事件类型名称有一定关联。
 
 所有事件封装类型均继承密封类 `love.forte.simbot.qguild.event.Signal.Dispatch`。
+
+> 自 `5.0` 起，`GroupAtMessageCreate.Data.author` 与 `GroupMessageCreate.Data.author`
+> 在 `memberOpenid`、`memberRole`、`bot` 之外，补充 `id`、`username`、`unionOpenid` 和 `unionUserAccount`。
+> 核心组件仍使用群成员 OpenID 作为 `QGGroupAuthor.id`，昵称由 `name` 提供。
 
 <deflist>
 <def title="Ready" id="love_forte_simbot_qguild_event_Ready">
@@ -718,7 +722,7 @@ API 模块事件封装可以使用在 **标准库模块 (stdlib)** 中，使用 
 
 ## 组件模块的标准 Event 实现 {id="component-events"}
 
-使用核心库，可以在 simbot4 的 `Application` 或 Spring Boot 中使用这些事件类型实现。
+使用核心库，可以在 simbot 的 `Application` 或 Spring Boot 中使用这些事件类型实现。
 
 核心模块所有的 simbot Event 实现类型定义都在包 `love.forte.simbot.component.qguild.event` 中。
 
@@ -778,9 +782,9 @@ API 模块事件封装可以使用在 **标准库模块 (stdlib)** 中，使用 
 </deflist>
 
 ### C2C 消息元数据 {id="c2c-message-metadata"}
-<primary-label ref="P_qg-5.0"/>
+<secondary-label ref="since-5.0"/>
 
-自 `5.0` 起，`QGC2CMessageCreateEvent` 暴露原始 C2C 消息中的 `messageType` 与 `messageScene`。
+`QGC2CMessageCreateEvent` 暴露原始 C2C 消息中的 `messageType` 与 `messageScene`。
 两个字段都可能为 `null`；`messageScene.source` 表示消息来源，`messageScene.ext` 为场景扩展信息列表，
 其中每项使用 `key=value` 表示。自定义菜单开关操作的结果也会通过 `ext` 提供。
 

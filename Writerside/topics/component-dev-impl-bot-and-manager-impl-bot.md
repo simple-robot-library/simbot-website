@@ -37,13 +37,18 @@
 
 ### 定义 FooBot 接口 {id="def-bot-interface"}
 
+<secondary-label ref="changed-5.0"/>
+
 > 我们建议将接口的定义与实际的实现分开，并且仅对外暴露接口类型。
 >
 > 当然，这并非强制的，你也可以选择跳过接口定义这一环，直接编写实现类。
 
 首先，定义接口 `FooBot` 并实现 `Bot`:
 
+继承 `Bot` 需要选择加入 `InheritanceBotApi`。
+
 ```Kotlin
+@OptIn(InheritanceBotApi::class)
 interface FooBot : Bot {
     // 1️⃣
     override val coroutineContext: CoroutineContext

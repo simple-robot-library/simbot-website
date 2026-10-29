@@ -200,11 +200,11 @@ BotRequests.requestDataByReserve(api, bot)
 </tab>
 </tabs>
 
-### 在组件库配合simbot4核心库时使用
+### 在组件库配合simbot核心库时使用
 
 <warning>
 
-虽然在使用组件库配合simbot4核心库时，我们更建议你使用 **消息元素** (
+虽然在使用组件库配合simbot核心库时，我们更建议你使用 **消息元素** (
 可参考
 <a href="component-kook-message-element.md" />
 )，而不是直接使用原始的API类型发送消息，但凡事都有例外。

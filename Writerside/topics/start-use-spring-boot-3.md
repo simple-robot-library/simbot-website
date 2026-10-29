@@ -2,7 +2,7 @@
 
 <tldr>
 
-在 JVM 平台下使用 Spring Boot 配合 simbot4 进行
+在 JVM 平台下使用 Spring Boot 配合 simbot 进行
 <control>快速开发</control> 。
 
 </tldr>

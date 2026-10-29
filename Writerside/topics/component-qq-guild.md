@@ -1,12 +1,12 @@
 # QQ机器人
 
-<a href="https://github.com/simple-robot/simbot-component-qq-guild/releases/latest">
-<img alt="release" src="https://img.shields.io/github/v/release/simple-robot/simbot-component-qq-guild" />
+<a href="https://github.com/simple-robot/simpler-robot/releases">
+<img alt="release" src="https://img.shields.io/github/v/release/simple-robot/simpler-robot?include_prereleases" />
 </a>
 
 <seealso>
 <category ref="links">
-<a href="https://github.com/simple-robot/simbot-component-qq-guild">QQ机器人组件仓库</a>
+<a href="https://github.com/simple-robot/simpler-robot/tree/dev/simbot-component-qq">QQ机器人组件源码</a>
 <a href="https://ktor.io/">Ktor首页</a>
 <a href="https://bot.q.qq.com/wiki/develop/api-v2/">QQ机器人开放平台</a>
 </category>
@@ -21,15 +21,15 @@
 QQ 组件主要分成三个层次：
 
 <list>
-<li><control>simbot-component-qq-guild-api</control>
+<li><control>simbot-component-qq-api</control>
 
 对 QQ 开放平台 API、模型、网关事件体的原始封装。
 </li>
-<li><control>simbot-component-qq-guild-stdlib</control>
+<li><control>simbot-component-qq-stdlib</control>
 
 在 API 之上提供较低封装的 Bot、鉴权与事件接收实现。
 </li>
-<li><control>simbot-component-qq-guild-core</control>
+<li><control>simbot-component-qq-core</control>
 
 面向 simbot 的组件实现，也是大多数业务项目真正直接依赖的模块。
 </li>
@@ -43,6 +43,7 @@ QQ 组件主要分成三个层次：
 - QQ群与 `C2C` 单聊能力
 - 频道、QQ群与 C2C 消息撤回 API（自 `5.0` 起补充群聊与单聊支持）
 - C2C 自定义菜单与多场景指令面板管理（自 `5.0` 起）
+- 群基础信息、机器人群内状态、入群申请管理和成员禁言（自 `5.0` 起）
 
 其中 QQ 群与 `C2C` 单聊能力自 `4.0.0-beta6` 起加入。
 更细粒度的事件与对象范围，请以 <a href="component-qq-guild-event-list.md">事件列表</a> 和相邻对象章节为准。
@@ -50,49 +51,30 @@ QQ 组件主要分成三个层次：
 > 序列化和网络请求相关分别基于 [Kotlin serialization](https://github.com/Kotlin/kotlinx.serialization)
 > 和 [Ktor](https://ktor.io/).
 
-- 前往**QQ机器人组件**的 [ GitHub 仓库](https://github.com/simple-robot/simbot-component-qq-guild)
+- 前往**QQ机器人组件**的 [源码目录](https://github.com/simple-robot/simpler-robot/tree/dev/simbot-component-qq)
 
 ## 模块
 
-QQ 组件主要分为下面几层：
+<secondary-label ref="changed-5.0"/>
 
-<deflist>
-<def title="simbot-component-qq-guild-api">
+QQ 组件使用 `simbot-component-qq-*` 坐标，随标准库统一版本发布。
 
-QQ 机器人官方 API 的底层封装模块。
+| 模块 | 内容 |
+| --- | --- |
+| `simbot-component-qq-common` | 共享常量与注解，自 `5.0` 起提供 |
+| `simbot-component-qq-api` | API 请求、原始事件、消息模型与构建器 |
+| `simbot-component-qq-stdlib` | Bot、鉴权和事件接收处理 |
+| `simbot-component-qq-core` | simbot 组件实现，普通应用直接依赖此模块 |
+| `simbot-component-qq-internal-ed25519` | 内部签名支持，通常不需要直接依赖 |
 
-- 定义 API 请求类型
-- 定义原始事件模型
-- 定义部分消息模型与构建器
-
-</def>
-<def title="simbot-component-qq-guild-stdlib">
-
-基于 `api` 的低限度 Bot 实现与事件接收处理模块。
-
-如果你希望保留更接近原始协议的事件流程，
-或者正在做更底层的集成，可以关注它。
-
-</def>
-<def title="simbot-component-qq-guild-core">
-
-真正作为 simbot 组件使用的核心模块。
-
-普通应用开发时，通常直接依赖它即可。
-
-</def>
-<def title="simbot-component-qq-guild-internal-ed25519">
-
-内部签名支持模块，一般不需要手动直接依赖。
-
-</def>
-</deflist>
+上述模块均支持 JVM、JS、`wasm-js` 和部分 Native 目标。
+版本升级与旧坐标迁移参见 [](migration-5.0.md)。
 
 ## 命名说明
 
-QQ机器人组件命名为 `simbot-component-qq-guild`，
-因为最早开始QQ并未开放普通个人开发者使用QQ群聊、QQ单聊的功能，
-因此此组件当时仅支持QQ频道。在开放后，其两端可以合并在一起使用，因此QQ群相关的能力才被支持。
+QQ机器人组件最初只支持 QQ 频道，因此使用 `simbot-component-qq-guild` 命名。
+自 `5.0` 起，模块坐标调整为 `simbot-component-qq-*`。
+包名与 `QQGuildComponent`、`QQGuildBotManager` 等类型名仍保留原有命名。
 
 > QQ群、QQ单聊功能自 `4.0.0-beta6` 版本起开始支持。
 
@@ -128,7 +110,7 @@ QQ机器人组件命名为 `simbot-component-qq-guild`，
 <step>
 <control>安装组件库</control>
 
-`simbot-component-qq-guild-core` 
+`simbot-component-qq-core`
 即为QQ机器人组件的核心库，
 也就是作为simbot组件所使用的
 <tooltip term="组件">组件库</tooltip>
@@ -138,26 +120,26 @@ QQ机器人组件命名为 `simbot-component-qq-guild`，
 <tab title="Gradle(Kotlin DSL)" group-key="kts">
 
 ```Kotlin
-implementation("love.forte.simbot.component:simbot-component-qq-guild-core:%qg-version%")
+implementation("love.forte.simbot.component:simbot-component-qq-core:%qg-version%")
 ```
 
 如果使用 Java 而不配合使用 Gradle 的 `kotlin` 插件, 那么你需要指定依赖的后缀为 `-jvm`。
 
 ```Kotlin
-implementation("love.forte.simbot.component:simbot-component-qq-guild-core-jvm:%qg-version%")
+implementation("love.forte.simbot.component:simbot-component-qq-core-jvm:%qg-version%")
 ```
 
 </tab>
 <tab title="Gradle(Groovy)" group-key="groovy">
 
 ```Groovy
-implementation 'love.forte.simbot.component:simbot-component-qq-guild-core:%qg-version%'
+implementation 'love.forte.simbot.component:simbot-component-qq-core:%qg-version%'
 ```
 
 如果使用 Java 而不配合使用 Gradle 的 `kotlin` 插件, 那么你需要指定依赖的后缀为 `-jvm`。
 
 ```Groovy
-implementation 'love.forte.simbot.component:simbot-component-qq-guild-core-jvm:%qg-version%'
+implementation 'love.forte.simbot.component:simbot-component-qq-core-jvm:%qg-version%'
 ```
 
 </tab>
@@ -166,7 +148,7 @@ implementation 'love.forte.simbot.component:simbot-component-qq-guild-core-jvm:%
 ```xml
 <dependency>
     <groupId>love.forte.simbot.component</groupId>
-    <artifactId>simbot-component-qq-guild-core-jvm</artifactId>
+    <artifactId>simbot-component-qq-core-jvm</artifactId>
     <version>%qg-version%</version>
 </dependency>
 ```

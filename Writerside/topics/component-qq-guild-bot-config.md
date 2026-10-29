@@ -119,6 +119,8 @@ bot开发配置中的 `Token`。
 
 `String`
 
+> 自 `5.0` 起使用统一的正式 API 域名，沙箱配置已废弃。
+
 目标服务器地址。默认为 `null`。
 
 QQ 开放平台自 `2026-08-10` 起将接口调用域名统一为
@@ -320,7 +322,7 @@ PUBLIC_GUILD_MESSAGES (1 << 30) // 消息事件，此为公域的消息事件
 <tip title="可选值参考">
 
 `nameBased` 的具体可选值可参考 `EventIntentsAggregation.getByName` 的
-[API文档](https://docs.simbot.forte.love/components/qq-guild/simbot-component-qq-guild-api/love.forte.simbot.qguild.event/-event-intents-aggregation/get-by-name.html)
+[API文档](%api-doc%)
 或源码的文档注释。
 
 此处会简单列举一下可选值的参考，但不保证绝对准确性，以实际代码中的效果与描述为准。

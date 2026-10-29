@@ -189,6 +189,26 @@ Mono.fromFuture(applicationAsync.asFuture())
 
 </note>
 
+## 取消与等待结束 {id="cancel"}
+
+<secondary-label ref="changed-5.0"/>
+
+调用 `application.cancel()` 或 `application.cancel(reason)` 终止应用。
+核心库与 Spring Boot starter 的实现依次触发：
+
+1. `ApplicationLaunchStage.RequestCancel`：在取消应用的 `Job` 前执行。
+2. 取消应用的 `Job`，`isActive` 变为 `false`。
+3. `ApplicationLaunchStage.Cancelled`：在发起任务取消后、`cancel()` 返回前执行。
+
+阶段处理器应快速完成，避免长时间阻塞。直接取消 `coroutineContext` 中的 `Job` 不会触发这些阶段处理器。
+`Cancelled` 触发时子任务可能仍在结束过程中；等待应用完全结束使用 `join()`，
+也可以通过 `isCompleted` 或 `onCompletion` 感知完成状态。
+
+```Kotlin
+application.cancel()
+application.join()
+```
+
 ## 事件处理器的注册
 
 有关事件处理器的相关描述可前往 [事件监听与处理](basic-event-listener.md) 章节阅读。

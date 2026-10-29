@@ -6,7 +6,7 @@ switcher-label: JavaAPI风格
 
 <tldr>
 
-- 对那些 **核心库** 中、实现了 simbot4 标准库的 `Message.Element` 消息元素类型的说明，
+- 对那些 **核心库** 中、实现了 simbot 标准库的 `Message.Element` 消息元素类型的说明，
 - 对一些与 **核心库** 中“消息”相关的内容的补充说明。
 
 </tldr>
@@ -36,7 +36,7 @@ switcher-label: JavaAPI风格
 > 仅用于发送。添加自 `4.0.0-beta6` 。
 
 </def>
-<def title="QGAttachmentMessage"></def>
+<def title="QGAttachmentMessage">接收到的附件消息，字段说明见下文的附件章节。</def>
 <def title="QGEmbed">对 API 模块中 Embed 消息的包装体，可用来发送 <code>Embed</code> 消息。</def>
 <def title="QGReference">
 
@@ -72,6 +72,34 @@ switcher-label: JavaAPI风格
 
 </def>
 </deflist>
+
+## 附件 {id="attachments"}
+
+<secondary-label ref="changed-5.0"/>
+
+`QGAttachmentMessage` 用于接收附件，暂不支持直接发送。
+`url` 为下载地址，缺少协议前缀时会补充 `https://`。
+
+附件信息通过以下类型化字段提供。
+
+| 字段 | 类型与含义 |
+| --- | --- |
+| `filename` | `String?`，文件名 |
+| `width` / `height` | `Int?`，图片宽高，单位为像素 |
+| `size` | `Long?`，文件大小，单位为字节 |
+| `contentType` | `String?`，附件内容类型 |
+| `voiceWavUrl` | `String?`，语音转换后的 WAV 地址 |
+| `asrReferText` | `String?`，语音识别参考结果 |
+| `attachmentId` | `String?`，QQ 附件 ID，需要选择加入 `QGUnstableProperty` |
+
+`source` 提供原始的 `Message.Attachment`。其中的 `url` 可能没有协议前缀。
+未由平台提供的可选属性为 `null`。
+
+旧的 `properties` 字符串属性表、构造函数、`copy()` 和解构方法已废弃。
+旧 `id` 也已废弃，其值仍为下载 URL 的 `ID` 包装；需要下载地址时使用 `url`，需要平台附件 ID 时使用 `attachmentId`。
+
+序列化仍使用 `qg.attachment` 类型名，新格式输出类型化字段，反序列化兼容旧 `properties` 中的字段。
+历史自定义字符串属性仍会保留。
 
 ## 发送消息 {id='message-usage'}
 
@@ -147,7 +175,7 @@ channel.sendReserve(Messages.of(
 </tabs>
 
 ## 消息撤回 {id='message-delete'}
-<primary-label ref="P_qg-5.0"/>
+<secondary-label ref="changed-5.0"/>
 
 自 `5.0` 起，QQ 群消息事件的 `messageContent` 也支持撤回当前收到的群消息：
 
@@ -189,6 +217,13 @@ QQ 服务端拒绝撤回时默认继续抛出异常，也可以使用 `StandardD
 启用后，普通 `Text`、文本消息链以及其中的 @、表情等文本内容会写入 Markdown 的 `content`。这不会替代显式构造 `QGMarkdown`：当你需要发送模板 Markdown 或自行指定 Markdown 内容时，仍应使用 `QGMarkdown`。
 
 ## Markdown 消息按钮 {id='message-keyboards'}
+
+<secondary-label ref="changed-5.0"/>
+
+> 底层按钮模型的 `buttonStyle`、`actionType`、`actionAnchor` 和 `permissionType`
+> 分别使用 `MessageKeyboardStyle`、`MessageKeyboardActionType`、`MessageKeyboardActionAnchor`
+> 和 `MessageKeyboardActionPermissionType`。通过各类型的 `of(...)` 包装原始数值。
+> builder / DSL 中的 `style`、`type` 和 `anchor` 仍可接收原始数值。
 
 自 `4.4.0` 起，群聊和单聊 Markdown 消息按钮使用 `QGKeyboards` / `MessageKeyboards` 表示。
 它支持按行组织多个按钮，并在发送体中仍序列化为官方 API 的 `keyboard` 字段。

@@ -59,7 +59,7 @@
         <!--    Add several topics that are most important for this section.    -->
         <primary>
             <title>基本内容👀</title>
-            <a href="outline.md" summary="对 simbot4 的基本介绍与概述">概述</a>
+            <a href="outline.md" summary="对 simbot 的基本介绍与概述">概述</a>
             <a href="basic-messages.md" summary="与消息、消息链、消息发送相关内容的描述与介绍。"/>
             <a href="basic-bot.md" summary="与 Bot 相关内容的描述与介绍。"/>
             <a href="basic-event.md" summary="与事件相关内容的描述与介绍。"/>
@@ -74,6 +74,7 @@
             <a href="how-to-use.md" summary="如何使用？开始使用概述"/>
             <a href="Spring-Boot.md" summary="与 Spring Boot 快速集成！"/>
             <a href="start-use-components.md" summary="使用、安装组件库"/>
+            <a href="migration-5.0.md" summary="5.0 的新增能力、废弃项与迁移说明"/>
         </secondary>
 
 

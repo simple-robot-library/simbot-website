@@ -2,11 +2,12 @@
 switcher-label: JavaAPI风格
 ---
 <show-structure for="chapter,procedure" depth="3"/>
-<primary-label ref="P_qg-5.0"/>
 
 # 自定义菜单与指令面板
 
-自 `5.0` 起，QQ机器人组件支持管理 QQ 开放平台的自定义菜单和指令面板。两类能力通过 `QGBot` 提供的管理器访问。
+<primary-label ref="P_since-5.0"/>
+
+QQ机器人组件支持管理 QQ 开放平台的自定义菜单和指令面板。两类能力通过 `QGBot` 提供的管理器访问。
 
 <seealso>
 <category ref="links">
@@ -19,12 +20,12 @@ switcher-label: JavaAPI风格
 自定义菜单是机器人 C2C 单聊窗口底部的全局菜单，只在 C2C 单聊中展示。
 菜单由 `CustomMenu` 表示，一个菜单包含若干 `CustomMenu.Item`：
 
-| 类型常量 | 说明 |
+| 类型 | 说明 |
 | --- | --- |
-| `CustomMenu.Item.TYPE_SEND_MESSAGE` | 点击后将预设消息填入聊天输入框 |
-| `CustomMenu.Item.TYPE_LINK` | 跳转到指定链接 |
-| `CustomMenu.Item.TYPE_SWITCH` | 展示并操作一个开关 |
-| `CustomMenu.Item.TYPE_MENU` | 包含二级菜单；二级菜单项支持发送消息或跳转链接 |
+| `CustomMenuItemType.SendMessage` | 点击后将预设消息填入聊天输入框 |
+| `CustomMenuItemType.Link` | 跳转到指定链接 |
+| `CustomMenuItemType.Switch` | 展示并操作一个开关 |
+| `CustomMenuItemType.Menu` | 包含二级菜单；二级菜单项支持发送消息或跳转链接 |
 
 开关项通过 `switchId` 和 `defaultValue` 描述。组件不在本地校验菜单类型与字段组合，具体有效性由 QQ 服务端决定。
 
@@ -42,12 +43,12 @@ println("version=${current.version}, menu=${current.menu}")
 val receipt = manager.update {
     item {
         name = "帮助"
-        type = CustomMenu.Item.TYPE_SEND_MESSAGE
+        type = CustomMenuItemType.SendMessage
         sendMessage = "/help"
     }
     item {
         name = "文档"
-        type = CustomMenu.Item.TYPE_LINK
+        type = CustomMenuItemType.Link
         link = "https://example.com/docs"
     }
 }
@@ -79,22 +80,26 @@ System.out.println(receipt.getVersion());
 ## 指令面板
 
 指令面板用于在会话中展示指令或链接。一个面板最多配置 20 个元素；元素类型由
-`CommandPanel.Item.TYPE_COMMAND` 和 `CommandPanel.Item.TYPE_LINK` 表示。
+`CommandPanelItemType.Command` 和 `CommandPanelItemType.Link` 表示。
 `command` 类型在用户点击后将名称填入聊天输入框，`link` 类型用于跳转链接。
 元素还可以设置描述和 `onlyAdmin`；名称最多 14 个字符，描述最多 30 个字符。
 面板备注最多 255 个字符，仅供开发者标记用途，不会展示给用户。
 
-面板的生效场景由 `QGCommandPanelScope` 表示：
+面板的生效场景由 `CommandPanelScope` 表示：
 
 | 场景 | 说明 |
 | --- | --- |
 | `C2C` | C2C 单聊 |
-| `GROUP` | QQ 群聊 |
-| `CHANNEL` | 文字子频道 |
+| `Group` | QQ 群聊 |
+| `Channel` | 文字子频道 |
 | `DM` | 频道私信 |
 
-目标范围由 `QGCommandPanelTargetType` 表示。`ALL` 对场景中的所有目标生效，`SPECIFIC` 只对指定用户或群生效。
-只有 `C2C` 和 `GROUP` 支持 `SPECIFIC`；`CHANNEL` 和 `DM` 只能使用 `ALL`。
+目标范围由 `CommandPanelTargetType` 表示。`All` 对场景中的所有目标生效，`Specific` 只对指定用户或群生效。
+只有 `C2C` 和 `Group` 支持 `Specific`；`Channel` 和 `DM` 只能使用 `All`。
+
+这些类型均为 value class。需要使用原始字符串时，场景通过 `scope` 获取，其他类型通过 `value` 获取；
+通过 `of(...)` 可以包装原始值。早期预览版本中的 `QGCommandPanelScope`、`QGCommandPanelTargetType`
+以及菜单项、面板项上的 `TYPE_*` 常量已移除。
 
 ### 创建、读取与分页查询
 
@@ -104,20 +109,20 @@ System.out.println(receipt.getVersion());
 val bot: QGBot = ...
 
 val handle = bot.commandPanels.create {
-    scope = QGCommandPanelScope.GROUP.value
-    targetType = QGCommandPanelTargetType.ALL.value
+    scope = CommandPanelScope.Group
+    targetType = CommandPanelTargetType.All
     panel {
         remark("常用指令")
         item {
             name = "/help"
             desc = "查看帮助"
-            type = CommandPanel.Item.TYPE_COMMAND
+            type = CommandPanelItemType.Command
             onlyAdmin = false
         }
         item {
             name = "项目主页"
             desc = "打开项目网站"
-            type = CommandPanel.Item.TYPE_LINK
+            type = CommandPanelItemType.Link
             link = "https://example.com"
         }
     }
@@ -128,7 +133,7 @@ val record = handle.get()
 println("${record.id}: ${record.panel}")
 
 // 按场景获取面板。Collectable 是冷的，开始收集时才会发起请求。
-bot.commandPanels.list(QGCommandPanelScope.GROUP)
+bot.commandPanels.list(CommandPanelScope.Group.scope)
     .asFlow()
     .collect { panel -> println(panel.id) }
 ```
@@ -150,7 +155,7 @@ bot.commandPanels.list(QGCommandPanelScope.GROUP)
 - `addGroupTargets(...)`、`removeGroupTargets(...)` 管理群聊目标。
 - `delete(...)` 删除面板；成功时返回 `Unit`，不会自动查询或缓存删除后的状态。
 
-关联目标操作对应 `QGCommandPanelTargetOperation.ADD` 和 `DEL`。
+底层 API 中的关联目标操作使用 `CommandPanelTargetUpdateOp.Add` 和 `Del`。
 创建时每类目标列表一次最多可以传入 20 个用户或群 OpenID；关联目标的具体合法性由 QQ 服务端校验。
 
 ```Kotlin
@@ -160,7 +165,7 @@ handle.update {
     remark("更新后的备注")
     item {
         name = "/status"
-        type = CommandPanel.Item.TYPE_COMMAND
+        type = CommandPanelItemType.Command
     }
 }
 
@@ -175,18 +180,17 @@ Java 中可以使用对应的生成方法，例如：
 ```Java
 var manager = bot.getCommandPanels();
 var panel = CommandPanel.builder().build();
-var handle = manager.createBlocking(
-        QGCommandPanelScope.GROUP.getValue(),
-        QGCommandPanelTargetType.ALL.getValue(),
-        null,
-        null,
-        panel
-);
+var input = CommandPanelCreate.builder()
+        .scope(CommandPanelScope.getGroup())
+        .targetType(CommandPanelTargetType.getAll())
+        .panel(panel)
+        .build();
+var handle = manager.createBlocking(input);
 var record = handle.getBlocking();
 handle.updateBlocking(panel);
 handle.deleteBlocking();
 ```
 
-面板列表记录 `QGCommandPanelRecord` 是查询时的瞬时快照，提供原始的 `scopeValue`、`targetTypeValue`、
-枚举形式的 `scope`、`targetType`、面板配置和版本号。列表查询通常不返回 `userOpenids` 与 `groupOpenids`，
-详情查询才会在适用时返回它们。
+面板列表记录 `QGCommandPanelRecord` 是查询时的瞬时快照，提供 `scope`、`targetType`、面板配置、
+版本号和底层 `source`。`scope` 与 `targetType` 使用上述 value class；
+列表查询通常不返回关联目标，详情查询返回的目标列表可从 `source.userOpenids`、`source.groupOpenids` 获取。

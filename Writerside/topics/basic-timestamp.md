@@ -20,12 +20,6 @@ val now = Timestamp.now()
 val time = Timestamp.ofMilliseconds(123456L)
 ```
 
-<warning>
-非 JVM 平台（尤其是 native 平台）的
-<code>Timestamp.now</code>
-尚在实验中, 可能不稳定、或产生预期外的行为和结果。
-</warning>
-
 </tab>
 <tab  title="Java" group-key="Java">
 
@@ -61,6 +55,32 @@ long seconds = timestamp.timeAs(TimeUnit.SECONDS);
 
 </tab>
 </tabs>
+
+## 与 Kotlin 标准库时间类型转换
+
+<secondary-label ref="since-5.0"/>
+
+`Timestamp.now()` 通过 `kotlin.time.Clock.System` 获取当前时间，
+也可以向 `Timestamp.now(clock)` 提供指定的 `Clock`。
+这两种方式都返回基于 `kotlin.time.Instant` 的 `StandardInstantTimestamp`。
+`Timestamp.ofMilliseconds(...)` 仍返回 `MillisecondTimestamp`。
+
+通过 `Instant.toTimestamp()` 将标准库的时间点包装为 `Timestamp`，
+通过 `Timestamp.toInstant()` 转回标准库时间点：
+
+```Kotlin
+import love.forte.simbot.common.time.Timestamp
+import love.forte.simbot.common.time.Timestamp.Companion.toTimestamp
+import kotlin.time.Clock
+
+val timestamp = Clock.System.now().toTimestamp()
+val instant = timestamp.toInstant()
+val now = Timestamp.now(Clock.System)
+```
+
+Java 中对应使用 `Timestamp.of(instant)` 和 `timestamp.toInstant()`。
+`StandardInstantTimestamp.toInstant()` 直接返回其持有的 `Instant`；
+其他实现默认根据 `milliseconds` 转换。
 
 <note>
 

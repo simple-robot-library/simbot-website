@@ -1,12 +1,12 @@
 # KOOK(开黑啦)
 
-<a href="https://github.com/simple-robot/simbot-component-kook/releases/latest">
-<img alt="release" src="https://img.shields.io/github/v/release/simple-robot/simbot-component-kook" />
+<a href="https://github.com/simple-robot/simpler-robot/releases">
+<img alt="release" src="https://img.shields.io/github/v/release/simple-robot/simpler-robot?include_prereleases" />
 </a>
 
 <seealso>
 <category ref="links">
-<a href="https://github.com/simple-robot/simbot-component-kook">KOOK组件仓库</a>
+<a href="https://github.com/simple-robot/simpler-robot/tree/dev/simbot-component-kook">KOOK组件源码</a>
 <a href="https://developer.kookapp.cn/doc/reference">KOOK开发者平台</a>
 <a href="https://ktor.io/">Ktor首页</a>
 </category>
@@ -22,7 +22,10 @@ SDK实现库，
 > 序列化和网络请求相关分别基于 [Kotlin serialization](https://github.com/Kotlin/kotlinx.serialization)
 > 和 [Ktor](https://ktor.io/).
 
-- 前往**KOOK组件**的 [GitHub 仓库](https://github.com/simple-robot/simbot-component-kook)
+- 前往**KOOK组件**的 [源码目录](https://github.com/simple-robot/simpler-robot/tree/dev/simbot-component-kook)
+
+> 自 `5.0` 起，KOOK 组件在主仓库中维护，随标准库统一版本发布，模块坐标保持不变。
+> 核心模块提供 JVM、JS、`wasm-js` 和部分 Native 目标。
 
 ## 模块
 

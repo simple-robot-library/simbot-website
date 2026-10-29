@@ -32,6 +32,7 @@
     <toc-element topic="outline.md">
         <toc-element topic="features.md"/>
         <toc-element topic="module-libraries.md"/>
+        <toc-element topic="migration-5.0.md"/>
         <toc-element topic="semantic-versioning.md"/>
         <toc-element topic="java-friendly.md"/>
         <toc-element topic="use-kotlin.md"/>

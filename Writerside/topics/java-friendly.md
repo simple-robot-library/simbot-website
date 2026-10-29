@@ -7,12 +7,12 @@ switcher-label: JavaAPI风格
 # Java友好 ♥
 
 <tldr>
-对 simbot4 中提供的诸项 Java 友好方案的介绍。
+对 simbot 中提供的诸项 Java 友好方案的介绍。
 </tldr>
 
 ## Lambda
 
-simbot4 中相比于 simbot3, 对于部分 lambda 的场景进行了简单的优化,
+simbot 中相比于 simbot3, 对于部分 lambda 的场景进行了简单的优化,
 在 Java 中需要手写返回 `return Unit.INSTANCE;` 的地方大大减少了。
 
 ## 阻塞、异步与预处理
@@ -37,16 +37,24 @@ suspend fun run(): Int {
 通过编译器插件, 它便会为这个 `run()` 方法产生几个新的、可供 Java 直接使用的 API：
 
 ```Java
-/** 阻塞桥接, 等待(阻塞)挂起函数完成后返回结果 */
+/**
+ * 阻塞桥接，等待挂起函数完成后返回结果。
+ */
 public int runBlocking() { ... }
 
-/** 异步桥接, 返回 future */
+/**
+ * 异步桥接，返回 future。
+ */
 public CompletableFuture<? extends Integer> runAsync() { ... }
 
-/** Reserve 预处理桥接, 返回一个预处理结果 Reserve */
+/**
+ * Reserve 预处理桥接，返回 SuspendReserve。
+ */
 public SuspendReserve<? extends Integer> runReserve() { ... }
 
-/** Reactive 桥接, 返回某种发布者类型 */
+/**
+ * Reactive 桥接（自 5.0 起，实验性）。
+ */
 public Publisher<? extends Integer> runReactive() { ... }
 ```
 
@@ -92,14 +100,9 @@ public Publisher<? extends Integer> runReactive() { ... }
 </def>
 <def title="Reactive">
 
-有些 API 还会生成 `Reactive` 风格桥接。
-在文档里通常更常展示 `Reserve + transform(...)` 的写法，
-因为它更容易映射到 Reactor、RxJava 等具体响应式类型。
-
-如果某个 API 开启了对应 transformer，
-你也可能直接看到 `xxxReactive()` 或 `getXxxReactive()` 这类桥接名称。
-只是由于它的具体返回类型取决于所启用的 transformer 与运行时依赖，
-因此手册中的多数页面仍优先展示 `Reserve + transform(...)`。
+自 `5.0` 起，桥接方法返回 `org.reactivestreams.Publisher`，通常命名为
+`xxxReactive()`；属性风格的方法通常为 `getXxxReactive()`。
+这类 API 使用 `ExperimentalReactiveBridgingApi` 标记，可能在后续版本变更或移除。
 
 </def>
 </deflist>
@@ -181,6 +184,21 @@ future.whenComplete((value, exception) -> {
 
 下文所述的各种响应式结果通常也可能会有类似的问题，需要多加注意喔。
 
+
+## 响应式桥接 {id="reactive-bridging"}
+
+<primary-label ref="experimental"/>
+<secondary-label ref="since-5.0"/>
+
+生成的 `Reactive` 方法返回 `org.reactivestreams.Publisher`，可以交给 Reactor 等响应式库订阅。
+挂起函数在订阅后执行；返回非空值时发布该值，返回 `null` 时直接完成。
+Kotlin 调用这些实验性桥接方法需要选择加入 `ExperimentalReactiveBridgingApi`。
+
+```Java
+Mono.from(bot.startReactive()).block();
+```
+
+也可以使用下面的 `SuspendReserve` 转换器直接取得 Reactor 或 RxJava 类型。
 
 ## SuspendReserve 预执行桥接器
 

@@ -43,14 +43,16 @@
         这是一个尚处实验阶段的内容。可能不稳定、且可能会在未来发生变更或被移除。
     </secondary-label>
     <!-- versions -->
+    <secondary-label id="since-5.0" name="v5.0" color="marine">
+        自 v5.0 开始提供。
+    </secondary-label>
+    <primary-label id="P_since-5.0" name="v5.0" short-name="v5.0" color="marine">
+        自 v5.0 开始提供。
+    </primary-label>
+    <secondary-label id="changed-5.0" name="v5.0 变更" color="marine">
+        本节包含自 v5.0 起的行为或类型变更，具体范围见正文。
+    </secondary-label>
     <secondary-label id="version" name="%label-v%" color="purple">
         一个在版本%label-v%后开始支持的内容
     </secondary-label>
-
-    <secondary-label id="qg-5.0" name="v5.0" color="marine">
-        自 v5.0 开始提供。
-    </secondary-label>
-    <primary-label id="P_qg-5.0" name="v5.0" short-name="v5.0" color="marine">
-        自 v5.0 开始提供。
-    </primary-label>
 </labels>

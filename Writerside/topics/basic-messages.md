@@ -489,6 +489,25 @@ sendSupport.sendBlocking(messageContent);
 </tabs>
 
 
+### 发送与回复选项 {id="send-options"}
+
+<secondary-label ref="since-5.0"/>
+
+`SendSupport.send(...)` 与 `ReplySupport.reply(...)` 新增带可变参数选项的重载，
+分别接收 `SendOption` 和 `ReplyOption`。字符串、`Message` 与 `MessageContent` 均支持这些重载。
+
+```Kotlin
+val sendOptions: Array<out SendOption> = ...
+sendSupport.send("text", *sendOptions)
+
+val replyOptions: Array<out ReplyOption> = ...
+replySupport.reply("text", *replyOptions)
+```
+
+具体选项由组件或其他实现方扩展。
+实现方遇到已知但无法满足的选项时，应抛出明确的异常；未知选项通常忽略。
+标准接口的默认实现会委托到不带选项的原有方法，因此选项是否生效仍取决于具体实现。
+
 ### 发送回执 MessageReceipt
 
 当一个消息发送成功没有出错时, 便会返回一个回执 `MessageReceipt`。
@@ -537,4 +556,3 @@ receipt.deleteBlocking(); // 试着删除它
 举个例子, 你创建了一个包含3张图片消息的消息链并发送,  但是平台的底层API只支持一次发一个图片, 
 那么这时候组件的实现中就会发送三条消息, 并得到三个实际上的发送结果。而将这三个结果“聚合”为一个结果返回给调用处, 
 便是 `StandardMessageReceipt` 中这两个类型的主要作用。
-

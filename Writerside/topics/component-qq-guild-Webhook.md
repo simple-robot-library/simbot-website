@@ -510,7 +510,7 @@ val respond: Any? = when (result) {
 由于目前 Kotlin 多平台下对 Ed25519 可靠的库少之又少，
 因此暂无法保证签名校验和路径验证中的加密可以在 **JVM以外** 的平台上运行良好。
 
-如果你有好的方案或推荐，欢迎通过 [Issue](https://github.com/simple-robot/simbot-component-qq-guild/issues/new/choose)
+如果你有好的方案或推荐，欢迎通过 [Issue](https://github.com/simple-robot/simpler-robot/issues/new/choose)
 向我们反馈！
 
 </warning>
@@ -566,11 +566,11 @@ bot.emitEvent(payload) {
 由于目前 Kotlin 多平台下对 Ed25519 可靠的库少之又少，
 因此暂无法保证签名校验和路径验证中的加密可以在 **JVM以外** 的平台上运行良好。
 
-如果你有好的方案或推荐，欢迎通过 [Issue](https://github.com/simple-robot/simbot-component-qq-guild/issues/new/choose)
+如果你有好的方案或推荐，欢迎通过 [Issue](https://github.com/simple-robot/simpler-robot/issues/new/choose)
 向我们反馈！
 
 </warning>
 
 ## 示例
 
-可以在仓库的 [samples](https://github.com/simple-robot/simbot-component-qq-guild/tree/dev/main/samples) 模块下找到示例模块。
+可以在仓库的 [samples](https://github.com/simple-robot/simpler-robot/tree/dev/samples) 模块下找到示例模块。

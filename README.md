@@ -1,6 +1,6 @@
-# Simple Robot V4 Documentation Website
+# Simple Robot Documentation Website
 
-这是 [Simple Robot v4](https://github.com/simple-robot/simpler-robot/tree/v4-dev) 
+这是 [Simple Robot](https://github.com/simple-robot/simpler-robot/tree/dev)
 的手册网站。
 
 ## License

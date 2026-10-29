@@ -2,13 +2,13 @@
 
 # OneBot
 
-<a href="https://github.com/simple-robot/simbot-component-onebot/releases/latest">
-<img alt="release" src="https://img.shields.io/github/v/release/simple-robot/simbot-component-onebot" />
+<a href="https://github.com/simple-robot/simpler-robot/releases">
+<img alt="release" src="https://img.shields.io/github/v/release/simple-robot/simpler-robot?include_prereleases" />
 </a>
 
 <seealso>
 <category ref="links">
-<a href="https://github.com/simple-robot/simbot-component-onebot">OneBot组件仓库</a>
+<a href="https://github.com/simple-robot/simpler-robot/tree/dev/simbot-component-onebot">OneBot组件源码</a>
 <a href="https://ktor.io/">Ktor首页</a>
 <a href="https://github.com/botuniverse/onebot-11">OneBot11</a>
 </category>
@@ -27,7 +27,10 @@ OneBot 组件是一个
 > 序列化和网络请求相关分别基于 [Kotlin serialization](https://github.com/Kotlin/kotlinx.serialization)
 > 和 [Ktor](https://ktor.io/)。
 
-- 前往**OneBot组件**的 [GitHub 仓库](https://github.com/simple-robot/simbot-component-onebot)
+- 前往**OneBot组件**的 [源码目录](https://github.com/simple-robot/simpler-robot/tree/dev/simbot-component-onebot)
+
+> 自 `5.0` 起，OneBot 组件在主仓库中维护，随标准库统一版本发布，模块坐标保持不变。
+> OneBot v11 核心模块提供 JVM、JS、`wasm-js` 和部分 Native 目标。
 
 ## 模块
 

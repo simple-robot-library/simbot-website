@@ -2,7 +2,7 @@
 
 <tldr>
 
-`quantcat` 量子猫模块提供了一些 **注解** 风格的 simbot4 事件处理 API 的定义。
+`quantcat` 量子猫模块提供了一些 **注解** 风格的 simbot 事件处理 API 的定义。
 
 
 </tldr>

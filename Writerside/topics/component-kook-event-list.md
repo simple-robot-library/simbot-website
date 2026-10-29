@@ -3,7 +3,7 @@
 KOOK组件中的**事件类型**包含两个层面：
 
 1. **API 模块** 中，对 KOOK API 中官方定义的事件结构的基本封装与实现。
-2. **核心模块** 中，基于 API 模块中的事件封装，对 simbot4 标准库中的 `Event` 事件类型的实现。
+2. **核心模块** 中，基于 API 模块中的事件封装，对 simbot 标准库中的 `Event` 事件类型的实现。
 
 ## API 模块事件封装
 
@@ -401,7 +401,7 @@ API 模块所有的事件封装类型都在包 `love.forte.simbot.kook.event` �
 
 ## Simbot 标准库 Event 实现
 
-使用核心库，可以在 simbot4 的 `Application` 或 Spring Boot 中使用这些事件类型实现。
+使用核心库，可以在 simbot 的 `Application` 或 Spring Boot 中使用这些事件类型实现。
 
 核心模块所有的 simbot Event 实现类型定义都在包 `love.forte.simbot.component.kook.event` 中。
 

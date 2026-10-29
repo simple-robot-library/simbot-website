@@ -1,23 +1,23 @@
 # 概述
 
-Simple Robot v4 是一个基于 Kotlin 协程的多平台 Bot 风格[Kotlin 多平台](https://kotlinlang.org/docs/multiplatform.html)事件调度框架，
+Simple Robot 是一个基于 Kotlin 协程的 Bot 风格 [Kotlin 多平台](https://kotlinlang.org/docs/multiplatform.html)事件调度框架，
 异步高效、Java友好~
 
 ## 多平台实现 {id="multiplatform-targets"}
 
-Simple Robot v4 基于[**KMP**](https://kotlinlang.org/docs/multiplatform.html) 实现多平台, 
-支持 [native-target-support](https://kotlinlang.org/docs/native-target-support.html)
-中所述的 `Tier 1`、`Tier 2`、`Tier 3` 三个级别的全部目标以及 `wasm-js` 平台目标。
+Simple Robot 基于 [**KMP**](https://kotlinlang.org/docs/multiplatform.html) 实现多平台，
+支持 JVM、JS、`wasm-js` 和多个 Kotlin/Native 目标。具体支持范围以各模块为准。
 
 <tip>
 
-涉及到Ktor的模块暂时无法支持 `wasm-js` 平台。
+自 `5.0` 起，QQ 组件的 `common`、`api`、`stdlib`、`core` 和内部签名模块均支持 `wasm-js`。
+KOOK 与 OneBot v11 的核心模块也提供 `wasm-js` 目标。
 
 </tip>
 
 
-> 在部分需要 Ktor 依赖的模块中, 实现目标中会缺少那些 Ktor 尚不支持的平台。
-> 这些目标大部分是 `Tier 2` 或 `Tier 3` 中的。
+> 部分模块受 Ktor 或签名库等依赖限制，未提供下列全部 Native 目标。
+> 例如 QQ 组件的核心模块不提供 Android Native、`watchosX64` 和 `watchosDeviceArm64` 目标。
 
 <procedure collapsible="true" title="支持目标列表">
 <list>
@@ -50,7 +50,7 @@ Simple Robot v4 基于[**KMP**](https://kotlinlang.org/docs/multiplatform.html) 
 
 Java是重要的伙伴, Kotlin天生与Java具有极强的兼容性。
 
-simbot4 基于 **Java11**, 为所有模块提供 JVM 平台实现以及相应的 **模块化(JPMS)** 信息、
+simbot 基于 **Java11**, 为运行时模块提供 JVM 平台实现以及相应的 **模块化(JPMS)** 信息、
 提供 **Spring Boot** 的 starter 快速快发实现、
 以及异步、阻塞、预处理桥接器（可用于转化为响应式类型）的多种风格的挂起函数桥接API。
 
@@ -59,10 +59,10 @@ simbot4 基于 **Java11**, 为所有模块提供 JVM 平台实现以及相应的
 
 ## Bot风格
 
-simbot4 主要用于对接那些 Bot 平台, 例如 QQ频道机器人、米游社大别野机器人、KOOK机器人等, 
+simbot 主要用于对接 Bot 平台, 例如 QQ机器人、KOOK机器人和 OneBot 协议实现等，
 因此 simbot 的 API 设计也是以 Bot 为起点进行设计的。
 
 ## 高性能异步事件调度框架
 
-既然是 Bot, 那么就少不了事件。simbot4 基于 [**Kotlin 协程库**](https://kotlinlang.org/docs/coroutines-overview.html)
+既然是 Bot, 那么就少不了事件。simbot 基于 [**Kotlin 协程库**](https://kotlinlang.org/docs/coroutines-overview.html)
 实现高性能、无阻塞、轻量且灵活的异步调度机制。

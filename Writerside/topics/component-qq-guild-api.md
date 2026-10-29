@@ -7,7 +7,7 @@ switcher-label: Java API 风格
 ## API模块
 
 所有对 QQ 开放平台 API 的原始封装都在
-API 模块 `simbot-component-qq-guild-api` 中。
+API 模块 `simbot-component-qq-api` 中。
 
 这一层主要包含：
 
@@ -55,11 +55,9 @@ QQ群与 `C2C` 单聊发消息。
 </def>
 <def title="DeleteChannelMessageApi / GroupMessageDeleteApi / UserMessageDeleteApi">
 
-> 自 `5.0` 起废弃，请使用 `DeleteChannelMessageApi`。
-{style="warning"}
-
 分别用于撤回频道、QQ群和 C2C 单聊中的消息。
-`DeleteMessageApi` 是频道消息撤回的旧名称。
+群聊与 C2C 撤回自 `5.0` 起提供。
+`DeleteMessageApi` 是频道消息撤回的旧名称，自 `5.0` 起废弃，使用 `DeleteChannelMessageApi`。
 
 </def>
 <def title="CustomMenu 与 CommandPanel API">
@@ -71,6 +69,15 @@ API 模块提供 C2C 自定义菜单和多场景指令面板的模型与请求�
 
 </def>
 </deflist>
+
+### 群管理 API
+
+<secondary-label ref="since-5.0"/>
+
+`love.forte.simbot.qguild.api.group` 下提供群资料、机器人群内状态、入群申请和禁言相关 API：
+`GetGroupInfoApi`、`GetGroupBotStateApi`、`GetGroupJoinRequestListApi`、
+`ApproveGroupJoinRequestApi`、`GetGroupMuteSettingApi` 和 `SetGroupMuteSettingApi`。
+核心组件中的对应入口见 [](component-qq-guild-QGGroup.md)。
 
 ## 使用API
 
@@ -178,7 +185,7 @@ ApiRequests.requestDataReserve(api, client, token)
 
 ### Stdlib模块中使用
 
-在 `simbot-component-qq-guild-stdlib` 中，一个 `love.forte.simbot.qguild.stdlib.Bot`
+在 `simbot-component-qq-stdlib` 中，一个 `love.forte.simbot.qguild.stdlib.Bot`
 已经包含了客户端、鉴权与服务器地址等信息，
 因此你可以使用 `Bot.requestXxx(api)` 或 `api.requestXxxBy(bot)` 来简化你的请求
 (Java中可以使用 `BotRequests` 提供的静态方法)。
