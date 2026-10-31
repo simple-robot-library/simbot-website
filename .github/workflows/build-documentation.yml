@@ -1,0 +1,82 @@
+name: Build documentation version
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: Git ref to build
+        required: true
+        type: string
+      version:
+        description: Documentation major version
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  INSTANCE: Writerside/s4
+  ARTIFACT: webHelpS42-all.zip
+  ALGOLIA_ARTIFACT: algolia-indexes-S4.zip
+  DOCKER_VERSION: '2026.10.0423'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DOC_VERSION: ${{ inputs.version }}
+    steps:
+      - name: Checkout documentation source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Build Writerside documentation
+        uses: JetBrains/writerside-github-action@v4
+        with:
+          instance: ${{ env.INSTANCE }}
+          artifact: ${{ env.ARTIFACT }}
+          docker-version: ${{ env.DOCKER_VERSION }}
+
+      - name: Save build report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-${{ inputs.version }}
+          path: artifacts/report.json
+          retention-days: 7
+
+      - name: Check documentation report
+        uses: JetBrains/writerside-checker-action@v1
+        with:
+          instance: ${{ env.INSTANCE }}
+
+      - name: Prepare site and search records
+        shell: bash
+        run: |
+          mkdir -p site search/records
+          unzip -O UTF-8 -qq "artifacts/$ARTIFACT" -d site
+          unzip -O UTF-8 -qq "artifacts/$ALGOLIA_ARTIFACT" -d search/records
+          cp site/config.json search/config.json
+          if [[ "$DOC_VERSION" == "5.x" ]]; then
+            cp -R public/. site/
+          fi
+          python3 .github/scripts/prepare-documentation.py "$DOC_VERSION"
+
+      - name: Save checked site
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-${{ inputs.version }}
+          path: site/
+          include-hidden-files: true
+          retention-days: 7
+
+      - name: Save search records and version metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: search-${{ inputs.version }}
+          path: search/
+          retention-days: 7

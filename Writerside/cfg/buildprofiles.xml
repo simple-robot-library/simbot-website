@@ -40,10 +40,10 @@
         <algolia-id>VLLZ4JZE8Z</algolia-id>
         <algolia-index>doc</algolia-index>
         <algolia-api-key>e60d9ee16618a0ad3a338ecc73cb840e</algolia-api-key>
-        <web-root>https://simbot.forte.love</web-root>
+        <web-root>https://simbot.forte.love/</web-root>
         <feedback-support>true</feedback-support>
         <feedback-url>https://github.com/simple-robot-library/simbot4-website/issues/</feedback-url>
-<!--        <versions-switcher>https://kodo.forte.love/simbot/help-versions.json</versions-switcher>-->
+        <versions-switcher>https://simbot.forte.love/help-versions.json</versions-switcher>
 <!--        <color-preset>vivid</color-preset>-->
 <!--        <color-preset>soft</color-preset>-->
     </variables>
@@ -53,7 +53,7 @@
             <noindex-content>false</noindex-content>
         </variables>
         <sitemap priority="0.45" change-frequency="weekly" />
-        <llms-txt>true</llms-txt>
+        <llms-txt/>
     </build-profile>
 
     <footer>
