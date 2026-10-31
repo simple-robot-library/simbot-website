@@ -26,6 +26,7 @@
         SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
 
 <instance-profile id="s4"
+                  status="deprecated"
                  name="Simple Robot"
                   start-page="Home.topic">
     <toc-element topic="Home.topic"/>

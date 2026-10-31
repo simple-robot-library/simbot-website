@@ -1,165 +1,142 @@
 name: Deploy documentation
 
 on:
-  # If specified, the workflow will be triggered automatically once you push to the `main` branch.
-  # Replace `main` with your branch’s name
   push:
     branches:
       - master
+      - docs/v4
     paths:
       - 'Writerside/**'
-      - '.github/workflows/deploy-documentation.yml'
-
-  # Specify to run a workflow manually from the Actions tab on GitHub
+      - 'public/**'
+      - '.github/workflows/**'
+      - '.github/scripts/**'
   workflow_dispatch:
 
-# Gives the workflow permissions to clone the repo and create a page deployment
 permissions:
-  id-token: write
-  pages: write
+  contents: read
 
-env:
-  # Name of module and id separated by a slash
-  INSTANCE: Writerside/s4
-  INSTANCE_NAME: s4
-  # Replace HI with the ID of the instance in capital letters
-  ARTIFACT: webHelpS42-all.zip
-  # Writerside docker image version
-  # see https://www.jetbrains.com/help/writerside/deploy-docs-to-github-pages.html
-  DOCKER_VERSION: '2026.06.8817'
-  # Add the variable below to upload Algolia indexes
-  # Replace HI with the ID of the instance in capital letters
-  ALGOLIA_ARTIFACT: algolia-indexes-S4.zip
-  ALGOLIA_APP_NAME: VLLZ4JZE8Z
-  ALGOLIA_INDEX_NAME: doc
-  ALGOLIA_KEY: ${{ secrets.ALGOLIA_KEY }}
+# 两个分支始终发布同一份完整站点，串行执行以避免覆盖。
+concurrency:
+  group: documentation-pages
+  cancel-in-progress: false
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    outputs:
-      config_json: ${{ steps.output-config-json.outputs.config_json }}
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Build Writerside docs using Docker
-        uses: JetBrains/writerside-github-action@v4
-        with:
-          instance: ${{ env.INSTANCE }}
-          artifact: ${{ env.ARTIFACT }}
-          docker-version: ${{ env.DOCKER_VERSION }}
-
-      - name: Upload documentation
-        uses: actions/upload-artifact@v4
-        with:
-          name: docs
-          path: |
-            artifacts/${{ env.ARTIFACT }}
-            artifacts/report.json
-            public/*
-          retention-days: 7
-
-      - name: Upload documentation test reports
-        uses: actions/upload-artifact@v4
-        if: ${{ always() }}
-        with:
-          name: 'report.json'
-          path: |
-            artifacts/report.json
-          retention-days: 7
-
-      # Add the step below to upload Algolia indexes
-      - name: Upload algolia-indexes
-        uses: actions/upload-artifact@v4
-        with:
-          name: algolia-indexes
-          path: artifacts/${{ env.ALGOLIA_ARTIFACT }}
-          retention-days: 7
-
-      - name: Unzip artifact
-        run: unzip -O UTF-8 -qq artifacts/${{ env.ARTIFACT }} -d dir
-
-      - name: Output documentation config.json
-        id: output-config-json
-        run: |
-          echo "config_json=$(cat dir/config.json)" >> $GITHUB_OUTPUT
-
-  # Add the job below and artifacts/report.json on Upload documentation step above if you want to fail the build when documentation contains errors
-  test:
-    # Requires build job results
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: docs
-#          path: artifacts
-
-      - name: Test documentation
-        uses: JetBrains/writerside-checker-action@v1
-        with:
-          instance: ${{ env.INSTANCE }}
+    name: Build ${{ matrix.version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - version: '5.x'
+            ref: master
+          - version: '4.x'
+            ref: docs/v4
+    uses: ./.github/workflows/build-documentation.yml
+    with:
+      ref: ${{ github.ref_name == matrix.ref && github.sha || matrix.ref }}
+      version: ${{ matrix.version }}
 
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    # Requires the build job results
-    needs: test
-    runs-on: ubuntu-latest
     steps:
-      - name: Download artifact
+      - name: Download current documentation
         uses: actions/download-artifact@v4
         with:
-          name: docs
+          name: site-5.x
+          path: site
 
-      - name: Unzip artifact
-        run: unzip -O UTF-8 -qq artifacts/${{ env.ARTIFACT }} -d dir
+      - name: Download archived documentation
+        uses: actions/download-artifact@v4
+        with:
+          name: site-4.x
+          path: site/v4
 
-      - name: Copy public
-        run: cp -r public/* dir/
+      - name: Generate version switcher and check combined site
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          site = Path("site")
+          versions = []
+          for version, directory, url, current in [
+              ("4.x", site / "v4", "/v4/", False),
+              ("5.x", site, "/", True),
+          ]:
+              config = json.loads((directory / "config.json").read_text())
+              assert config["productVersion"] == version, config["productVersion"]
+              display = config["productVersionName"]
+              assert display.startswith(version[0] + ".") and display != version, display
+              assert (directory / "index.html").is_file(), directory
+              versions.append({"version": display, "url": url, "isCurrent": current})
+          (site / "help-versions.json").write_text(json.dumps(versions, ensure_ascii=False, indent=2) + "\n")
+          PY
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Upload complete site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dir
+          path: site
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy complete site
         id: deployment
         uses: actions/deploy-pages@v4
 
-  # https://www.jetbrains.com/help/writerside/configure-search.html
   publish-indexes:
-    # Requires the build-job results
-    needs: [build, test]
+    needs: deploy
     runs-on: ubuntu-latest
+    strategy:
+      # 同一索引的两次更新依次执行，保留各自的 product/version 范围。
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        version: ['5.x', '4.x']
     container:
       image: registry.jetbrains.team/p/writerside/builder/algolia-publisher:2.0.32-3
     env:
-      CONFIG_JSON_VERSION: ${{ fromJSON(needs.build.outputs.config_json).productVersion }}
-
+      DOC_VERSION: ${{ matrix.version }}
+      ALGOLIA_APP_NAME: VLLZ4JZE8Z
+      ALGOLIA_INDEX_NAME: doc
     steps:
-      - name: Download artifact
+      - name: Download checked search records
         uses: actions/download-artifact@v4
         with:
-          name: algolia-indexes
+          name: search-${{ matrix.version }}
+          path: search
 
-      - name: Unzip artifact
+      - name: Read built product and version
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const config = JSON.parse(fs.readFileSync('search/config.json', 'utf8'));
+            if (config.productVersion !== process.env.DOC_VERSION || config.productId !== 's4') {
+              throw new Error('Search metadata does not match the documentation version');
+            }
+            core.exportVariable('CONFIG_JSON_PRODUCT', config.productId);
+            core.exportVariable('CONFIG_JSON_VERSION', config.productVersion);
+
+      - name: Publish version search records
+        shell: bash
+        env:
+          ALGOLIA_KEY: ${{ secrets.ALGOLIA_KEY }}
         run: |
-          unzip -O UTF-8 -qq ${{ env.ALGOLIA_ARTIFACT }} -d algolia-indexes
-          env "algolia-key=${{env.ALGOLIA_KEY}}" java -jar /opt/builder/help-publication-agent.jar \
-          update-index \
-          --application-name ${{env.ALGOLIA_APP_NAME}} \
-          --index-name ${{env.ALGOLIA_INDEX_NAME}} \
-          --product ${{env.INSTANCE_NAME}} \
-          --version ${{env.CONFIG_JSON_VERSION}} \
-          --index-directory algolia-indexes/ \
-          2>&1 | tee algolia-update-index-log.txt
-
+          set -euo pipefail
+          env "algolia-key=$ALGOLIA_KEY" java -jar /opt/builder/help-publication-agent.jar \
+            update-index \
+            --application-name "$ALGOLIA_APP_NAME" \
+            --index-name "$ALGOLIA_INDEX_NAME" \
+            --product "$CONFIG_JSON_PRODUCT" \
+            --version "$CONFIG_JSON_VERSION" \
+            --index-directory search/records/ \
+            2>&1 | tee algolia-update-index-log.txt

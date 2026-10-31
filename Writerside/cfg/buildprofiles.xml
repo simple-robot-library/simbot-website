@@ -33,30 +33,31 @@
         <download-page>https://github.com/simple-robot/simpler-robot</download-page>
         <showDownloadButton>true</showDownloadButton>
         <enable-contribution>true</enable-contribution>
-        <contribute-url>https://github.com/simple-robot-library/simbot4-website/tree/master/Writerside/</contribute-url>
+        <contribute-url>https://github.com/simple-robot-library/simbot4-website/tree/docs/v4/Writerside/</contribute-url>
         <locale-code>zh-CN</locale-code>
-        <noindex-content>false</noindex-content>
+        <noindex-content>true</noindex-content>
         <include-in-head>head-script.html</include-in-head>
         <algolia-id>VLLZ4JZE8Z</algolia-id>
         <algolia-index>doc</algolia-index>
         <algolia-api-key>e60d9ee16618a0ad3a338ecc73cb840e</algolia-api-key>
-        <web-root>https://simbot.forte.love</web-root>
+        <web-root>https://simbot.forte.love/v4/</web-root>
         <feedback-support>true</feedback-support>
         <feedback-url>https://github.com/simple-robot-library/simbot4-website/issues/</feedback-url>
-<!--        <versions-switcher>https://kodo.forte.love/simbot/help-versions.json</versions-switcher>-->
+        <versions-switcher>https://simbot.forte.love/help-versions.json</versions-switcher>
 <!--        <color-preset>vivid</color-preset>-->
 <!--        <color-preset>soft</color-preset>-->
     </variables>
 
     <build-profile instance="s4">
         <variables>
-            <noindex-content>false</noindex-content>
+            <noindex-content>true</noindex-content>
         </variables>
         <sitemap priority="0.45" change-frequency="weekly" />
-        <llms-txt />
+        <llms-txt/>
     </build-profile>
 
     <footer>
+        <link href="https://simbot.forte.love/">当前版本文档（5.x）</link>
         <copyright>%copyright-year% Forte Scarlet.</copyright>
         <link href="https://docs.simbot.forte.love/">文档引导站</link>
         <link href="https://github.com/orgs/simple-robot/discussions">社区</link>
