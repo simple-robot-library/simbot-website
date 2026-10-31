@@ -40,6 +40,49 @@
 提交成员禁言设置，成员禁言变更使用 `SetMemberMuteState` 表示，支持增加、更新和解除。
 核心组件的 `setMemberMutes(...)` 提供批量操作入口。
 
+## 群成员管理 API
+
+<secondary-label ref="since-5.0"/>
+
+以下接口位于 `love.forte.simbot.qguild.api.group`。
+核心组件的查询、移除和黑名单操作参见 [](component-qq-guild-QGGroup.md#group-members)。
+
+### GetGroupMemberListApi {id="love_forte_simbot_qguild_api_group_GetGroupMemberListApi"}
+
+查询成员列表，返回 `GroupMemberPage`。
+`createFlow(groupOpenid) { requestData(client, token) }` 返回按游标翻页的冷流。
+
+### GetGroupMemberInfoApi {id="love_forte_simbot_qguild_api_group_GetGroupMemberInfoApi"}
+
+按群及成员 ID 查询 `GroupMemberInfo`。
+
+### BatchRemoveGroupMembersApi {id="love_forte_simbot_qguild_api_group_BatchRemoveGroupMembersApi"}
+
+一次移除 1～20 个成员，可使用 `addToMemberBlacklist` 请求同时拉黑，返回 `GroupMembersRemoveResult`。
+
+### GetGroupMemberBlacklistApi {id="love_forte_simbot_qguild_api_group_GetGroupMemberBlacklistApi"}
+
+查询 `GroupBlacklistPage`，可指定 `cursor` 和 `limit`（默认 20，最大 100）。
+也提供自动分页的冷流 `createFlow`，用来查询黑名单用户列表 `GroupBlacklistUser`。
+
+### ModifyGroupMemberBlacklistApi {id="love_forte_simbot_qguild_api_group_ModifyGroupMemberBlacklistApi"}
+
+通过 `ModifyGroupMemberBlacklistOp.ADD` / `DEL` 添加或移出黑名单，单次 1～20 个成员。
+添加要求目标用户已不在群内。
+返回 `GroupBlacklistModifyResult.failOpenids`，保留部分失败信息。
+
+```Kotlin
+val result = BatchRemoveGroupMembersApi.create(
+    groupOpenid = "群OpenID",
+    memberOpenids = listOf("成员OpenID"),
+    addToMemberBlacklist = true,
+).requestData(client, token)
+println(result.removeMembersResult)
+println(result.addToMemberBlacklistFailOpenids)
+```
+
+批量接口在构建时校验非空白群/成员 ID 和非空列表，数量上限由服务端校验。请求成功与所有目标均成功应根据响应分别判断。
+
 ## 其他 API
 
 <deflist>

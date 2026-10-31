@@ -52,8 +52,8 @@ intents += EventIntents.GroupAndC2CEvent.intents
 | --- | --- |
 | `id` | 群聊的 `group_openid` |
 | `name` | 空字符串；`QGGroupWithInfo` 使用查询所得的群名称 |
-| `members` | 空结果 |
-| `member(id)` | `null` |
+| `members` | 按平台游标分页查询群成员 |
+| `member(id)` | 查询指定成员，返回 `QGGroupMemberWithInfo` |
 | `ownerId` | `null` |
 | `roles` | `OWNER`、`ADMIN`、`MEMBER` 三种 `QGGroupRole` |
 
@@ -96,6 +96,65 @@ println("${botMember.id}: ${botMember.memberRole}")
 
 通过 `bot.groupRelation` 也可以使用 `groupInfo(groupId)` 和 `groupBotState(groupId)`。
 `groupRelation.group(id)` 仍只包装群 ID，不校验群是否存在；`groups` 仍为空，`groupCount()` 仍返回 `-1`。
+
+## 群成员管理 {id="group-members"}
+
+<secondary-label ref="since-5.0"/>
+
+`group.members` 获取群成员列表，收集时请求平台 API 并按游标自动翻页，每页最多返回 30 条。
+
+<note>
+
+也因此要注意 API 的接口频率限制。以 [获取群成员列表](https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_members.get.html) 为例，
+它的接口频率限制是 60 QPM，那么针对一个 500 人的群，如果你尝试获取全部成员，那么会调用接口次数 500/30~=17次。
+
+</note>
+
+列表中的元素为 `QGGroupMemberWithInfo`，包含本次查询得到的成员资料。
+已知成员 ID 时，可以通过 `member(id)` 或 `memberWithInfo(id)` 查询成员，需要直接获取 API 模型时使用 `memberInfo(id)`。
+
+```Kotlin
+val member = group.memberWithInfo(memberOpenid)
+println(member.name)
+println(member.memberRole)
+println(member.joinTime)
+
+// 通过原始资料读取成员 OpenID、统一标识等属性。
+println(member.source)
+```
+
+`QGGroupMemberWithInfo` 的 `id` 为成员 OpenID，`groupId` 为所属群的 OpenID。
+它还提供 `isBot`、可空的 `unionOpenid` 及原始 `GroupMemberInfo`，并支持已有的成员禁言操作。
+每次调用都会查询最新的信息。
+
+`bot.groupRelation` 提供 `members(groupId)`、`memberInfo(groupId, memberId)`
+和 `memberWithInfo(groupId, memberId)`，可用于已知群和成员 ID 的场景。
+
+### 移除成员与黑名单 {id="group-member-blacklist"}
+
+`removeMembers(memberIds, addToBlacklist)` 批量移除群成员，可选择同时加入黑名单。
+平台单次最多处理 20 个，数量上限由服务端校验。
+返回的 `GroupMembersRemoveResult` 包含移除状态和同时加入黑名单失败的成员 OpenID。
+
+```Kotlin
+val result = group.removeMembers(listOf(memberOpenid), addToBlacklist = true)
+println(result.removeMembersResult)
+println(result.addToMemberBlacklistFailOpenids)
+```
+
+`group.blacklist` 查询群黑名单，收集时按游标翻页，元素为 `GroupBlacklistUser`。
+通过 `addToBlacklist(memberIds)` 和 `removeFromBlacklist(memberIds)` 添加或移出黑名单，
+返回结果中的 `failOpenids` 为本次操作失败的成员 OpenID。
+加入黑名单要求目标用户已不在群内。需要同时移除并拉黑时，可以使用 `removeMembers` 的 `addToBlacklist` 参数。
+
+`bot.groupRelation` 提供带 `groupId` 的同名方法。
+批量请求保留输入顺序及重复项，空列表或空白 ID 在请求前抛出 `IllegalArgumentException`。
+
+<note>
+这些群成员管理接口需要平台授予访问权限。查询或操作失败时抛出平台或网络异常；
+`member(id)` 的可空返回类型沿用原有签名，查询错误仍会通过异常传播。
+自 `5.0` 起，`members` 和 `member(id)` 开始实际请求平台，使用时应留意权限和接口频率限制。
+</note>
 
 ## 入群申请 {id="join-requests"}
 
