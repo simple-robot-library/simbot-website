@@ -83,6 +83,60 @@ println(result.addToMemberBlacklistFailOpenids)
 
 批量接口在构建时校验非空白群/成员 ID 和非空列表，数量上限由服务端校验。请求成功与所有目标均成功应根据响应分别判断。
 
+## 入群自动审批 API
+
+<secondary-label ref="since-5.0"/>
+
+以下 API 位于 `love.forte.simbot.qguild.api.group`，用于管理机器人创建的跨群自动审批策略。
+相关模型位于 `love.forte.simbot.qguild.model.group`。
+
+### GetGroupJoinApprovalStrategyListApi {id="love_forte_simbot_qguild_api_group_GetGroupJoinApprovalStrategyListApi"}
+
+查询生效中的策略列表，返回 `GroupJoinApprovalStrategyPage`，按创建时间倒序排列。
+支持 `cursor/limit` 查询参数及自动分页冷流 `createFlow`。
+
+### CreateGroupJoinApprovalStrategyApi {id="love_forte_simbot_qguild_api_group_CreateGroupJoinApprovalStrategyApi"}
+
+创建策略，群 OpenID 列表与 QQ 群号列表二选一，返回 `GroupJoinApprovalStrategyCreated`。
+请求模型 `GroupJoinApprovalStrategyCreate` 提供 Java builder 和 Kotlin DSL。
+每个机器人最多创建 20 个策略，每个策略最多关联 100 个群；仅在机器人具有群管理员身份的群中生效。
+
+### ModifyGroupJoinApprovalStrategyApi {id="love_forte_simbot_qguild_api_group_ModifyGroupJoinApprovalStrategyApi"}
+
+使用 `GroupJoinApprovalStrategyModify` 修改启用状态、过期时间、关联群或备注，返回 `GroupJoinApprovalStrategyModified`。
+关联群操作使用 `GroupJoinApprovalStrategyGroupAction`，群标识形式须与创建时一致。
+
+### DeleteGroupJoinApprovalStrategyApi {id="love_forte_simbot_qguild_api_group_DeleteGroupJoinApprovalStrategyApi"}
+
+删除指定策略，返回 `Unit`。
+
+### ExecuteGroupJoinApprovalStrategyApi {id="love_forte_simbot_qguild_api_group_ExecuteGroupJoinApprovalStrategyApi"}
+
+对策略关联的全部群执行全量扫描，自动通过匹配白名单的入群申请。
+官方说明异步执行、约 10 分钟完成；请求成功返回 `Unit`，表示服务端已接受请求。
+
+### ModifyGroupJoinApprovalStrategyWhitelistApi {id="love_forte_simbot_qguild_api_group_ModifyGroupJoinApprovalStrategyWhitelistApi"}
+
+使用 `GroupJoinApprovalStrategyOp.ADD/DEL` 新增或删除白名单 QQ 号码，返回 `GroupJoinApprovalStrategyWhitelistModified`。
+号码使用字符串，单次最多 10000 个，策略白名单上限 10 万。返回号码数为估算值。
+
+启用状态使用 Boolean 映射官方 `on/off`，时间使用 `kotlin.time.Instant`。
+可选请求字段为 `null` 时省略，群号请求与响应统一使用字符串。
+构建时仅校验必要下限与群标识组合，数量和长度上限由服务端校验。
+
+```Kotlin
+val created = CreateGroupJoinApprovalStrategyApi.create {
+    addGroupOpenid("群OpenID")
+    isEnable = true
+}.requestData(client, token)
+
+ModifyGroupJoinApprovalStrategyWhitelistApi.create(
+    created.strategyId,
+    GroupJoinApprovalStrategyOp.ADD,
+    listOf("1234567"),
+).requestData(client, token)
+```
+
 ## 其他 API
 
 <deflist>

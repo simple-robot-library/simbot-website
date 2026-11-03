@@ -79,6 +79,14 @@ API 模块提供 C2C 自定义菜单和多场景指令面板的模型与请求�
 `ApproveGroupJoinRequestApi`、`GetGroupMuteSettingApi` 和 `SetGroupMuteSettingApi`。
 核心组件中的对应入口见 [](component-qq-guild-QGGroup.md)。
 
+### 入群自动审批 API
+
+<secondary-label ref="since-5.0"/>
+
+`love.forte.simbot.qguild.api.group` 下提供入群自动审批策略的列表、创建、修改、删除、执行及白名单操作接口。
+创建和修改请求提供 Java builder 与 Kotlin DSL，时间使用 `kotlin.time.Instant`，启用状态使用 Boolean。
+详细类型参见 [](component-qq-guild-api-list.md)。
+
 ## 使用API
 
 在 API 模块、stdlib 模块和核心组件模块中都可以使用 API。
