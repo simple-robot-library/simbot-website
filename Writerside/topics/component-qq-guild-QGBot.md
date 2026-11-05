@@ -898,3 +898,47 @@ bot.sendToBlocking(Identifies.of("channel id"), Messages.of(
 
 </tab>
 </tabs>
+
+
+## 入群自动审批策略 {id="group-join-approval-strategies"}
+
+<secondary-label ref="since-5.0"/>
+
+通过 `bot.groupJoinApprovalStrategies` 管理机器人创建的入群自动审批策略。
+每个策略可关联多个群，设置的规则在机器人拥有群管理员身份时生效。
+
+```Kotlin
+val manager = bot.groupJoinApprovalStrategies
+val created = manager.create {
+    addGroupOpenid("群OpenID")
+    isEnable = true
+}
+created.addWhitelistUsers(listOf("1234567"))
+created.execute()
+
+manager.list().asFlow().collect { record ->
+    println(record.source)
+}
+```
+
+Kotlin DSL 扩展位于 `love.forte.simbot.component.qguild.group`。
+`create` 返回保留服务端创建回执的操作句柄；`handle(strategyId)` 可按已知策略 ID 构造句柄，此操作不产生请求。
+`list(startCursor, limit, autoPagination)` 返回冷 `Collectable`，收集时请求；设置 `autoPagination=false` 时仅请求一页。
+群标识为可空字符串列表，未返回时保留 `null`。
+查询记录保存获取时的快照，后续操作的结果通过返回回执读取。
+
+句柄提供 `update`、白名单增删、`execute` 和 `delete`。
+修改关联群时，`groupAction` 的群标识形式须与创建策略时一致。
+执行策略是异步操作，官方说明约 10 分钟完成；`execute` 返回表示服务端已接受本次请求。
+
+Java 可使用 API 模型的 builder，以及生成的阻塞、异步和 reserve 入口：
+
+```Java
+var manager = bot.getGroupJoinApprovalStrategies();
+var input = GroupJoinApprovalStrategyCreate.builder().addGroupId("123456789").build();
+var created = manager.createBlocking(input);
+created.addWhitelistUsersBlocking(java.util.List.of("1234567"));
+created.executeBlocking();
+```
+
+底层接口参见 [](component-qq-guild-api-list.md)。
