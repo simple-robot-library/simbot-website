@@ -15,18 +15,23 @@ switcher-label: JavaAPI风格
 simbot 中相比于 simbot3, 对于部分 lambda 的场景进行了简单的优化,
 在 Java 中需要手写返回 `return Unit.INSTANCE;` 的地方大大减少了。
 
-## 阻塞、异步与预处理
+## 阻塞、异步与响应式
 
-simbot4
+simbot
 借助编译器插件
 [kotlin-suspend-transform-compiler-plugin][kstcp]
-为 Java 和其他可能的平台提供阻塞、异步以及 `Reserve` 风格的 API（`Reserve` 后续小节会讲）。
+为 Java 和其他可能的平台提供阻塞、异步以及响应式风格的 API。项目中启用并配置编译器插件后，
+标记 `@ST`（`@SuspendTrans`）或 `@STP`（`@SuspendTransProperty`）的挂起声明会生成相应桥接方法。
+未标记的挂起函数及手写 Java 辅助方法，需要查看各自提供的入口。
 
 [kstcp]: https://github.com/ForteScarlet/kotlin-suspend-transform-compiler-plugin
 
 例如, 一个 Kotlin 中的挂起函数：
 
 ```Kotlin
+import love.forte.simbot.suspendrunner.ST
+
+@ST
 suspend fun run(): Int {
     // ...
 }
@@ -34,7 +39,7 @@ suspend fun run(): Int {
 
 在 Java 中是难以调用的, 因为挂起函数在编译后会经过“编译魔法”而产生一些变化。
 
-通过编译器插件, 它便会为这个 `run()` 方法产生几个新的、可供 Java 直接使用的 API：
+如果启用了项目中的插件配置，并给这个挂起函数添加 `@ST`，编译器插件会生成可供 Java 使用的桥接 API：
 
 ```Java
 /**
@@ -48,11 +53,6 @@ public int runBlocking() { ... }
 public CompletableFuture<? extends Integer> runAsync() { ... }
 
 /**
- * Reserve 预处理桥接，返回 SuspendReserve。
- */
-public SuspendReserve<? extends Integer> runReserve() { ... }
-
-/**
  * Reactive 桥接（自 5.0 起，实验性）。
  */
 public Publisher<? extends Integer> runReactive() { ... }
@@ -60,7 +60,7 @@ public Publisher<? extends Integer> runReactive() { ... }
 
 ## 真实命名规则
 
-最常见的 JVM 侧桥接风格可以粗略理解为下面四类：
+最常见的 JVM 侧桥接风格可以粗略理解为下面三类：
 
 <deflist>
 <def title="Blocking">
@@ -88,20 +88,10 @@ public Publisher<? extends Integer> runReactive() { ... }
 - `bot.asFuture()`
 
 </def>
-<def title="Reserve">
-
-预处理调用，通常是 `xxxReserve()` 并返回 `SuspendReserve<T>`。
-
-例如：
-
-- `bot.startReserve()`
-- `application.joinReserve()`
-
-</def>
 <def title="Reactive">
 
 自 `5.0` 起，桥接方法返回 `org.reactivestreams.Publisher`，通常命名为
-`xxxReactive()`；属性风格的方法通常为 `getXxxReactive()`。
+`xxxReactive()`；属性风格的方法通常为 `getXxxReactive()`。具体名称可通过注解参数调整。
 这类 API 使用 `ExperimentalReactiveBridgingApi` 标记，可能在后续版本变更或移除。
 
 </def>
@@ -111,9 +101,9 @@ public Publisher<? extends Integer> runReactive() { ... }
 例如 `content()`、`guildCount()` 这类 API 在 JVM 上更常看到 `getContent()`、`getGuildCount()` 这样的名称。
 
 
-### 💡文档表现
+### 💡 文档表现
 
-在文档中，可能会同时提供阻塞、异步、预处理(响应式)三种风格的API。
+在文档中，可能会同时提供阻塞、异步、响应式三种风格的API。
 
 此时你可以通过文档**右上角**的切换标签
 <control>JavaAPI风格</control>
@@ -128,8 +118,7 @@ public Publisher<? extends Integer> runReactive() { ... }
 
 </note>
 
-
-### ⚠️注意异步中的异常处理
+### ⚠️ 注意异步中的异常处理
 
 当你在使用**异步**结果时（也包括下文会提到的各响应式类型结果），你需要多一些心眼儿。
 
@@ -190,48 +179,35 @@ future.whenComplete((value, exception) -> {
 <primary-label ref="experimental"/>
 <secondary-label ref="since-5.0"/>
 
-生成的 `Reactive` 方法返回 `org.reactivestreams.Publisher`，可以交给 Reactor 等响应式库订阅。
-挂起函数在订阅后执行；返回非空值时发布该值，返回 `null` 时直接完成。
+借助编译器插件，其生成的 JVM 编译产物包含 `Reactive` 方法，返回 `org.reactivestreams.Publisher`，
+以直接交给 Reactor 等响应式库处理并使用，挂起函数在订阅后执行。
+返回非空值时发布该值，返回 `null` 时直接完成。依据响应式的特性，订阅所得元素永不为 null。
+
 Kotlin 调用这些实验性桥接方法需要选择加入 `ExperimentalReactiveBridgingApi`。
 
 ```Java
 Mono.from(bot.startReactive()).block();
 ```
 
-也可以使用下面的 `SuspendReserve` 转换器直接取得 Reactor 或 RxJava 类型。
+<note>
 
-## SuspendReserve 预执行桥接器
+虽然示例使用了 `block`，但是既然你选择使用响应式 API，那么我们并不建议你使用任何可能会导致阻塞行为的操作。
+这里只是为了示例的便捷性才使用它，在真正的代码逻辑中请避免。
 
-前文提到了编译器插件会生成返回值为 `SuspendReserve` 预处理结果桥接函数,
-借助它便可以将挂起函数转化为更多可以支持的类型, 尤其是 Java 中的各种**响应式**结果。
+</note>
 
-```Java
-var reserve = xxx.runReserve();
+### 顺序组合响应式操作
 
-// 将挂起函数的结果作为 [[[Reactor|https://projectreactor.io/]]] 的 `reactor.core.publisher.Mono` 返回
-// 使用此转化器需要确保运行时环境中存在 [[[kotlinx-coroutines-reactor|https://github.com/Kotlin/kotlinx.coroutines/tree/master/reactive]]] 的相关依赖
-var mono = reserve.transform(SuspendReserves.mono());
-
-// 将挂起函数的结果作为 [[[RxJava 2.x|https://github.com/ReactiveX/RxJava]]] 的 `io.reactivex.Maybe` 返回
-// 使用此转化器需要确保运行时环境中存在 [[[kotlinx-coroutines-rx2|https://github.com/Kotlin/kotlinx.coroutines/tree/master/reactive]]] 的相关依赖
-var rx2Maybe = reserve.transform(SuspendReserves.rx2Maybe());
-
-// 将挂起函数的结果作为 [[[RxJava 3.x|https://github.com/ReactiveX/RxJava]]] 的 `io.reactivex.rxjava3.core.Maybe` 返回
-// 使用此转化器需要确保运行时环境中存在 [[[kotlinx-coroutines-rx3|https://github.com/Kotlin/kotlinx.coroutines/tree/master/reactive]]] 的相关依赖
-var rx3Maybe = reserve.transform(SuspendReserves.rx3Maybe());
-```
-
-当然, 通过 `SuspendReserve` 你也可以做到普通的阻塞与异步效果。
+以下示例需要 Reactor 的 `reactor-core` 依赖。通过 `Mono.from` 接入生成的 Publisher，
+使用 `then` 等待前一个操作完成后执行下一个操作：
 
 ```Java
-var reserve = xxx.runReserve();
-
-// 阻塞并等待返回
-var block = reserve.transform(SuspendReserves.block());
-
-// 将挂起函数的结果作为 `CompletableFuture` 返回
-var future = reserve.transform(SuspendReserves.async());
+Mono.from(bot.startReactive())
+        .then(Mono.from(bot.joinReactive()))
+        .subscribe(ignored -> {}, Throwable::printStackTrace);
 ```
+
+响应式链需要订阅后才会执行。返回 `null` 的桥接调用只发送完成信号，后续操作应通过 `then` 组合。
 
 ## 集成 Spring Boot
 

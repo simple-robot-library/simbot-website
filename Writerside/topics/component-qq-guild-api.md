@@ -105,12 +105,12 @@ API 模块提供 C2C 自定义菜单和多场景指令面板的模型与请求�
 - `appId`: _可选_ 。如果提供，会将其添加到请求头 `X-Union-Appid` 中。这是新的 `access_token` 访问方式所要求的。
 
 对 API 的请求在 Kotlin 中以挂起扩展函数提供；
-在 Java 中可通过 `ApiRequests` 使用阻塞、异步与 `SuspendReserve` 三种桥接形式。
+在 Java 中可通过 `ApiRequests` 使用阻塞、异步及响应式方法。
 
 API 层常用入口有：
 
 - `request`: 直接返回原始的 `HttpResponse` 结果，几乎不做校验
-- `requestText`: 返回请求到的原始JSON字符串，会校验HTTP响应状态是否为 `2xx`。
+- `requestText`: 返回响应文本，不校验 HTTP 状态。
 - `requestData`: 会解析响应值为对应的实体对象后返回。会校验是否成功。
 
 以 `GetGuildApi`（获取频道服务器详情）为例：
@@ -132,6 +132,11 @@ val data = api.requestData(client, token)
 
 </tab>
 <tab title="Java" group-key="Java">
+
+底层 `ApiRequests` / `BotRequests` 提供 `requestReactive`、`requestTextReactive` 和 `requestDataReactive`，
+返回 `Publisher`，订阅时发起请求。core 中带 `@ST` 的操作也提供生成的 `xxxReactive()`；
+持有 `QGBot` 时可通过 `bot.executeReactive(api)`、`bot.executeTextReactive(api)` 或 `bot.executeDataReactive(api)` 请求。
+响应式入口属于实验性 API，参见 [](java-friendly.md#reactive-bridging)。
 
 ```Java
 // 准备必要信息
@@ -171,19 +176,13 @@ var client = ApiRequests.newHttpClient();
 // 准备API对象
 final var api = GetGuildApi.create("频道ID");
 // 发起请求
-ApiRequests.requestReserve(api, client, token)
-        // 假设转化为 reactor 的 `Mono`
-        .transform(SuspendReserves.mono())
+Mono.from(ApiRequests.requestReactive(api, client, token))
         .subscribe(response -> { ... });
 
-ApiRequests.requestTextReserve(api, client, token)
-        // 假设转化为 reactor 的 `Mono`
-        .transform(SuspendReserves.mono())
+Mono.from(ApiRequests.requestTextReactive(api, client, token))
         .subscribe(text -> { ... });
 
-ApiRequests.requestDataReserve(api, client, token)
-        // 假设转化为 reactor 的 `Mono`
-        .transform(SuspendReserves.mono())
+Mono.from(ApiRequests.requestDataReactive(api, client, token))
         .subscribe(data -> { ... });
 ```
 {switcher-key="%jr%"}
@@ -257,19 +256,13 @@ Bot bot = ...
 // 准备API对象
 final var api = GetGuildApi.create("频道ID");
 // 发起请求
-BotRequests.requestReserve(bot, api)
-        // 假设转化为 reactor 的 `Mono`
-        .transform(SuspendReserves.mono())
+Mono.from(BotRequests.requestReactive(bot, api))
         .subscribe(response -> { ... });
 
-BotRequests.requestTextReserve(bot, api)
-        // 假设转化为 reactor 的 `Mono`
-        .transform(SuspendReserves.mono())
+Mono.from(BotRequests.requestTextReactive(bot, api))
         .subscribe(text -> { ... });
 
-BotRequests.requestDataReserve(bot, api)
-        // 假设转化为 reactor 的 `Mono`
-        .transform(SuspendReserves.mono())
+Mono.from(BotRequests.requestDataReactive(bot, api))
         .subscribe(data -> { ... });
 ```
 {switcher-key="%jr%"}

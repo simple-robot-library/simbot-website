@@ -124,18 +124,107 @@ println(result.addToMemberBlacklistFailOpenids)
 可选请求字段为 `null` 时省略，群号请求与响应统一使用字符串。
 构建时仅校验必要下限与群标识组合，数量和长度上限由服务端校验。
 
+<tabs>
+<tab title="Kotlin" group-key="Kotlin">
+
 ```Kotlin
+import love.forte.simbot.qguild.api.group.*
+import love.forte.simbot.qguild.api.requestData
+import love.forte.simbot.qguild.model.group.GroupJoinApprovalStrategyOp
+
 val created = CreateGroupJoinApprovalStrategyApi.create {
     addGroupOpenid("群OpenID")
     isEnable = true
 }.requestData(client, token)
 
-ModifyGroupJoinApprovalStrategyWhitelistApi.create(
+val result = ModifyGroupJoinApprovalStrategyWhitelistApi.create(
     created.strategyId,
     GroupJoinApprovalStrategyOp.ADD,
     listOf("1234567"),
 ).requestData(client, token)
+println(result.whitelistUserCount)
+
+ExecuteGroupJoinApprovalStrategyApi.create(created.strategyId).requestData(client, token)
 ```
+
+按游标查询：
+
+```Kotlin
+GetGroupJoinApprovalStrategyListApi.createFlow(limit = 20) {
+    requestData(client, token)
+}.collect { strategy ->
+    println(strategy.strategyId)
+}
+```
+
+</tab>
+<tab title="Java" group-key="Java">
+
+准备创建请求。`client` 与 `token` 的准备方式参见 [](component-qq-guild-api.md)。
+
+```Java
+var input = GroupJoinApprovalStrategyCreate.builder()
+        .addGroupOpenid("群OpenID")
+        .isEnable(true)
+        .build();
+var api = CreateGroupJoinApprovalStrategyApi.create(input);
+```
+
+阻塞风格：
+
+```Java
+var created = ApiRequests.requestDataBlocking(api, client, token);
+var whitelist = ModifyGroupJoinApprovalStrategyWhitelistApi.create(
+        created.getStrategyId(), GroupJoinApprovalStrategyOp.ADD, List.of("1234567"));
+var result = ApiRequests.requestDataBlocking(whitelist, client, token);
+System.out.println(result.getWhitelistUserCount());
+ApiRequests.requestDataBlocking(
+        ExecuteGroupJoinApprovalStrategyApi.create(created.getStrategyId()), client, token);
+```
+{switcher-key="%jb%"}
+
+异步风格：
+
+```Java
+ApiRequests.requestDataAsync(api, client, token)
+        .thenCompose(created -> ApiRequests.requestDataAsync(
+                ModifyGroupJoinApprovalStrategyWhitelistApi.create(
+                        created.getStrategyId(), GroupJoinApprovalStrategyOp.ADD, List.of("1234567")),
+                client, token))
+        .thenAccept(result -> System.out.println(result.getWhitelistUserCount()))
+        .exceptionally(error -> { error.printStackTrace(); return null; });
+```
+{switcher-key="%ja%"}
+
+响应式风格：持有 core 的 `QGBot` 时，可直接使用生成的 `executeDataReactive`。
+此入口及响应式桥接均为实验性 API。
+
+```Java
+Mono.from(bot.executeDataReactive(api))
+        .flatMap(created -> Mono.from(bot.executeDataReactive(
+                ModifyGroupJoinApprovalStrategyWhitelistApi.create(
+                        created.getStrategyId(), GroupJoinApprovalStrategyOp.ADD, List.of("1234567")))))
+        .subscribe(result -> System.out.println(result.getWhitelistUserCount()), Throwable::printStackTrace);
+```
+{switcher-key="%jr%"}
+
+仅使用 API 模块时，可直接使用 `ApiRequests.requestDataReactive`。请求在订阅时发起。
+
+```Java
+Mono.from(ApiRequests.requestDataReactive(api, client, token))
+        .flatMap(created -> Mono.from(ApiRequests.requestDataReactive(
+                ModifyGroupJoinApprovalStrategyWhitelistApi.create(
+                        created.getStrategyId(), GroupJoinApprovalStrategyOp.ADD, List.of("1234567")),
+                client, token)))
+        .subscribe(result -> System.out.println(result.getWhitelistUserCount()), Throwable::printStackTrace);
+```
+{switcher-key="%jr%"}
+
+以上 Java 示例使用 `java.util.List`、`love.forte.simbot.qguild.api.ApiRequests`，
+以及 `api.group` 中的请求类型和 `model.group` 中的模型类型。响应式示例另需 Reactor 的 `Mono`。
+
+</tab>
+</tabs>
 
 ## 其他 API
 
