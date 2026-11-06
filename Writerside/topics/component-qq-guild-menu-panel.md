@@ -58,7 +58,7 @@ println("updated version=${receipt.version}")
 `update(...)` 会整体覆盖当前菜单；从未设置菜单时，读取结果中的 `menu` 为 `null`。
 `QGCustomMenuSnapshot` 和 `QGCustomMenuUpdateReceipt` 都保留底层 API 返回的 `source`，并提供服务端版本号。
 
-Java 中可以使用生成的异步、阻塞或 `SuspendReserve` 形式：
+Java 中可以使用阻塞、异步或响应式风格：
 
 ```Java
 var manager = bot.getCustomMenus();
@@ -66,6 +66,26 @@ var current = manager.getBlocking();
 var receipt = manager.updateBlocking(CustomMenu.parse(json));
 System.out.println(receipt.getVersion());
 ```
+{switcher-key="%jb%"}
+
+```Java
+var manager = bot.getCustomMenus();
+manager.getAsync()
+        .thenCompose(current -> manager.updateAsync(CustomMenu.parse(json)))
+        .thenAccept(receipt -> System.out.println(receipt.getVersion()))
+        .exceptionally(error -> { error.printStackTrace(); return null; });
+```
+{switcher-key="%ja%"}
+
+```Java
+var manager = bot.getCustomMenus();
+Mono.from(manager.getReactive())
+        .flatMap(current -> Mono.from(manager.updateReactive(CustomMenu.parse(json))))
+        .subscribe(receipt -> System.out.println(receipt.getVersion()), Throwable::printStackTrace);
+```
+{switcher-key="%jr%"}
+
+响应式示例使用 Reactor `Mono`，生成的 Publisher 入口属于实验性 API，详见 [](java-friendly.md#reactive-bridging)。
 
 ### 自定义菜单互动
 

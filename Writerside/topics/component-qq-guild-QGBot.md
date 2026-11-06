@@ -763,15 +763,11 @@ final var guildRelation = bot.getGuildRelation();
 guildRelation.getGuildAsync(Identifies.of(1234L))
         .thenAccept(guild -> { ... });
 // 获取全部 QGGuild 的流
-guildRelation.getGuilds()
-        // 可以转化成 Flux
-        .transform(SuspendReserves.flux())
+Collectables.asFlux(guildRelation.getGuilds())
         .subscribe(guild -> { ... });
 
 // 额外提供可以指定批次数量和 lastId 的API
-guildRelation.guilds(null, 100)
-        // 可以转化成 Flux
-        .transform(SuspendReserves.flux())
+Collectables.asFlux(guildRelation.guilds(null, 100))
         .subscribe(guild -> { ... });
 
 // 额外提供了一些直接查询子频道的API
@@ -801,9 +797,7 @@ var guilds = guildRelation.getGuilds();
                 .forEach(guild -> { ... });
 
 // 额外提供可以指定批次数量和 lastId 的API
-var guildList = guildRelation.guilds(null, 100)
-        // 可以转化成 list
-        .transform(SuspendReserves.list());
+var guildList = Collectables.toList(guildRelation.guilds(null, 100));
 
 // 额外提供了一些直接查询子频道的API
 // 寻找指定ID的子频道
@@ -898,3 +892,208 @@ bot.sendToBlocking(Identifies.of("channel id"), Messages.of(
 
 </tab>
 </tabs>
+
+
+## 入群自动审批策略 {id="group-join-approval-strategies"}
+
+<secondary-label ref="since-5.0"/>
+
+通过 `QGBot.groupJoinApprovalStrategies` 管理机器人创建的入群自动审批策略。
+每个策略可关联多个群，设置的规则在机器人拥有群管理员身份时生效。
+
+core 中的策略 ID、群 OpenID、QQ 群号和白名单号码使用 `ID`。
+Kotlin 可通过字符串的 `.ID` 扩展构造，Java 可使用 `Identifies.of(...)`。
+创建、修改所用的底层 API 请求模型仍接收字符串。调用其 builder 时按 API 字段传值。
+
+### 创建并执行策略
+
+<tabs>
+<tab title="Kotlin" group-key="Kotlin">
+
+```Kotlin
+import love.forte.simbot.common.id.StringID.Companion.ID
+import love.forte.simbot.component.qguild.group.create
+
+val manager = bot.groupJoinApprovalStrategies
+val created = manager.create {
+    addGroupOpenid("群OpenID") // 也可使用 addGroupId("123456789")，两种标识二选一
+    isEnable = true
+    remark = "活动报名"
+}
+println(created.id)
+println(created.expireAt)
+
+val receipt = created.addWhitelistUsers(listOf("1234567".ID, "1234568".ID))
+println(receipt.whitelistUserCount) // 平台返回的估算数量
+created.execute()
+```
+
+</tab>
+<tab title="Java" group-key="Java">
+
+```Java
+var manager = bot.getGroupJoinApprovalStrategies();
+var input = GroupJoinApprovalStrategyCreate.builder()
+        .addGroupOpenid("群OpenID")
+        .isEnable(true)
+        .remark("活动报名")
+        .build();
+```
+
+```Java
+var created = manager.createBlocking(input);
+System.out.println(created.getId());
+created.addWhitelistUsersBlocking(List.of(Identifies.of("1234567")));
+created.executeBlocking();
+```
+{switcher-key="%jb%"}
+
+```Java
+var task = manager.createAsync(input)
+        .thenCompose(created -> created.addWhitelistUsersAsync(
+                List.of(Identifies.of("1234567")))
+                .thenCompose(receipt -> created.executeAsync()));
+task.whenComplete((ignored, error) -> {
+    if (error != null) error.printStackTrace();
+});
+```
+{switcher-key="%ja%"}
+
+<if switcher-key="%jr%">
+
+```Java
+var task = Mono.from(manager.createReactive(input))
+        .flatMap(created -> Mono.from(created.addWhitelistUsersReactive(
+                List.of(Identifies.of("1234567"))))
+                .then(Mono.from(created.executeReactive())));
+task.subscribe(ignored -> {}, Throwable::printStackTrace);
+```
+
+> 响应式桥接返回 `org.reactivestreams.Publisher`，自 5.0 起提供，使用 Reactor 时需引入 `reactor-core`，详见 [](java-friendly.md#reactive-bridging)。
+
+</if>
+
+</tab>
+</tabs>
+
+`create` 返回保留服务端创建回执的操作句柄，可读取启用状态、过期时间和原始 `source`。
+执行策略是异步操作，官方说明约 10 分钟完成；`execute` 成功返回表示服务端已接受本次请求。
+
+### 查询和遍历
+
+`list(startCursor, limit, autoPagination)` 返回冷 `Collectable`，收集时请求。
+默认自动分页；设置 `autoPagination=false` 时仅请求一页，空页会得到空集合。
+群 OpenID 和 QQ 群号列表为可空 `List<ID>`，未返回时保留 `null`。
+
+<tabs>
+<tab title="Kotlin" group-key="Kotlin">
+
+```Kotlin
+manager.list().asFlow().collect { record ->
+    println("策略=${record.id}, 群=${record.groupOpenids ?: record.groupIds}")
+}
+
+val firstPage = manager.list(limit = 20, autoPagination = false)
+firstPage.asFlow().collect { println(it.source) }
+```
+
+</tab>
+<tab title="Java" group-key="Java">
+
+阻塞收集：
+
+```Java
+var records = Collectables.toList(manager.list());
+records.forEach(record -> System.out.println(record.getId()));
+```
+{switcher-key="%jb%"}
+
+异步收集：
+
+```Java
+Collectables.toListAsync(manager.list())
+        .thenAccept(records -> records.forEach(record -> System.out.println(record.getId())))
+        .exceptionally(error -> { error.printStackTrace(); return null; });
+```
+{switcher-key="%ja%"}
+
+响应式收集：
+
+```Java
+Collectables.asFlux(manager.list())
+        .subscribe(record -> System.out.println(record.getId()), Throwable::printStackTrace);
+```
+{switcher-key="%jr%"}
+
+`Collectables` 位于 `love.forte.simbot.common.collectable`。
+`asFlux` 需要 Reactor 及 `kotlinx-coroutines-reactor` 依赖。
+Java 单页查询使用 `manager.list(null, 20, false)`。
+
+</tab>
+</tabs>
+
+### 操作已知策略
+
+`handle(strategyId)` 按已知策略 ID 构造句柄，此操作不产生请求。
+列表记录与创建结果也提供相同的操作能力。查询记录保留获取时的快照，操作结果通过返回回执读取。
+
+<tabs>
+<tab title="Kotlin" group-key="Kotlin">
+
+```Kotlin
+import love.forte.simbot.component.qguild.group.update
+
+val strategy = manager.handle("策略ID".ID)
+val receipt = strategy.update { isEnable = false }
+println(receipt.isEnable)
+strategy.removeWhitelistUsers(listOf("1234567".ID))
+strategy.delete()
+```
+
+修改关联群时，`groupAction` 的群标识形式须与创建策略时一致：
+
+```Kotlin
+strategy.update {
+    groupAction {
+        op = GroupJoinApprovalStrategyOp.ADD
+        addGroupOpenid("另一个群OpenID")
+    }
+}
+```
+
+</tab>
+<tab title="Java" group-key="Java">
+
+```Java
+var strategy = manager.handle(Identifies.of("策略ID"));
+var change = GroupJoinApprovalStrategyModify.builder().isEnable(false).build();
+```
+
+```Java
+var receipt = strategy.updateBlocking(change);
+System.out.println(receipt.isEnable());
+strategy.removeWhitelistUsersBlocking(List.of(Identifies.of("1234567")));
+strategy.deleteBlocking();
+```
+{switcher-key="%jb%"}
+
+```Java
+strategy.updateAsync(change)
+        .thenCompose(receipt -> strategy.removeWhitelistUsersAsync(List.of(Identifies.of("1234567"))))
+        .thenCompose(receipt -> strategy.deleteAsync())
+        .exceptionally(error -> { error.printStackTrace(); return null; });
+```
+{switcher-key="%ja%"}
+
+```Java
+Mono.from(strategy.updateReactive(change))
+        .then(Mono.from(strategy.removeWhitelistUsersReactive(List.of(Identifies.of("1234567")))))
+        .then(Mono.from(strategy.deleteReactive()))
+        .subscribe(ignored -> {}, Throwable::printStackTrace);
+```
+{switcher-key="%jr%"}
+
+</tab>
+</tabs>
+
+底层接口参见 [](component-qq-guild-api-list.md)。
