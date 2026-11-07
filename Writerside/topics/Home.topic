@@ -46,14 +46,8 @@
 
         <!--    Add up to 2 topics that you want to promote. Use the "type" attribute to select an icon.    -->
         <spotlight>
-            <a href="https://github.com/simple-robot" type="account"
-               summary="🎉前往 GitHub 组织库首页了解更多内容！">
-                组织库
-            </a>
-            <a href="communities.md" type="search"
-               summary="😊前往社群信息寻找、加入一个心仪的社群或讨论区并与其他人或维护者友好交流吧~">
-                社群
-            </a>
+            <a href="how-to-use.md" type="start" summary="选择开发方式和组件，从项目走到第一个 Bot">开始使用</a>
+            <a href="first-event.md" type="start" summary="无需平台账号，在本地运行第一个事件处理示例">第一次处理事件</a>
         </spotlight>
 
         <!--    Add several topics that are most important for this section.    -->

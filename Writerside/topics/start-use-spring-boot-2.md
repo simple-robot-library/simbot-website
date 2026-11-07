@@ -27,14 +27,18 @@ switcher-label: JavaAPI风格
 
 ## 安装
 
-<include from="Spring-Boot.md" element-id="install-spring"></include>
+准备一个 Spring Boot 2 项目，JDK 版本为 11 或更高，然后添加兼容 starter：
+
+<include from="refers.md" element-id="simbot-spring-2-build"></include>
+
+接入平台时还需要添加组件及其所需的网络引擎，参见 [](start-use-components.md)。
 
 ## 与 Spring Boot 3 的主要差异
 
 - 依赖坐标为 `love.forte.simbot:simbot-core-spring-boot-starter-v2`
 - `@EnableSimbot` 位于 `love.forte.simbot.spring2`
 - 相关配置、处理器与应用实现主要位于 `love.forte.simbot.spring2.*`
-- Java 基线为 11，而不是 17
+- Java 最低要求 11 不是 17（与 simbot 本体的要求一致）
 
 ## 使用
 

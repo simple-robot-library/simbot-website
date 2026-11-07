@@ -4,6 +4,13 @@ switcher-label: JavaAPI风格
 
 # 开始使用
 
+希望从完整示例开始？前往 [](component-kook-first-bot.md)。
+
+本页介绍如何安装 KOOK 组件、注册 Bot 并监听事件。需要提前准备好平台所需的 Bot 账号认证信息等内容，再选择核心库或 Spring Boot 的示例。
+
+页面中的代码片段用于说明各步骤。组合到同一个程序时，请先创建应用并注册监听器，再注册和启动 Bot，最后等待应用结束。示例中的 `join` 或 `block` 应放在启动流程末尾。
+
+
 ## 安装
 
 <include from="component-kook.md" element-id="install-core" />
@@ -31,7 +38,7 @@ val app = launchSimpleApplication {
     // 其他配置...
 }
 
-app.join() // 挂起app直到cancel它
+// 继续注册监听器和 Bot，最后再等待应用结束
 ```
 
 </tab>
@@ -48,12 +55,8 @@ final var applicationAsync = Applications.launchApplicationAsync(
     }
 );
 
-applicationAsync
-        .asFuture()
-        // Application 转化为 Future
-        .thenCompose(Application::asFuture)
-        // 阻塞这个Future直到Application被cancel
-        .join();
+// 后续可在此 Future 完成后注册监听器和 Bot
+var applicationFuture = applicationAsync.asFuture();
 ```
 {switcher-key=%ja%}
 
@@ -68,8 +71,7 @@ final var application = Applications.launchApplicationBlocking(
     }
 );
 
-// 阻塞直到被cancel
-application.joinBlocking();
+// 继续注册监听器和 Bot，最后再等待应用结束
 ```
 {switcher-key=%jb%}
 
@@ -84,15 +86,8 @@ var applicationAsync = Applications.launchApplicationAsync(
         }
 );
 
-// 例如：转化为 reactor.core.publisher.Mono;
-var mono = Mono.fromFuture(applicationAsync.asFuture())
-        .flatMap(app ->
-                Mono.from(app.joinReactive())
-        );
-
-// 使用这个响应式类型，例如阻塞它。
-/// 阻塞直到被cancel
-mono.block();
+// 后续可在响应式链中注册监听器和 Bot
+var applicationMono = Mono.fromFuture(applicationAsync.asFuture());
 ```
 {switcher-key=%jr%}
 

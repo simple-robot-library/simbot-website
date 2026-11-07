@@ -4,6 +4,13 @@ switcher-label: JavaAPI风格
 
 # 开始使用
 
+希望从完整示例开始？前往 [](component-qq-guild-first-bot.md)。
+
+本页介绍如何安装 QQ 机器人 组件、注册 Bot 并监听事件。请先准备平台所需的 Bot 账号认证信息、所需权限，再选择核心库或 Spring Boot 的示例。
+
+页面中的代码片段用于说明各步骤。组合到同一个程序时，请先创建应用并注册监听器，再注册和启动 Bot，最后等待应用结束。示例中的 `join` 或 `block` 应按需放在流程末尾。
+
+
 ## 安装
 
 <include from="component-qq-guild.md" element-id="install-core" />
@@ -16,13 +23,11 @@ switcher-label: JavaAPI风格
 
 ### API 服务地址
 
-QQ 开放平台自 `2026-08-10` 起将接口调用域名统一为
-`https://api.bot.qq.com`，不再提供独立的沙箱接口域名。
-组件默认使用此统一地址，无需额外配置。
+QQ 开放平台自 `2026-08-10` 起将接口调用域名统一为 `https://api.bot.qq.com`，
+不再提供独立的沙箱接口域名。组件默认使用此统一地址，无需额外配置。
 
-旧的 `useSandboxServerUrl()` 和配置值 `"SANDBOX"` 仅为兼容已有项目而保留，
-现已弃用，不应在新配置中继续使用。需要使用代理等自定义地址时，
-可通过 `serverUrl` 显式配置。有关配置文件的完整说明，参考 [](component-qq-guild-bot-config.md) 。
+旧的 `useSandboxServerUrl()` 和配置值 `"SANDBOX"` 现已弃用，仅为兼容已有项目而保留，不应在新配置中继续使用。
+需要使用代理等自定义地址时，可通过 `serverUrl` 显式配置。有关配置文件的完整说明，参考 [](component-qq-guild-bot-config.md) 。
 
 ### 事件监听配置
 
@@ -104,7 +109,7 @@ val app = launchSimpleApplication {
     // 其他配置...
 }
 
-app.join() // 挂起app直到cancel它
+// 继续注册监听器和 Bot，最后再等待应用结束
 ```
 
 </tab>
@@ -121,12 +126,8 @@ final var applicationAsync = Applications.launchApplicationAsync(
     }
 );
 
-applicationAsync
-        .asFuture()
-        // Application 转化为 Future
-        .thenCompose(Application::asFuture)
-        // 阻塞这个Future直到Application被cancel
-        .join();
+// 后续可在此 Future 完成后注册监听器和 Bot
+var applicationFuture = applicationAsync.asFuture();
 ```
 {switcher-key=%ja%}
 
@@ -141,8 +142,7 @@ final var application = Applications.launchApplicationBlocking(
     }
 );
 
-// 阻塞直到被cancel
-application.joinBlocking();
+// 继续注册监听器和 Bot，最后再等待应用结束
 ```
 {switcher-key=%jb%}
 
@@ -157,15 +157,8 @@ var applicationAsync = Applications.launchApplicationAsync(
         }
 );
 
-// 例如：转化为 reactor.core.publisher.Mono;
-var mono = Mono.fromFuture(applicationAsync.asFuture())
-        .flatMap(app ->
-                Mono.from(app.joinReactive())
-        );
-
-// 使用这个响应式类型，例如阻塞它。
-/// 阻塞直到被cancel
-mono.block();
+// 后续可在响应式链中注册监听器和 Bot
+var applicationMono = Mono.fromFuture(applicationAsync.asFuture());
 ```
 {switcher-key=%jr%}
 

@@ -38,7 +38,7 @@ JVM 平台中，Spring Boot starter 默认推荐使用 Spring Boot 3，
 
 如果你仍停留在 Spring Boot 2.x，
 则可以使用兼容模块 `simbot-core-spring-boot-starter-v2`，
-其 Java 基线为 **Java11+** 。
+其 Java 最低要求为 **Java11+** 。
 
 ## 过滤器的概念
 

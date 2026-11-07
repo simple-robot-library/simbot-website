@@ -154,6 +154,17 @@ Spring Boot 3.2及以下 (包括 2.x) 文档: <b>Dependency Versions / Version P
 [issues](https://github.com/simple-robot/simpler-robot/issues)
 反馈详情。
 
+## Bot 已启动但没有收到事件 {collapsible="true"}
+
+可以按下面的顺序检查：
+
+1. 查看启动日志，确认 Bot 已注册并启动。使用 Spring Boot 时，检查 `.bot.json` 文件路径和组件标识是否准确。
+2. 确认平台端具备所需权限（如有，例如 QQ 组件），并已订阅对应事件。OneBot 这类需要第三方服务端的还需要检查事件 WebSocket 地址和协议服务是否可访问。
+3. 确认监听器被注册或被 Spring 扫描到，事件类型与平台实际推送的类型相匹配。
+4. 如果配置了过滤条件，检查消息内容和条件是否匹配。可以先监听更通用的事件类型观察接收到的事件。
+
+各平台的配置入口见 [](start-use-components.md)。有关事件处理器的注册方式，参见 [](basic-event-listener.md)。
+
 ## QQ机器人组件监听不到群聊消息 {collapsible="true"}
 
 首先确保你配置了沙箱群（如果是测试环境），并启动成功无误。

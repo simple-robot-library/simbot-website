@@ -1,125 +1,57 @@
 # 开始使用
 
 <tldr>
-本章节介绍开始使用 simbot 的基本步骤。
+选择开发方式和目标平台，跟随一个完整的简单示例，开始使用 simbot。
 </tldr>
 
-<procedure>
-<step>安装核心库或Spring starter, 或者其他任意的 Application 实现。</step>
-<step>选择并安装你所需的组件库, 配置它们</step>
-<step>启动你的程序, 或者打包、部署。</step>
-</procedure>
+## 选择你的起点
+
+| 你想做什么？ | 去这里看看！ |
+| --- | --- |
+| 体验平台无关的纯本地 Demo 级事件处理 | [](first-event.md)。在本地推送一个测试事件并观察处理结果。 |
+| 在普通 Kotlin 或 Java 项目中接入 Bot | 了解 [](start-use-core.md)，再选择 [](start-use-components.md)。 |
+| 在 Spring Boot 项目中接入 Bot | [](start-use-spring-boot-3.md)。已有 Spring Boot 2 项目可参考 [](start-use-spring-boot-2.md)。 |
+| 从旧版本升级 | [](migration-5.0.md)。 |
+
+如果已经确定使用的平台，也可以直接前往对应组件的快速开始。它们会一并介绍依赖、Bot 配置和事件监听等内容。
+
+## 从项目到 Bot
+
+接入某组件平台通常需要以下步骤：
+
+1. 准备 Kotlin 或 Java 项目，并添加一个 `Application` 实现。
+2. 选择平台组件，添加组件依赖和它需要的网络库 (Ktor) 引擎等。
+3. 准备平台账号或协议服务，按组件说明配置并注册 Bot。
+4. 注册事件监听器，启动 Bot，再运行应用并验证消息或事件。
+
+各平台的凭据、权限和事件订阅方式不尽相同，具体内容以对应组件的手册为准。
 
 ## 安装 Application 实现
 
-先添加一个基于 `simbot-api`、实现了完整 `Application` 能力的库，再按它的要求配置或使用。
+`Application` 是组件、插件和事件调度器的运行环境。官方提供两种常用实现：
 
-### 官方实现
+- [](start-use-core.md)：使用核心库 `simbot-core`，在代码中配置应用、组件和 Bot。
+- [](start-use-spring-boot-3.md)：在 Spring Boot 项目中使用 starter，结合 Spring 配置和注解编写监听器。
 
-simbot 提供了两个这样的库：`simbot-core`（也就是 **“核心库”**）和 Spring Boot 的 starter 实现。
-
-<list>
-<li>
-
-前往 <a href="start-use-core.md">核心库</a>
-了解如何添加并使用 <code>simbot-core</code> 以及它提供的 <code>Application</code> 实现：<code>Simple</code>。
-
-</li>
-<li>
-
-前往 <a href="start-use-spring-boot-3.md">Spring Boot 3</a>
-了解如何添加并使用 <code>simbot-core-spring-boot-starter</code> 以及它提供的 <code>Application</code> 实现。
-
-</li>
-<li>
-
-如果你仍在使用 Spring Boot 2.x，
-前往 <a href="start-use-spring-boot-2.md">Spring Boot 2</a>
-了解如何添加并使用 <code>simbot-core-spring-boot-starter-v2</code>。
-
-</li>
-</list>
-
-<note>
-
-通常来说，虽然也需要添加组件库，但核心库（或其他 Application 实现库）的依赖依然是**必须的**。
-因为组件库对核心库（或者标准库）的依赖通常**只在编译期**。
-
-</note>
+使用 Spring Boot 2 的项目可以选择 [](start-use-spring-boot-2.md)。
+依赖坐标、JVM 版本和快照仓库的说明见 [](installation.md)。
 
 ## 安装组件、插件
 
-`Application` 提供了 `simbot-api`（也就是**“标准库”**）定义的诸多能力，比如组件、插件安装和事件调度，
-但它不包含 **具体的平台实现**，比如 QQ 频道、KOOK、大别野等 **特定平台** 的事件和消息。
-
-这些**特定平台**的实现，就是一个个不同的**组件或插件**。它们依赖标准库，但彼此独立。
-大部分已趋近稳定的组件库自 5.0 起在主仓库中维护并统一发版，其他组件或三方组件由各自的维护者管理。
-下文将它们称为 **“组件库”** 。
-
-以我们 [**官方维护的组件库**](components-intro.md) 为例，它们都有各自的应用手册，
-手册里也会提供类似“快速开始”的章节，说明如何配置、如何搭建项目。
-
-接下来只要选择要用的组件库，把依赖加上，再完成配置就行。
-如果只用一个组件库，也可以直接看对应的“快速开始”，里面会一起介绍核心库和组件库实现的安装。
-
-下面是一个简单的添加依赖的**伪例子**：
-
-<tabs group="build">
-<tab title="Gradle (Kotlin DSL)" group-key="kts">
-
-```Kotlin
-// 使用核心库
-implementation("love.forte.simbot:simbot-core:%version%")
-// 添加组件库, 假设有两个叫做 foo1、bar2 的组件实现
-implementation("com.example.component:foo1-core:x.xx")
-implementation("io.github.Jojo.cp:bar2-impl:x.xx")
-```
-
-</tab>
-<tab title="Gradle (Groovy)" group-key="groovy">
-
-```groovy
-// 使用核心库
-implementation 'love.forte.simbot:simbot-core:%version%'
-// 添加组件库, 假设有两个叫做 foo1、bar2 的组件实现
-implementation 'com.example.component:foo1-core:x.xx'
-implementation 'io.github.Jojo.cp:bar2-impl:x.xx'
-```
-
-</tab>
-<tab title="Maven" group-key="maven">
-
-```xml
-<!-- 使用核心库 -->
-<dependency>
-    <groupId>love.forte.simbot</groupId>
-    <artifactId>simbot-core-jvm</artifactId>
-    <version>%version%</version>
-</dependency>
-<!-- 添加组件库, 假设有两个叫做 foo1、bar2 的组件实现 -->
-<dependency>
-    <groupId>com.example.component</groupId>
-    <artifactId>foo1-core</artifactId>
-    <version>x.xx</version>
-</dependency>
-<dependency>
-    <groupId>io.github.Jojo.cp</groupId>
-    <artifactId>bar2-impl</artifactId>
-    <version>x.xx</version>
-</dependency>
-```
-
-</tab>
-</tabs>
+组件库提供平台相关的事件、消息和 Bot 实现。选择组件后，按照它的文档添加依赖并完成配置。
 
 ### 官方组件
 
-- 前往 [**组件库**](components-intro.md) 找到需要的组件，再按引导或手册添加依赖并使用。
+- [](component-qq-guild-first-bot.md)：接入 QQ 机器人官方开放平台 API。
+- [](component-kook-first-bot.md)：接入 KOOK 官方开放平台 API。
+- [](component-onebot-v11-first-bot.md)：连接 OneBot 11 协议实现。
+
+更多组件和模块选择说明见 [](components-intro.md) 和 [](module-libraries.md)。
 
 ### 社区组件
 
-- 前往 [**社区组件**](community-components.md) 找到需要的组件，或者自行开发组件、插件再使用。
+前往 [](community-components.md) 了解社区组件。使用时请参考相应组件的版本、依赖和配置说明。
 
 ### 组件开发
 
-- 前往 [**组件开发**](component-dev.md) 了解开发组件库的方式与步骤。
+如果你希望实现自己的组件或插件，前往 [](component-dev.md)。

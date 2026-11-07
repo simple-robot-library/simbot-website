@@ -1,5 +1,8 @@
 # 更深一步
 
-本章节下会针对一些普通应用场景下不常用或比较复杂、但功能也更加强大的内容的介绍与描述。
+了解 [](basic-application.md)、[](basic-event-listener.md) 等基础内容后，可以根据需要继续阅读：
 
-在更深一步之前, 你应当已经大致了解过 **基本内容**。
+- 使用 [](advanced-quantcat.md) 的注解简化事件监听和过滤。
+- 通过 [](advanced-interceptor.md) 定制事件处理过程。
+- 使用实验性的 [](extension-continuous-session.md) 处理多轮会话。
+- 阅读 [](component-dev.md)，实现自己的组件或插件。

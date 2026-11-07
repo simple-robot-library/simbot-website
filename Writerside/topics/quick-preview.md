@@ -11,8 +11,8 @@ switcher-label: JavaAPI风格
 <p>—— 唐·孟郊《登科后》</p>
 </tldr>
 
-> 本章节提供一些常见的代码示例与风格展示，但是**不会**对它们做过多介绍，甚至不会介绍。
-> 详细的内容可前往文档各处查阅。
+> 本章节展示常见的代码示例与使用风格。初次使用时，可以先阅读 [](first-event.md) 来运行一个完整的纯本地示例，
+> 再选择组件接入实际平台。
 
 ## 构建Application
 
@@ -73,7 +73,7 @@ var mono = Mono.fromFuture(future);
 </tab>
 <tab title="Spring">
 
-在Spring中，你不需要关系 `Application` 的构建。
+在 Spring 中，`Application` 的构建由 starter 处理。
 
 <tabs group="code">
 <tab title="Kotlin" group-key="Kotlin">

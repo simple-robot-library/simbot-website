@@ -37,17 +37,18 @@
         <toc-element topic="java-friendly.md"/>
         <toc-element topic="use-kotlin.md"/>
     </toc-element>
-    <toc-element topic="quick-preview.md"/>
     <toc-element topic="how-to-use.md">
+        <toc-element topic="first-event.md"/>
         <toc-element topic="installation.md"/>
+        <toc-element topic="start-use-components.md"/>
         <toc-element toc-title="使用">
             <toc-element topic="start-use-core.md"/>
             <toc-element topic="start-use-spring-boot-3.md"/>
             <toc-element topic="start-use-spring-boot-2.md"/>
         </toc-element>
-        <toc-element topic="start-use-components.md"/>
         <toc-element topic="codegen.md"/>
     </toc-element>
+    <toc-element topic="quick-preview.md"/>
     <toc-element toc-title="集成">
         <toc-element topic="Spring-Boot.md"/>
         <toc-element topic="other-integration.md"/>
@@ -72,6 +73,7 @@
 
         <toc-element topic="components-intro.md"/>
         <toc-element topic="component-qq-guild.md">
+            <toc-element topic="component-qq-guild-first-bot.md"/>
             <toc-element topic="component-qq-guild-start-using.md"/>
             <toc-element topic="component-qq-guild-Webhook.md"/>
             <toc-element topic="component-qq-guild-bot-config.md"/>
@@ -101,6 +103,7 @@
         </toc-element>
         <toc-element topic="component-onebot.md">
             <toc-element topic="component-onebot-v11.md">
+                <toc-element topic="component-onebot-v11-first-bot.md"/>
                 <toc-element topic="component-onebot-v11-start-using.md"/>
                 <toc-element topic="component-onebot-v11-event.md"/>
                 <toc-element topic="component-onebot-v11-message.md"/>
@@ -116,6 +119,7 @@
         </toc-element>
         <toc-element topic="component-kook.md">
             <toc-element topic="component-kook-bot-config.md"/>
+            <toc-element topic="component-kook-first-bot.md"/>
             <toc-element topic="component-kook-start-using.md"/>
             <toc-element toc-title="基础内容">
                 <toc-element topic="component-kook-api-list.md"/>

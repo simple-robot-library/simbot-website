@@ -29,3 +29,10 @@ group.launch { ... }
 参考
 <a href="java-friendly.md" />
 。
+
+## 查找和使用对象
+
+从 [](component-onebot-v11-OneBotBot.md) 可以查询好友、陌生人和群。
+群、成员和好友的可用操作分别参见 [](component-onebot-v11-OneBotGroup.md)、
+[](component-onebot-v11-OneBotMember.md) 和 [](component-onebot-v11-OneBotFriend.md)。
+消息段与消息发送的说明见 [](component-onebot-v11-message.md)。

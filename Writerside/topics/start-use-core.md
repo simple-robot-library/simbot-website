@@ -6,7 +6,7 @@ switcher-label: JavaAPI风格
 
 <tldr>
 
-使用 `Application` 的基本实现模块 `simbot-core`。
+使用 `Application` 的基本实现模块 `simbot-core`。想先运行一个完整的纯本地例子，可以参考 [](first-event.md)。
 
 </tldr>
 
@@ -27,6 +27,8 @@ switcher-label: JavaAPI风格
 > 参考更多。
 
 ## 使用
+
+下面的片段分别展示创建和等待/保持应用的方法。接入组件时，请先注册监听器、注册并启动 Bot，再在程序末尾等待应用结束。
 
 ### 创建 Application
 
@@ -106,7 +108,8 @@ Mono.fromFuture(applicationAsync.asFuture())
 
 ## 运行
 
-执行你的程序入口 `main` 方法，体验一下吧~
+完成组件配置和监听器注册后，执行 `main` 方法。`join()` 会挂起并等待应用关闭，适合放在函数末尾。
+如果暂时没有平台账号，可以先运行 [](first-event.md) 中的本地事件示例。
 
 > 在 native 平台下，你可能需要使用 `runBlocking { ... }` 包裹上述需要挂起的内容
 > (因为 native 尚不支持可挂起的 main 入口，参考 [KT-52753](https://youtrack.jetbrains.com/issue/KT-52753/Native-Support-suspending-entrypoints))，

@@ -101,7 +101,7 @@ Spring Boot 2.7 的开放源码软件支持（OSS support）已结束（2023-11-
 
 引用其中的相关说明：
 
-> 此外，Spring Boot 3.x 要求使用 Java 17 作为基线，
+> 此外，Spring Boot 3.x 要求最低使用 Java 17，
 > 因此如果您想利用您最喜欢的框架的新主要版本的强大功能，升级 Java 版本至关重要。
 >
 > 不过，如果现在不能升级，一些供应商（如 Oracle 和 BellSoft）
@@ -577,12 +577,11 @@ public class MyPluginInstaller implements SimbotPluginInstaller {
 
 ```Kotlin
 @Component // 交给 Spring 管理
-public class MyComponentInstaller implements SimbotApplicationLauncherPreConfigurer {
-    @Override
+class MyComponentInstaller : SimbotApplicationLauncherPreConfigurer {
     override fun configure(configurer: ApplicationFactoryConfigurer<SpringApplicationBuilder, SpringApplicationEventRegistrar, SpringEventDispatcherConfiguration>) {
         // 配置或安装，同一个工厂实例的多次配置会被合并
         configurer.install(...)
-        installer.install(...) { ... }
+        configurer.install(...) { ... }
     }
 }
 ```
@@ -597,7 +596,7 @@ public class MyComponentInstaller implements SimbotApplicationLauncherPreConfigu
     public void configure(@NotNull ApplicationFactoryConfigurer<SpringApplicationBuilder, SpringApplicationEventRegistrar, SpringEventDispatcherConfiguration> configurer) {
         // 配置或安装，同一个工厂实例的多次配置会被合并
         configurer.install(...);
-        installer.install(..., config -> { ... });
+        configurer.install(..., config -> { ... });
     }
 }
 ```
