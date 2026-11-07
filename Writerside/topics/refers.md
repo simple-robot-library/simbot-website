@@ -146,7 +146,8 @@ implementation 'love.forte.simbot:simbot-core-spring-boot-starter-v2:%version%'
 处选择一个对应所用平台下合适的 `Client Engine`。
 这里会根据不同平台提供几个示例，你可以选择其他可用目标。
 
-> 注意应选择使用 `v2.x` 版本的 Ktor。5.0 后的版本会更新到 Ktor 3。
+> 引擎版本需要与组件使用的 Ktor 版本一致。simbot 5.0 与其组件使用 Ktor 3，
+> 具体版本参见 [](migration-5.0.md)。
 
 <tabs group="Platform">
 <tab title="JVM" group-key="JVM">

@@ -79,21 +79,18 @@ group.sendBlocking(messageContent);
 
 ```Java
 OneBotGroup group = ...;
-group.sendReserve("text")
-    .transform(SuspendReserves.mono())
+Mono.from(group.sendReactive("text"))
     .subscribe();
 
-group.sendReserve(
+Mono.from(group.sendReactive(
     Messages.builder()
             .add("text")
             .add(new At(Identifies.of(123)))
     .build()
-    )
-        .transform(SuspendReserves.mono())
+    ))
     .subscribe();
 
-group.sendReserve(messageContent)
-    .transform(SuspendReserves.mono())
+Mono.from(group.sendReactive(messageContent))
     .subscribe();
 ```
 {switcher-key=%jr%}
@@ -142,19 +139,16 @@ group.deleteBlocking(
 
 ```Java
 OneBotGroup group = ...;
-group.deleteReserve()
-    .transform(SuspendReserves.mono())
+Mono.from(group.deleteReactive())
     .subscribe();
 
-group.deleteReserve(OneBotGroupDeleteOption.dismiss())
-    .transform(SuspendReserves.mono())
+Mono.from(group.deleteReactive(OneBotGroupDeleteOption.dismiss()))
     .subscribe();
 
-group.deleteReserve(
+Mono.from(group.deleteReactive(
         OneBotGroupDeleteOption.dismiss(),
         StandardDeleteOption.IGNORE_ON_FAILURE
-    )
-    .transform(SuspendReserves.mono())
+    ))
     .subscribe();
 ```
 {switcher-key=%jr%}
@@ -217,8 +211,7 @@ group.banBlocking(true); // true开启，false关闭
 
 ```Java
 OneBotGroup group = ...;
-group.banReserve("newName") // true开启，false关闭
-    .transform(SuspendReserves.mono())
+Mono.from(group.banReactive(true)) // true开启，false关闭
     .subscribe();
 ```
 {switcher-key=%jr%}
@@ -256,8 +249,7 @@ group.setNameBlocking("newName");
 
 ```Java
 OneBotGroup group = ...;
-group.setNameReserve("newName")
-    .transform(SuspendReserves.mono())
+Mono.from(group.setNameReactive("newName"))
     .subscribe();
 ```
 {switcher-key=%jr%}
@@ -294,8 +286,7 @@ group.setBotGroupNickBlocking("newNick");
 
 ```Java
 OneBotGroup group = ...;
-group.setBotGroupNickReserve("newNick")
-    .transform(SuspendReserves.mono())
+Mono.from(group.setBotGroupNickReactive("newNick"))
     .subscribe();
 ```
 {switcher-key=%jr%}
@@ -333,8 +324,7 @@ group.setAdminBlocking(memberId, true);
 
 ```Java
 OneBotGroup group = ...;
-group.setAdminReserve(memberId, true)
-    .transform(SuspendReserves.mono())
+Mono.from(group.setAdminReactive(memberId, true))
     .subscribe();
 ```
 {switcher-key=%jr%}
@@ -375,12 +365,10 @@ group.getAllHonorInfoBlocking();
 
 ```Java
 OneBotGroup group = ...;
-group.getHonorInfoReserve("talkative")
-    .transform(SuspendReserves.mono())
+Mono.from(group.getHonorInfoReactive("talkative"))
     .subscribe();
 
-group.getAllHonorInfoReserve()
-    .transform(SuspendReserves.mono())
+Mono.from(group.getAllHonorInfoReactive())
     .subscribe();
 ```
 {switcher-key=%jr%}
@@ -428,8 +416,7 @@ group.setAnonymousBlocking(true);
 
 ```Java
 OneBotGroup group = ...;
-group.setAnonymousReserve(true)
-    .transform(SuspendReserves.mono())
+Mono.from(group.setAnonymousReactive(true))
     .subscribe();
 ```
 {switcher-key=%jr%}

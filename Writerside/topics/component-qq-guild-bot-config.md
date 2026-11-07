@@ -12,7 +12,7 @@
 并以 `.bot.json` 作为扩展名，例如 `mybot.bot.json`。
 
 这个扫描目录是可配置的。
-这是属于 simbot4 Spring Boot starter 的配置，可参考
+这是属于 simbot Spring Boot starter 的配置，可参考
 [集成 Spring Boot](Spring-Boot.md)。
 
 </tip>
@@ -73,13 +73,11 @@
 
 ## 属性描述
 
-<deflist>
-<def title="component">
+### `component`
 
 固定值：`simbot.qqguild`
 
-</def>
-<def title="ticket">
+### `ticket`
 
 bot用于登录的票据信息，必填。
 
@@ -109,9 +107,8 @@ bot开发配置中的 `Token`。
 </def>
 </deflist>
 
-</def>
 
-<def title="config">
+### `config`
 可选项，提供一些额外的可配置属性。
 
 <deflist>
@@ -629,8 +626,6 @@ val configuration = ConfigurableBotConfiguration().apply {
 }
 ```
 
-</def>
-</deflist>
 </def>
 </deflist>
 

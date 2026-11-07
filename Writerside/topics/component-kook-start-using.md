@@ -87,9 +87,7 @@ var applicationAsync = Applications.launchApplicationAsync(
 // 例如：转化为 reactor.core.publisher.Mono;
 var mono = Mono.fromFuture(applicationAsync.asFuture())
         .flatMap(app ->
-                app.joinReserve().transform(
-                        SuspendReserves.mono()
-                )
+                Mono.from(app.joinReactive())
         );
 
 // 使用这个响应式类型，例如阻塞它。
@@ -337,9 +335,7 @@ public static void main(String[] args) {
         // 配置 Application
         .doOnNext(CoreMain::configure)
         .flatMap(app ->
-            app.joinReserve().transform(
-                SuspendReserves.mono()
-            )
+            Mono.from(app.joinReactive())
         );
 
     // 使用这个响应式类型，例如阻塞它。
@@ -380,8 +376,7 @@ public static void configure(Application application) {
                 return Unit.INSTANCE;
             });
     // 启动
-    bot.startReserve()
-            .transform(SuspendReserves.mono())
+    Mono.from(bot.startReactive())
             // 在使用响应式编程的时候，记得处理异常
             .doOnError(ex -> {
                 Logger.getGlobal().log(
@@ -562,8 +557,7 @@ public static void configure(Application application) {
                         System.out.println("Event: " + event);
                         if ("你好".equals(event.getMessageContent().getPlainText())) {
                             // 返回一个内容是响应式类型的EventResult类型的结果
-                            final var mono = event.replyReserve("你也好")
-                                    .transform(SuspendReserves.mono())
+                            final var mono = Mono.from(event.replyReactive("你也好"))
                                     .then();
 
                             return EventResult.of(mono);
@@ -720,8 +714,7 @@ public class MyHandles {
     @Filter("你好")
     public Mono<?> onMessage(KookChannelMessageEvent event) {
         System.out.println("KookChannelMessageEvent: " + event);
-        return event.replyReserve("你也好")
-            .transform(SuspendReserves.mono());
+        return Mono.from(event.replyReactive("你也好"));
         // 可以直接返回任意(kotlinx.coroutines支持的)响应式类型，
         // 不过需要注意，确保运行时环境中有对应的依赖，
         // 以Mono为例，需要添加 [[[kotlinx-coroutines-reactor|https://github.com/Kotlin/kotlinx.coroutines/tree/master/reactive]]]

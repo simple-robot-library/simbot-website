@@ -79,21 +79,18 @@ member.sendBlocking(messageContent);
 
 ```Java
 OneBotMember member = ...;
-member.sendReserve("text")
-    .transform(SuspendReserves.mono())
+Mono.from(member.sendReactive("text"))
     .subscribe();
 
-member.sendReserve(
+Mono.from(member.sendReactive(
     Messages.builder()
             .add("text")
             .add(new Face(Identifies.of(123)))
     .build()
-    )
-        .transform(SuspendReserves.mono())
+    ))
     .subscribe();
 
-member.sendReserve(messageContent)
-    .transform(SuspendReserves.mono())
+Mono.from(member.sendReactive(messageContent))
     .subscribe();
 ```
 {switcher-key=%jr%}
@@ -144,19 +141,16 @@ member.deleteBlocking(
 
 ```Java
 OneBotMember member = ...;
-member.deleteReserve()
-    .transform(SuspendReserves.mono())
+Mono.from(member.deleteReactive())
     .subscribe();
 
-member.deleteReserve(OneBotMemberDeleteOption.rejectRequest())
-    .transform(SuspendReserves.mono())
+Mono.from(member.deleteReactive(OneBotMemberDeleteOption.rejectRequest()))
     .subscribe();
 
-member.deleteReserve(
+Mono.from(member.deleteReactive(
         OneBotMemberDeleteOption.rejectRequest(),
         StandardDeleteOption.IGNORE_ON_FAILURE
-    )
-    .transform(SuspendReserves.mono())
+    ))
     .subscribe();
 ```
 {switcher-key=%jr%}
@@ -217,8 +211,7 @@ var stranger = member.toStrangerBlocking();
 
 ```Java
 OneBotMember member = ...;
-member.toStrangerReserve()
-        .transform(SuspendReserves.mono())
+Mono.from(member.toStrangerReactive())
         .subscribe(stranger -> {
             // ... 
         });
@@ -261,8 +254,7 @@ member.setNickBlocking("newNick");
 
 ```Java
 OneBotMember member = ...;
-member.setNickReserve("newNick")
-        .transform(SuspendReserves.mono())
+Mono.from(member.setNickReactive("newNick"))
         .subscribe();
 ```
 {switcher-key=%jr%}
@@ -303,8 +295,7 @@ member.setAdminBlocking(true);
 
 ```Java
 OneBotMember member = ...;
-membersetAdminReserve(true)
-        .transform(SuspendReserves.mono())
+Mono.from(member.setAdminReactive(true))
         .subscribe();
 ```
 {switcher-key=%jr%}
@@ -353,8 +344,7 @@ var info = member.getSourceMemberInfoBlocking();
 
 ```Java
 OneBotMember member = ...;
-member.getSourceMemberInfoReserve()
-        .transform(SuspendReserves.mono())
+Mono.from(member.getSourceMemberInfoReactive())
         .subscribe(info -> {
             // ...
         });
@@ -405,12 +395,10 @@ member.unbanBlocking();
 
 ```Java
 OneBotMember member = ...;
-member.banReserve(10L, TimeUnit.MINUTES)
-        .transform(SuspendReserves.mono())
+Mono.from(member.banReactive(10L, TimeUnit.MINUTES))
         .subscribe();
 
-member.unbanReserve()
-        .transform(SuspendReserves.mono())
+Mono.from(member.unbanReactive())
         .subscribe();
 ```
 {switcher-key=%jr%}
@@ -455,8 +443,7 @@ member.setSpecialTitleBlocking("newTitle");
 
 ```Java
 OneBotMember member = ...;
-member.setSpecialTitleReserve("newTitle")
-        .transform(SuspendReserves.mono())
+Mono.from(member.setSpecialTitleReactive("newTitle"))
         .subscribe();
 ```
 {switcher-key=%jr%}

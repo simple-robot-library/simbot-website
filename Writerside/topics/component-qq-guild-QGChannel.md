@@ -108,15 +108,13 @@ event.getContentAsync()
 
 ```Java
 QGChannelCreateEvent event = ...
-var channel = event.getContentBlocking() 
+var channel = event.getContent();
 ```
 {switcher-key='%jb%'}
 
 ```Java
 QGChannelCreateEvent event = ...
-event.getContentReserve()
-        // 例如转为 Reactor 的 `Mono`
-        .transform(SuspendReserves.mono())
+Mono.from(event.getContentReactive())
         .subscribe(channel -> { ... })
 ```
 {switcher-key='%jr%'}
@@ -182,14 +180,13 @@ channel.sendBlocking(Messages.of(
 ```Java
 QGTextChannel channel = ...
 
-channel.sendReserve("消息内容")
-        .transform(SuspendReserves.mono())
+Mono.from(channel.sendReactive("消息内容"))
         .subscribe(receipt -> { ... });
 
-channel.sendReserve(Messages.of(
+Mono.from(channel.sendReactive(Messages.of(
         Text.of("文本消息"),
         At.of(Identifies.of("user id"))
-    )).transform(SuspendReserves.mono())
+    )))
         .subscribe(receipt -> { ... });
 ```
 

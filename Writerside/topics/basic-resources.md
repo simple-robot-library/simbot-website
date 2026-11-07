@@ -50,7 +50,7 @@ var bytesResource = Resources.valueOf(bytes);
 <tabs>
 <tab title="Kotlin" group-key="Kotlin">
 
-```json
+```kotlin
 val fileResource1 = fileResource("/file/image.jpg")
 val fileResource2 = fileResource("file", "image.jpg")
 ```
@@ -82,7 +82,7 @@ var fileResource2 = Resources.valueOfPath("file", "image.jpg");
 <tabs>
 <tab title="Kotlin" group-key="Kotlin">
 
-```json
+```kotlin
 val file = File("sample.txt")
 val resource = file.toResource()
 ```
@@ -115,7 +115,7 @@ val resource = path.toResource()
 
 ```java
 var path = Paths.get("file.txt");
-var resrouce = Resources.valueOf(path);
+var resource = Resources.valueOf(path);
 ```
 
 </tab>

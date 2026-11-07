@@ -38,5 +38,5 @@
 <include from="ads.md" element-id="horizontal-multi-ad-unit"></include>
 
 [GH]: https://github.com/simple-robot/simpler-robot
-[GH-CB]: https://github.com/simple-robot/simpler-robot/blob/v4-dev/docs/CONTRIBUTING.md
+[GH-CB]: https://github.com/simple-robot/simpler-robot/blob/dev/docs/CONTRIBUTING_CN.md
 [GHD]: https://github.com/orgs/simple-robot/discussions

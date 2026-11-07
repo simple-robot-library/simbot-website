@@ -17,8 +17,7 @@
 
 事件类型中, 比较基础、接近根部的类型。
 
-<deflist>
-<def title="Event" id="d-event">
+### Event {id="d-event"}
 
 事件。是所有事件类型的老父亲。
 
@@ -42,8 +41,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="ComponentEvent" id="d-component-event">
+### ComponentEvent {id="d-component-event"}
 
 代表一个含有
 <tooltip term="组件标识"><code>Component</code></tooltip>
@@ -59,8 +57,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="BotEvent" id="d-bot-event">
+### BotEvent {id="d-bot-event"}
 
 继承 [`ComponentEvent`](#d-component-event),
 代表一个含有 `Bot` 的事件。
@@ -75,8 +72,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="ContentEvent" id="d-content-event">
+### ContentEvent {id="d-content-event"}
 
 存在一个 **主要事件中心 (`content`)** 的事件类型。
 
@@ -92,8 +88,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="SourceEvent" id="d-source-event">
+### SourceEvent {id="d-source-event"}
 
 存在一个 **源头 (`source`)** 的事件类型。
 通常与 [`ContentEvent`](#d-content-event) 配合实现。
@@ -110,8 +105,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="ChangeEvent" id="d-change-event">
+### ChangeEvent {id="d-change-event"}
 
 继承 [`ContentEvent`](#d-content-event),
 发生了某种变化的事件。
@@ -128,8 +122,6 @@
 
 </def>
 </deflist>
-</def>
-</deflist>
 
 ## 行为对象 Actor 相关事件
 
@@ -137,8 +129,7 @@
 <tooltip term="行为对象">行为对象</tooltip>
 相关、并将其视为**事件中心**的事件类型。
 
-<deflist>
-<def title="ActorEvent" id="d-actor-event">
+### ActorEvent {id="d-actor-event"}
 
 所有**行为对象事件**的统一父类, 继承 [BotEvent](#d-bot-event)、[ContentEvent](#d-content-event)。
 
@@ -160,8 +151,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="ContactEvent">
+### ContactEvent
 
 以
 <tooltip term="联系人">联系人</tooltip>
@@ -178,8 +168,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="OrganizationEvent" id="d-organization-event">
+### OrganizationEvent {id="d-organization-event"}
 
 以
 <tooltip term="组织">组织</tooltip>
@@ -196,8 +185,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="ChatRoomEvent">
+### ChatRoomEvent
 
 以
 <tooltip term="聊天室">聊天室</tooltip>
@@ -214,8 +202,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="ChatGroupEvent">
+### ChatGroupEvent
 
 以
 <tooltip term="聊天群">聊天群</tooltip>
@@ -232,8 +219,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="GuildEvent">
+### GuildEvent
 
 以
 <tooltip term="频道服务器">频道服务器</tooltip>
@@ -250,8 +236,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="ChannelEvent">
+### ChannelEvent
 
 以
 <tooltip term="频道">频道</tooltip>
@@ -274,8 +259,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="ChatChannelEvent">
+### ChatChannelEvent
 
 以
 <tooltip term="聊天频道">聊天频道</tooltip>
@@ -298,8 +282,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="OrganizationSourceEvent">
+### OrganizationSourceEvent
 
 以
 <tooltip term="组织">组织</tooltip>
@@ -319,8 +302,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="MemberEvent" id="d-member-event">
+### MemberEvent {id="d-member-event"}
 
 以
 <tooltip term="组织成员">组织成员</tooltip>
@@ -343,8 +325,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="ChatGroupMemberEvent" id="d-group-member-event">
+### ChatGroupMemberEvent {id="d-group-member-event"}
 
 以一个
 <tooltip term="聊天群">聊天群</tooltip>
@@ -369,8 +350,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="GuildMemberEvent" id="d-guild-member-event">
+### GuildMemberEvent {id="d-guild-member-event"}
 
 以一个
 <tooltip term="频道">频道</tooltip>
@@ -394,15 +374,12 @@
 
 </def>
 </deflist>
-</def>
-</deflist>
 
 ## 请求相关事件
 
 一些与**申请、请求**或相似概念相关的事件类型。
 
-<deflist>
-<def title="RequestEvent">
+### RequestEvent
 
 `Bot` 收到的某种与请求/申请有关的事件。继承 [BotEvent](#d-bot-event)。
 
@@ -428,8 +405,7 @@
 <def title="accept()">接受此请求。</def>
 </deflist>
 
-</def>
-<def title="OrganizationRequestEvent">
+### OrganizationRequestEvent
 
 `Bot` 收到的某种与
 <tooltip term="组织">组织</tooltip>
@@ -437,8 +413,7 @@
 
 继承 [OrganizationEvent](#d-organization-event)。
 
-</def>
-<def title="OrganizationJoinRequestEvent">
+### OrganizationJoinRequestEvent
 
 某个用户想要加入目标
 <tooltip term="组织">组织</tooltip>
@@ -458,8 +433,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="ChatGroupJoinRequestEvent">
+### ChatGroupJoinRequestEvent
 
 某用户申请加入
 <tooltip term="聊天群">聊天群</tooltip>
@@ -474,8 +448,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="GuildJoinRequestEvent">
+### GuildJoinRequestEvent
 
 某用户申请加入
 <tooltip term="频道">频道</tooltip>
@@ -490,8 +463,6 @@
 </def>
 </deflist>
 
-</def>
-</deflist>
 
 ## 成员变动事件
 
@@ -499,8 +470,7 @@
 <tooltip term="组织成员">组织成员</tooltip>
 发生了**变化、变动**或相似概念相关的事件类型。
 
-<deflist>
-<def title="MemberChangeEvent">
+### MemberChangeEvent
 
 当
 <tooltip term="组织成员">组织成员</tooltip>
@@ -517,8 +487,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="GuildMemberChangeEvent">
+### GuildMemberChangeEvent
 
 当
 <tooltip term="频道">频道</tooltip>
@@ -543,8 +512,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="GroupMemberChangeEvent">
+### GroupMemberChangeEvent
 
 当
 <tooltip term="聊天群">聊天群</tooltip>
@@ -569,8 +537,6 @@
 </def>
 </deflist>
 
-</def>
-</deflist>
 
 ## 组织变动事件
 
@@ -578,8 +544,7 @@
 <tooltip term="组织">组织</tooltip>
 发生了**变化、变动**或相似概念相关的事件类型。
 
-<deflist>
-<def title="OrganizationChangeEvent">
+### OrganizationChangeEvent
 
 某
 <tooltip term="组织">组织</tooltip>
@@ -598,8 +563,7 @@
 </def>
 </deflist>
 
-</def>
-<def title="MemberIncreaseOrDecreaseEvent">
+### MemberIncreaseOrDecreaseEvent
 某组织成员增加或减少的事件。
 
 <deflist type="medium">
@@ -620,51 +584,40 @@
 </def>
 </deflist>
 
-</def>
-<def title="MemberIncreaseEvent">
+### MemberIncreaseEvent
 某组织成员增加事件。继承 <code>MemberIncreaseOrDecreaseEvent</code>。
-</def>
-<def title="MemberDecreaseEvent">
+### MemberDecreaseEvent
 某组织成员减少事件。继承 <code>MemberIncreaseOrDecreaseEvent</code>。
-</def>
-<def title="ChatGroupMemberIncreaseOrDecreaseEvent">
+### ChatGroupMemberIncreaseOrDecreaseEvent
 某 
 <tooltip term="聊天群">聊天群</tooltip>
 成员变动事件。
-</def>
-<def title="ChatGroupMemberIncreaseEvent">
+### ChatGroupMemberIncreaseEvent
 某 
 <tooltip term="聊天群">聊天群</tooltip>
 成员增加事件。继承 <code>ChatGroupMemberIncreaseOrDecreaseEvent</code>。
-</def>
-<def title="ChatGroupMemberDecreaseEvent">
+### ChatGroupMemberDecreaseEvent
 某 
 <tooltip term="聊天群">聊天群</tooltip>
 成员减少事件。继承 <code>ChatGroupMemberIncreaseOrDecreaseEvent</code>。
-</def>
-<def title="GuildMemberIncreaseOrDecreaseEvent">
+### GuildMemberIncreaseOrDecreaseEvent
 某 
 <tooltip term="频道">频道</tooltip>
 成员变动事件。
-</def>
-<def title="GuildMemberIncreaseEvent">
+### GuildMemberIncreaseEvent
 某 
 <tooltip term="频道">频道</tooltip>
 成员增加事件。继承 <code>GuildMemberIncreaseOrDecreaseEvent</code>。
-</def>
-<def title="GuildMemberDecreaseEvent">
+### GuildMemberDecreaseEvent
 某 
 <tooltip term="频道">频道</tooltip>
 成员减少事件。继承 <code>GuildMemberIncreaseOrDecreaseEvent</code>。
-</def>
-</deflist>
 
 ## 消息事件
 
 一些与**Bot收到消息**相关的事件类型。
 
-<deflist>
-<def title="MessageEvent" id="d-message-event">
+### MessageEvent {id="d-message-event"}
 
 一个 `Bot` 收到消息的事件。继承 [BotEvent](#d-bot-event)、`ReplySupport`。
 
@@ -688,47 +641,38 @@
 
 </def>
 </deflist>
-</def>
-<def title="ChatRoomMessageEvent">
+### ChatRoomMessageEvent
 一个 <code>Bot</code> 从 
 <tooltip term="聊天室">聊天室</tooltip>
 处收到消息的事件。
-</def>
-<def title="ChatGroupMessageEvent">
+### ChatGroupMessageEvent
 一个 <code>Bot</code> 从 
 <tooltip term="聊天群">聊天群</tooltip>
 处收到消息的事件。
-</def>
-<def title="ChatChannelMessageEvent">
+### ChatChannelMessageEvent
 一个 <code>Bot</code> 从 
 <tooltip term="聊天频道">聊天频道</tooltip>
 处收到消息的事件。
-</def>
-<def title="MemberMessageEvent">
+### MemberMessageEvent
 一个 <code>Bot</code> 从 
 <tooltip term="组织成员">组织成员</tooltip>
 处收到消息的事件。
-</def>
-<def title="ChatGroupMemberMessageEvent">
+### ChatGroupMemberMessageEvent
 一个 <code>Bot</code> 从 
 <tooltip term="聊天群">聊天群</tooltip>
 中的
 <tooltip term="组织成员">组织成员</tooltip>
 处收到消息的事件。
-</def>
-<def title="GuildMemberMessageEvent">
+### GuildMemberMessageEvent
 一个 <code>Bot</code> 从 
 <tooltip term="频道">频道</tooltip>
 中的
 <tooltip term="组织成员">组织成员</tooltip>
 处收到消息的事件。
-</def>
-<def title="ContactMessageEvent">
+### ContactMessageEvent
 一个 <code>Bot</code> 从 
 <tooltip term="联系人">联系人</tooltip>
 处收到消息的事件。
-</def>
-</deflist>
 
 ## 内部事件
 

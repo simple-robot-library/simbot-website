@@ -100,7 +100,6 @@ for (Thread thread : result.getThreads()) {
 在组件模块中提供了一些新的类型：
 
 - `QGForumChannel` : 表示论坛子频道的 `Channel` 实现
-- `QGForums` : 表示一个 `QGGuild` 针对帖子的相关操作
 - `QGThread` : 表示一个主题帖
 - `QGThreadCreator` : 一个用于构造并发布帖子的构造器
 
@@ -112,7 +111,7 @@ for (Thread thread : result.getThreads()) {
 <tab title="Kotlin" group-key="Kotlin">
 
 ```kotlin
-val guild: QGGuild = ....
+val guild: QGGuild = ...
         
 // 在所有的子频道中筛选出 论坛子频道
 guild.channels.asFlow()
@@ -141,11 +140,11 @@ guild.channels.asFlow()
 除了在 `channels` 中通过类型筛选以外，也可以通过 `QGGuild.forums` 来进行操作：
 
 ```kotlin
-val guild: QGGuild = ....
+val guild: QGGuild = ...
         
 // 在所有的子频道中筛选出 论坛子频道
 // highlight-next-line
-guild.forums.forumChannels
+guild.forums.asFlow()
     .collect { channel: QGForumChannel ->
     // ...
     channel.threads.collect {
@@ -163,7 +162,7 @@ guild.forums.forumChannels
     thread!!.delete()
 }
 // 根据ID获取指定的 论坛子频道 实例
-val forumChannel: QGForumChannel? = guild.forums.forumChannel("666".ID)
+val forumChannel: QGForumChannel? = guild.forum("666".ID)
 
 ```
 
@@ -173,130 +172,73 @@ val forumChannel: QGForumChannel? = guild.forums.forumChannel("666".ID)
 ```java
 QGGuild guild = ...;
 
-// 直接遍历
-// 你也可以选择转为列表后再操作
-guild.getChannels().collectAsync(channel -> {
-    // 遍历所有的论坛子频道
-    // highlight-next-line
-    if (channel instanceof QGForumChannel forumChannel) {
-        // 获取所有的主题帖并遍历
-        forumChannel.getThreads().collectAsync(thread -> {
-            // ...
-        }); // thenXxx?
-        // 获取指定ID的主题帖
-        CompletableFuture<? extends QGThread> threadAsync = forumChannel.getThreadAsync(Identifies.ID("123"));
-        // 构造并发布一个主题贴
-        forumChannel.threadCreator()
-                .title(...)
-                .content(...)
-                .format(...)
-                .publishAsync();
-        
-        threadAsync.thenAccept(thread -> { // or use thenCompose
-            // 假设其不为null
-            assert thread != null;
-            // 删除某个主题帖
-            thread.deleteAsync();
-        });
-    }
+// 异步遍历论坛子频道
+// 可使用 Bot 等适合当前业务生命周期的 CoroutineScope
+var scope = GlobalScope.INSTANCE;
+guild.getForums().collectAsync(scope, channel -> {
+    channel.getThreads().collectAsync(scope, thread -> {
+        // 处理主题帖
+    });
 });
+
+// 查询指定的论坛子频道与主题帖
+guild.getForumAsync(Identifies.of("666"))
+        .thenCompose(channel -> {
+            if (channel == null) {
+                return CompletableFuture.completedFuture(null);
+            }
+            return channel.getThreadAsync(Identifies.of("123"));
+        })
+        .thenAccept(thread -> {
+            if (thread != null) {
+                thread.deleteAsync();
+            }
+        });
 ```
 {switcher-key="%ja%"}
 
 ```java
 QGGuild guild = ...;
 
-// 直接遍历
-// 你也可以选择转为列表后再操作
-guild.getChannels().collect(channel -> {
-    // 遍历所有的论坛子频道
-    // highlight-next-line
-    if (channel instanceof QGForumChannel forumChannel) {
-        // 获取所有的主题帖并遍历
-        forumChannel.getThreads().collect(thread -> {
-            // ...
-        });
-        // 获取指定ID的主题帖
-        QGThread thread = forumChannel.getThread(Identifies.ID("123")); // nullable
-        // 构造并发布一个主题贴
-        forumChannel.threadCreator()
-                .title(...)
-                .content(...)
-                .format(...)
-                .publishBlocking();
-        
-        // 假设其不为null
-        assert thread != null;
-        // 删除某个主题帖
+// 阻塞地收集并遍历论坛子频道
+for (var channel : Collectables.toList(guild.getForums())) {
+    for (var thread : Collectables.toList(channel.getThreads())) {
+        // 处理主题帖
+    }
+}
+
+var channel = guild.getForum(Identifies.of("666"));
+if (channel != null) {
+    var thread = channel.getThread(Identifies.of("123"));
+    channel.threadCreator()
+            .title("标题")
+            .content("内容")
+            .textFormat()
+            .publishBlocking();
+    if (thread != null) {
         thread.deleteBlocking();
     }
-});
+}
 ```
 {switcher-key="%jb%"}
-
-除了在 `channels` 中通过类型筛选以外，也可以通过 `QGGuild.forums` 来进行操作：
 
 ```java
 QGGuild guild = ...;
 
-// 直接遍历
-// 你也可以选择转为列表后再操作
-guild.getForums()
-        // highlight-next-line
-        .getForumChannels()
-        .collectAsync(forumChannel -> {
-            // 获取所有的主题帖并遍历
-            forumChannel.getThreads().collectAsync(thread -> {
-                // ...
-            }); // thenXxx?
-            // 获取指定ID的主题帖
-            CompletableFuture<? extends QGThread> threadAsync = forumChannel.getThreadAsync(Identifies.ID("123"));
-            // 构造并发布一个主题贴
-            forumChannel.threadCreator()
-                    .title(...)
-                    .content(...)
-                    .format(...)
-                    .publishAsync();
-            threadAsync.thenAccept(thread -> { // or use thenCompose
-                // 假设其不为null
-                assert thread != null;
-                // 删除某个主题帖
-                thread.deleteAsync();
-            });
+// 订阅论坛子频道和主题帖
+Collectables.asFlux(guild.getForums())
+        .flatMap(channel -> Collectables.asFlux(channel.getThreads()))
+        .subscribe(thread -> {
+            // 处理主题帖
         });
-```
-{switcher-key="%ja%"}
 
-```java
-QGGuild guild = ...;
-
-// 直接遍历
-// 你也可以选择转为列表后再操作
-guild.getForums()
-        // highlight-next-line
-        .getForumChannels()
-        .collect(forumChannel -> {
-            // 遍历所有的论坛子频道
-            // 获取所有的主题帖并遍历
-            forumChannel.getThreads().collect(thread -> {
-                // ...
-            });
-            // 获取指定ID的主题帖
-            QGThread thread = forumChannel.getThread(Identifies.ID("123")); // nullable
-            // 构造并发布一个主题贴
-            forumChannel.threadCreator()
-                    .title(...)
-                    .content(...)
-                    .format(...)
-                    .publishBlocking();
-            
-            // 假设其不为null
-            assert thread != null;
-            // 删除某个主题帖
-            thread.deleteBlocking();
-        });
+// 查询指定的论坛子频道与主题帖
+Mono.from(guild.forumReactive(Identifies.of("666")))
+        .flatMap(channel -> Mono.from(channel.threadReactive(Identifies.of("123"))))
+        .flatMap(thread -> Mono.from(thread.deleteReactive()))
+        .subscribe();
 ```
-{switcher-key="%jb%"}
+{switcher-key="%jr%"}
 
 </tab>
 </tabs>
@@ -393,7 +335,7 @@ bot.subscribe(EventProcessors.async(OpenForumThreadCreate.class, (event, raw) ->
         return CompletableFuture.completedFuture(null); // Void?
     }));
 
-bot.startAsync().thenCompose((v) -> bot.joinAsync()).join();
+bot.startAsync().thenCompose((v) -> bot.asFuture()).join();
 ```
 {switcher-key="%ja%"}
 
@@ -403,10 +345,9 @@ Bot bot = BotFactory.create("appid", "sec", "token", (config) -> {
         config.setIntentsValue(
                 config.getIntentsValue() | EventIntents.OpenForumsEvent.getIntents()
         );
-        return Unit.INSTANCE;
     });
 
-bot.registerBlockingProcessor(EventProcessors.block(OpenForumThreadCreate.class, (event, raw) -> {
+bot.registerProcessor(EventProcessors.block(OpenForumThreadCreate.class, (event, raw) -> {
         System.out.println("OpenForumThreadCreate:     " + event);
         System.out.println("OpenForumThreadCreate.raw: " + raw);
     }));

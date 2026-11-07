@@ -88,10 +88,8 @@ Starter 2 / 3 共用的通用支持模块。
 <list>
 <li>
 
-首先，Spring Boot 2.x 目前最后的一个版本 v2.7.x 已经在 2023-11-24 结束了
-_开放源码软件支持(OSS support)_ ，并会在 2026 年之前彻底结束支持。
-
-(参考[Spring官方文档](https://spring.io/projects/spring-boot#support))
+Spring Boot 2.7 的开放源码软件支持（OSS support）已结束（2023-11-24）。
+商业支持期限请参考 [Spring 官方支持政策](https://spring.io/support-policy/)和[版本支持信息](https://spring.io/projects/spring-boot#support)。
 
 </li>
 <li>
@@ -155,7 +153,7 @@ simbot的组件是功能的主要提供者，是**重要**的核心概念之一�
 class MyApplication
 
 fun main(args: Array<String>) {
-    runApplicarion<MyApplication>(*args)
+    runApplication<MyApplication>(*args)
 }
 ```
 

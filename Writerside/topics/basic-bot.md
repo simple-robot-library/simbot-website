@@ -41,8 +41,7 @@ bot.startBlocking(); // 启动它
 
 ```Java
 var bot = botManager.register(...);
-bot.startReserve()
-        .transform(SuspendReserves.mono())
+Mono.from(bot.startReactive())
         .block();
 ```
 {switcher-key="%jr%"}
@@ -81,9 +80,8 @@ bot.joinBlocking();
 {switcher-key="%jb%"}
 
 ```Java
-bot.startReserve()
-        .transform(SuspendReserves.mono())
-        .then(bot.joinReserve().transform(SuspendReserves.mono()))
+Mono.from(bot.startReactive())
+        .then(Mono.from(bot.joinReactive()))
         .block();
 ```
 {switcher-key="%jr%"}
@@ -103,7 +101,7 @@ bot.startReserve()
 </def>
 <def title="id">
 
-`Bot` 的 ID。但是此ID通常是注册 Bot 时使用的某种 ID（比如 `APPID`, 
+`Bot` 的 ID。但是此ID通常是注册 Bot 时使用的某种 ID（比如 `APPID`），
 而这个 ID 并不一定就是 Bot 作为用户的 ID。
 
 </def>
@@ -135,7 +133,7 @@ bot.startReserve()
 </def>
 <def title="join(...)">
    
-挂起 `Bot`, 直到它被关闭。
+挂起当前协程，直到 `Bot` 完成。
 
 在 JVM 中，异步桥接名称是 `asFuture()`。
 

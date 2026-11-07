@@ -13,7 +13,7 @@
 并以 `.bot.json` 作为扩展名，例如 `mybot.bot.json`。
 
 这个扫描目录是可配置的。
-这是属于 simbot4 Spring Boot starter 的配置，可参考
+这是属于 simbot Spring Boot starter 的配置，可参考
 [simbot手册: 使用 Spring Boot 3](https://simbot.forte.love/start-use-spring-boot-3.html)。
 
 </tip>
@@ -44,23 +44,23 @@
       "guild": {
         "syncPeriod": 180000,
         "batchDelay": 0
-      },
-      "clientEngineConfig": {
-        "threadsCount": null,
-        "pipelining": null
-      },
-      "wsEngineConfig": {
-        "threadsCount": null,
-        "pipelining": null
-      },
-      "timeout": {
-        "connectTimeoutMillis": 5000,
-        "requestTimeoutMillis": 5000,
-        "socketTimeoutMillis": null
-      },
-      "wsConnectTimeout": null,
-      "isNormalEventProcessAsync": null
-    }
+      }
+    },
+    "clientEngineConfig": {
+      "threadsCount": null,
+      "pipelining": null
+    },
+    "wsEngineConfig": {
+      "threadsCount": null,
+      "pipelining": null
+    },
+    "timeout": {
+      "connectTimeoutMillis": 5000,
+      "requestTimeoutMillis": 5000,
+      "socketTimeoutMillis": null
+    },
+    "wsConnectTimeout": null,
+    "isNormalEventProcessAsync": null
   }
 }
 ```
@@ -68,14 +68,12 @@
 
 ## 属性描述
 
-<deflist>
-<def title="component">
+### `component`
 
 
 固定值 `simbot.kook`，**必填**，代表此配置文件为KOOK组件的。
 
-</def>
-<def title="ticket">
+### `ticket`
 
 对 bot 身份进行校验、访问 KOOK API 以及连接KOOK服务器进行事件订阅时所需的 bot 票据信息。
 
@@ -85,35 +83,28 @@
 
 </note>
 
-<deflist>
-<def title="clientId">
+#### `clientId`
 
 BOT的 `Client ID`。
 
-</def>
-<def title="token">
+#### `token`
 
 BOT使用 **websocket** 模式进行连接的 `token` .
 
-</def>
-</deflist>
 
-</def>
-<def title="config">
+### `config`
 
 
 其他配置，可选。
 
-<deflist>
-<def title="isCompress">
+#### `isCompress`
 
 
 是否压缩数据。默认为 `true`。
 
 > 参考 [Gateway API](https://developer.kookapp.cn/doc/http/gateway) 中的 `compress` 参数。
 
-</def>
-<def title="syncPeriods">
+#### `syncPeriods`
 
 
 缓存对象信息的同步周期配置。
@@ -191,8 +182,7 @@ BOT使用 **websocket** 模式进行连接的 `token` .
 </def>
 </deflist>
 
-</def>
-<def title="clientEngineConfig &amp; wsEngineConfig">
+#### `clientEngineConfig & wsEngineConfig`
 
 
 `clientEngineConfig` 和 `wsEngineConfig` 两个配置项类型相同，
@@ -217,8 +207,7 @@ BOT使用 **websocket** 模式进行连接的 `token` .
 </def>
 </deflist>
 
-</def>
-<def title="timeout">
+#### `timeout`
 
 BOT内进行API请求时候的超时时间配置。(基于 [Ktor HttpTimeout](https://ktor.io/docs/timeout.html))
 
@@ -255,7 +244,7 @@ BOT内进行API请求时候的超时时间配置。(基于 [Ktor HttpTimeout](ht
 <def title="connectTimeoutMillis">
 
 
-> a time period required to process an HTTP call: from sending a request to receiving a response.
+建立连接的超时时间，单位毫秒。
 
 更多参考 [Ktor HttpTimeout](https://ktor.io/docs/timeout.html#configure_plugin)
 
@@ -263,7 +252,7 @@ BOT内进行API请求时候的超时时间配置。(基于 [Ktor HttpTimeout](ht
 <def title="requestTimeoutMillis">
 
 
-> a time period in which a client should establish a connection with a server.
+从发送请求到收到响应的超时时间，单位毫秒。
 
 更多参考 [Ktor HttpTimeout](https://ktor.io/docs/timeout.html#configure_plugin)
 
@@ -271,24 +260,22 @@ BOT内进行API请求时候的超时时间配置。(基于 [Ktor HttpTimeout](ht
 <def title="socketTimeoutMillis">
 
 
-> a maximum time of inactivity between two data packets when exchanging data with a server.
+数据传输时两个数据包之间允许的最长空闲时间，单位毫秒。
 
 更多参考 [Ktor HttpTimeout](https://ktor.io/docs/timeout.html#configure_plugin)
 
 </def>
 </deflist>
 
-</def>
-<def title="wsConnectTimeout">
+#### `wsConnectTimeout`
 
 
 ws连接超时时间，单位 `ms` 。默认为 `6000` 毫秒。
 
-</def>
-<def title="isNormalEventProcessAsync">
+#### `isNormalEventProcessAsync`
 
 
-`ProcessorType.NORMAL` 类型的事件处理器是否在异步中执行。默认为 `true`。
+`SubscribeSequence.NORMAL` 类型的事件处理器是否在异步中执行。默认为 `true`。
 当为 `false` 时, `NORMAL` 的表现效果将会与 `PREPARE` 基本类似。
 
 <tip>
@@ -297,9 +284,3 @@ ws连接超时时间，单位 `ms` 。默认为 `6000` 毫秒。
 此配置项对你来说可能就没有太大的作用。
 
 </tip>
-
-
-</def>
-</deflist>
-</def>
-</deflist>

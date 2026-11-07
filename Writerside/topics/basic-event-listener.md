@@ -472,7 +472,7 @@ var eventListener = EventListeners.block(Event.class, (context, event) -> {
 
 ## 注解 API
 
-simbot4 定义了一套**注解API**，用来支持使用注解快速实现事件处理逻辑。
+simbot 定义了一套**注解API**，用来支持使用注解快速实现事件处理逻辑。
 这套注解API主要由 `Spring Boot starter` 进行实现。
 
 <tabs group="Code">

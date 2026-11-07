@@ -91,7 +91,8 @@ public Publisher<? extends Integer> runReactive() { ... }
 <def title="Reactive">
 
 自 `5.0` 起，桥接方法返回 `org.reactivestreams.Publisher`，通常命名为
-`xxxReactive()`；属性风格的方法通常为 `getXxxReactive()`。具体名称可通过注解参数调整。
+`xxxReactive()`；属性风格的方法通常为 `getXxxReactive()`。具体名称可通过注解参数调整。`@ST` 各桥接的名称分别配置，例如 Kotlin 的 `channel(id)`
+即使将 Reserve 方法命名为 `getChannelReserve(id)`，默认响应式方法仍是 `channelReactive(id)`。
 这类 API 使用 `ExperimentalReactiveBridgingApi` 标记，可能在后续版本变更或移除。
 
 </def>
@@ -198,7 +199,9 @@ Mono.from(bot.startReactive()).block();
 
 ### 顺序组合响应式操作
 
-以下示例需要 Reactor 的 `reactor-core` 依赖。通过 `Mono.from` 接入生成的 Publisher，
+本文和其他章节中的响应式 Java 示例使用 Reactor，需要添加 `io.projectreactor:reactor-core` 依赖，
+并导入 `reactor.core.publisher.Mono`。将 `Collectable` 转为 `Flux` 的示例还需要
+`org.jetbrains.kotlinx:kotlinx-coroutines-reactor` 依赖。通过 `Mono.from` 接入生成的 Publisher，
 使用 `then` 等待前一个操作完成后执行下一个操作：
 
 ```Java

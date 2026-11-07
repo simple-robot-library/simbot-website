@@ -31,7 +31,7 @@ simbot 的 JVM 目标最低为 **Java11**。不论是使用 Kotlin 还是 Java �
 
 ### 开发语言?
 
-simbot4 是基于 Kotlin 多平台实现、提供 Java 友好 API 的事件调度框架。
+simbot 是基于 Kotlin 多平台实现、提供 Java 友好 API 的事件调度框架。
 对于普通开发者来讲, 我们提供了阻塞、异步等多种风格的 Java API 供开发者选择。
 
 对于 **组件开发**, 我们**强烈建议**使用 [Kotlin](https://kotlinlang.org/) 语言。

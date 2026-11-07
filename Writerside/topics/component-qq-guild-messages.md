@@ -158,15 +158,13 @@ channel.sendBlocking(Messages.of(
 ```Java
 QGTextChannel channel = ...;
 
-channel.sendReserve("消息内容")
-        .transform(SuspendReserves.mono())
+Mono.from(channel.sendReactive("消息内容"))
         .subscribe(receipt -> { ... });
 
-channel.sendReserve(Messages.of(
+Mono.from(channel.sendReactive(Messages.of(
         Text.of("文本消息"),
         At.of(Identifies.of("user id"))
-    ))
-    .transform(SuspendReserves.mono())
+    )))
     .subscribe(receipt -> { ... });
 ```
 
@@ -317,10 +315,10 @@ var keyboards = MessageKeyboards.create(List.of(
         MessageKeyboard.create("template-b")
 ));
 
-group.sendReserve(Messages.of(
+Mono.from(group.sendReactive(Messages.of(
         QGMarkdown.create("请选择"),
         QGKeyboards.create(keyboards)
-)).transform(SuspendReserves.mono()).subscribe(receipt -> { ... });
+))).subscribe(receipt -> { ... });
 ```
 
 </if>

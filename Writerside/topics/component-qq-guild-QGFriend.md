@@ -81,8 +81,7 @@ var receipt = friend.sendBlocking("你好，这是一条 C2C 单聊消息");
 ```Java
 QGFriend friend = ...;
 
-friend.sendReserve("你好，这是一条 C2C 单聊消息")
-        .transform(SuspendReserves.mono())
+Mono.from(friend.sendReactive("你好，这是一条 C2C 单聊消息"))
         .subscribe(receipt -> { });
 ```
 {switcher-key="%jr%"}
@@ -144,8 +143,7 @@ var media = friend.uploadMediaBlocking("https://example.com/example.png", 1);
 ```Java
 QGFriend friend = ...;
 
-friend.uploadMediaReserve("https://example.com/example.png", 1)
-        .transform(SuspendReserves.mono())
+Mono.from(friend.uploadMediaReactive("https://example.com/example.png", 1))
         .subscribe(media -> { });
 ```
 {switcher-key="%jr%"}

@@ -52,8 +52,8 @@ simbot 提供了两个这样的库：`simbot-core`（也就是 **“核心库”
 `Application` 提供了 `simbot-api`（也就是**“标准库”**）定义的诸多能力，比如组件、插件安装和事件调度，
 但它不包含 **具体的平台实现**，比如 QQ 频道、KOOK、大别野等 **特定平台** 的事件和消息。
 
-这些**特定平台**的实现，就是一个个不同的**组件或插件**。它们一般在各自独立的仓库中维护、发版，
-依赖标准库，但彼此独立。
+这些**特定平台**的实现，就是一个个不同的**组件或插件**。它们依赖标准库，但彼此独立。
+大部分已趋近稳定的组件库自 5.0 起在主仓库中维护并统一发版，其他组件或三方组件由各自的维护者管理。
 下文将它们称为 **“组件库”** 。
 
 以我们 [**官方维护的组件库**](components-intro.md) 为例，它们都有各自的应用手册，
@@ -93,7 +93,7 @@ implementation 'io.github.Jojo.cp:bar2-impl:x.xx'
 <!-- 使用核心库 -->
 <dependency>
     <groupId>love.forte.simbot</groupId>
-    <artifactId>simbot-core</artifactId>
+    <artifactId>simbot-core-jvm</artifactId>
     <version>%version%</version>
 </dependency>
 <!-- 添加组件库, 假设有两个叫做 foo1、bar2 的组件实现 -->

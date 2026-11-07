@@ -1,7 +1,7 @@
 # 编译器插件
 
 如果你使用 `Kotlin` + `Gradle` 开发组件（这也是我们推荐的组合）, 那么当你公开了一个挂起函数的 API、
-或实现一个具有挂起函数的 simbot4 标准 API (例如 `Bot`、**事件** 等) 时，
+或实现一个具有挂起函数的 simbot 标准 API (例如 `Bot`、**事件** 等) 时，
 你极大概率（我们也强烈推荐）你需要使用到标准库在使用的编译器插件: 
 [kotlin-suspend-transform-compiler-plugin][kstcp]。
 
@@ -112,6 +112,9 @@ interface Foo {
     
     // 生成的预处理API，返回值结果是 SuspendReserve, 可以用来做进一步转化。
     fun runReserve(): SuspendReserve<Data> { ... } 
+
+    // 生成的响应式 API
+    fun runReactive(): Publisher<out Data> { ... }
 }
 ```
 
@@ -149,6 +152,9 @@ interface Foo {
     
     // 生成的预处理API，返回值结果是 SuspendReserve, 可以用来做进一步转化。
     val valueReserve: SuspendReserve<Data> get() { ... } 
+
+    // 生成的响应式 API，Java 中为 getValueReactive()
+    val valueReactive: Publisher<out Data> get() { ... }
 }
 ```
 
@@ -181,6 +187,7 @@ interface Foo {
     // 异步API和预处理API
     fun valueAsync(): CompletableFuture<out Data> { ... } 
     fun valueReserve(): SuspendReserve<Data> { ... } 
+    fun valueReactive(): Publisher<out Data> { ... }
 }
 ```
 
@@ -251,7 +258,7 @@ class MeSourceType : SourceType { // 假设这是你提供的实现类
 }
 ```
 
-在 simbot4 标准 API 中，大部分被标记的挂起函数都没有参数，因此注意它标记的注解即可，`@ST` 或 `@STP` 中的一个。
+在 simbot 标准 API 中，大部分被标记的挂起函数都没有参数，因此注意它标记的注解即可，`@ST` 或 `@STP` 中的一个。
 注解有可能会被标记在类上而不是方法上，可以注意观察。
 
 但也并非没有具有特殊参数的API，目前，它们分布在如下地方：

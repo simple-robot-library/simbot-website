@@ -182,15 +182,13 @@ relation.getContacts()
         .subscribe(friend -> System.out.println("Friend: " + friend));
 
 // 根据ID寻找指定的好友
-relation.getContactReserve(Identifies.of(123L))
-        .transform(SuspendReserves.mono())
+Mono.from(relation.contactReactive(Identifies.of(123L)))
         .subscribe(friend -> {
             // ...
         });
 
 // 根据ID寻找指定的陌生人
-relation.getStrangerReserve(Identifies.of(123L))
-        .transform(SuspendReserves.mono())
+Mono.from(relation.strangerReactive(Identifies.of(123L)))
         .subscribe(friend -> {
             // ...
         });
@@ -276,20 +274,18 @@ final var stranger = relation.getStranger(Identifies.of(123L));
 ```Java
 final var relation = bot.getGroupRelation();
 // 查询所有的群并转化为 Flux 后遍历
-relation.getGroup()
+relation.getGroups()
         .transform(SuspendReserves.flux())
         .subscribe(group -> System.out.println("Group: " + group));
 
 // 根据ID寻找指定的群
-relation.getGroupReserve(Identifies.of(123L))
-        .transform(SuspendReserves.mono())
+Mono.from(relation.groupReactive(Identifies.of(123L)))
         .subscribe(group -> {
             // ...
         });
 
 // 根据ID寻找指定的群内成员
-relation.getMemberReserve(Identifies.of(123L), Identifies.of(456L))
-        .transform(SuspendReserves.mono())
+Mono.from(relation.memberReactive(Identifies.of(123L), Identifies.of(456L)))
         .subscribe(group -> {
             // ...
         });

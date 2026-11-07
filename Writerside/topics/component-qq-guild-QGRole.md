@@ -129,8 +129,7 @@ QGMemberRole memberRole = role.grantToBlocking(member);
 QGGuildRole role = ...
 QGMember member = ...
 // 将角色赋予目标成员，得到 QGMemberRole 结果
-role.grantToReserve(member)
-        .transform(SuspendReserves.mono())
+Mono.from(role.grantToReactive(member))
         .subscribe(memberRole -> {});
 ```
 {switcher-key='%jr%'}
@@ -188,8 +187,7 @@ role.deleteBlocking();
 ```Java
 QGGuildRole role = ...
 // 删除这个角色
-role.deleteReserve()
-        .transform(SuspendReserves.mono())
+Mono.from(role.deleteReactive())
         .subscribe(unit -> {  });
 ```
 {switcher-key='%jr%'}
@@ -228,8 +226,7 @@ role.deleteBlocking();
 ```Java
 QGMemberRole role = ...
 // 取消此角色对其对应用户的授权
-role.deleteReserve()
-        .transform(SuspendReserves.mono())
+Mono.from(role.deleteReactive())
         .subscribe(unit -> {  });
 ```
 {switcher-key='%jr%'}

@@ -11,6 +11,8 @@
 [Simple Robot 主仓库](https://github.com/simple-robot/simpler-robot)，随标准库统一版本发布。
 原有组件版本号与标准库版本号不再分别维护。各模块说明参见 [](module-libraries.md)。
 
+### QQ 组件模块变化
+
 QQ 组件的 Maven 坐标由 `simbot-component-qq-guild-*` 调整为 `simbot-component-qq-*`，
 groupId 仍为 `love.forte.simbot.component`。例如：
 
@@ -19,12 +21,14 @@ implementation("love.forte.simbot.component:simbot-component-qq-core:%qg-version
 ```
 
 Maven 或未使用 Kotlin Gradle 插件的 Java 项目应使用 `simbot-component-qq-core-jvm`。
-旧坐标保留重定位发布；新项目和更新后的依赖声明应使用新坐标。
-QQ 组件的包名仍使用 `qguild`，无需将其批量替换为 `qq`。
+旧坐标保留重定位发布，新项目和更新后的依赖声明应使用新坐标。
+QQ 组件的包名仍使用 `qguild`，无需替换。
 
 新增的 `simbot-component-qq-common` 存放共享常量与注解。
 `Timestamp`、`TimeUnit` 等时间类型迁至 `simbot-common-time`，包名保持不变。
 直接使用这些类型的公共库应声明相应模块依赖。
+
+### 版本情况
 
 当前版本使用 Kotlin `%kt-version%`、Ktor `3.3.3`、kotlinx-coroutines `1.11.0`、
 kotlinx-serialization `1.11.0`。项目中显式声明的依赖版本也应与之协调。
@@ -43,13 +47,15 @@ kotlinx-serialization `1.11.0`。项目中显式声明的依赖版本也应与�
 | 提及判断 | `EventMentionAware.isMention(event)` 返回 `false` 后继续常规判定，可继续检查消息中的 `At` 元素。 |
 
 实验性、内部 API 和 Java 专用 API 等选择加入标记改为编译错误级别。
-Kotlin 代码使用这些 API 时需要明确添加对应的 `@OptIn(...)`；例如 `ExperimentalSimbotAPI`、`Api4J`、
+Kotlin 代码使用这些 API 时需要明确添加对应的 `@OptIn(...)`，例如 `ExperimentalSimbotAPI`、`Api4J`、
 `ExperimentalQGApi` 和 `ExperimentalQGMediaApi`。
 
 组件开发者实现带发送或回复选项的重载时，应自行解析选项。
 标准接口的默认实现会委托到原有的不带选项的方法，具体实现未重写时会忽略选项。
 
 ## QQ 组件
+
+QQ 组件在至 5.0 时更新了若干能力与变更。
 
 ### 新增能力
 

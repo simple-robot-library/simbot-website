@@ -862,10 +862,10 @@ application.getEventDispatcher().register(EventListeners.nonBlock(
             var buttonId = event.getResolved().getButtonId();
 
             var response = "confirm".equals(buttonData) ?
-                    event.respondReserve(InteractionResponseApi.CODE_SUCCESS) :
-                    event.respondReserve(InteractionResponseApi.CODE_FAILED);
+                    event.respondReactive(InteractionResponseApi.CODE_SUCCESS) :
+                    event.respondReactive(InteractionResponseApi.CODE_FAILED);
 
-            return EventResult.of(response.transform(SuspendReserves.mono()).then());
+            return EventResult.of(Mono.from(response).then());
         }
 ));
 ```
@@ -907,7 +907,7 @@ application.getEventDispatcher().register(EventListeners.async(
 application.getEventDispatcher().register(EventListeners.block(
         QGGroupMemberAddEvent.class,
         (context, event) -> {
-            var member = event.getMemberBlocking();
+            var member = event.getMember();
             System.out.println(member.getId());
             return EventResult.empty();
         }
@@ -919,8 +919,7 @@ application.getEventDispatcher().register(EventListeners.block(
 application.getEventDispatcher().register(EventListeners.nonBlock(
         QGGroupMemberAddEvent.class,
         (context, event) -> {
-            var member = event.getMemberReserve()
-                    .transform(SuspendReserves.mono())
+            var member = Mono.from(event.getMemberReactive())
                     .doOnNext(value -> System.out.println(value.getId()))
                     .then();
 

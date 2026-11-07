@@ -5,7 +5,8 @@
 > 具体 API 的说明，可以前往 [API 文档](https://docs.simbot.forte.love/) 或文档注释查看，
 > 这两处通常更贴近实际，也更完整。
 >
-> 这里的列表是自动生成的，会随着版本更新。
+> 这里的列表依据项目中的生成结果整理，可结合 API 文档查看更新。
+> 模板 API 使用 `ExperimentalTemplateApi` 标记，Kotlin 调用时需要选择加入。
 
 <deflist>
 <def title="GetGatewayApi" id="love_forte_simbot_kook_api_GetGatewayApi">
@@ -459,6 +460,252 @@
 `love.forte.simbot.kook.api.userchat.GetUserChatViewApi`
 
 <a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/user-chat#%E8%8E%B7%E5%8F%96%E7%A7%81%E4%BF%A1%E8%81%8A%E5%A4%A9%E4%BC%9A%E8%AF%9D%E8%AF%A6%E6%83%85">获取私信聊天会话详情</a>
+
+
+</def>
+
+<def title="GetCategoryListApi" id="love_forte_simbot_kook_api_category_GetCategoryListApi">
+
+`love.forte.simbot.kook.api.category.GetCategoryListApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/thread#%E8%8E%B7%E5%8F%96%E5%B8%96%E5%AD%90%E5%88%86%E5%8C%BA%E5%88%97%E8%A1%A8">获取帖子分区列表</a>
+
+
+
+</def>
+
+<def title="UpdateTemplateApi" id="love_forte_simbot_kook_api_template_UpdateTemplateApi">
+
+`love.forte.simbot.kook.api.template.UpdateTemplateApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/template">更新模板</a>
+
+POST /api/v3/template/update
+
+
+
+</def>
+
+<def title="GetTemplateListApi" id="love_forte_simbot_kook_api_template_GetTemplateListApi">
+
+`love.forte.simbot.kook.api.template.GetTemplateListApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/template">获取模板列表</a>
+
+GET /api/v3/template/list
+
+
+
+</def>
+
+<def title="DeleteTemplateApi" id="love_forte_simbot_kook_api_template_DeleteTemplateApi">
+
+`love.forte.simbot.kook.api.template.DeleteTemplateApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/template">删除模板</a>
+
+POST /api/v3/template/delete
+
+
+
+</def>
+
+<def title="CreateTemplateApi" id="love_forte_simbot_kook_api_template_CreateTemplateApi">
+
+`love.forte.simbot.kook.api.template.CreateTemplateApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/template">创建模板</a>
+
+POST /api/v3/template/create
+
+
+
+</def>
+
+<def title="UpdateChannelApi" id="love_forte_simbot_kook_api_channel_UpdateChannelApi">
+
+`love.forte.simbot.kook.api.channel.UpdateChannelApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/channel#%E7%BC%96%E8%BE%91%E9%A2%91%E9%81%93">编辑频道</a>
+
+
+
+
+</def>
+
+<def title="GetChannelUserListApi" id="love_forte_simbot_kook_api_channel_GetChannelUserListApi">
+
+`love.forte.simbot.kook.api.channel.GetChannelUserListApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/channel#%E8%AF%AD%E9%9F%B3%E9%A2%91%E9%81%93%E7%94%A8%E6%88%B7%E5%88%97%E8%A1%A8">语音频道用户列表</a>
+
+
+
+</def>
+
+<def title="ChannelKickoutApi" id="love_forte_simbot_kook_api_channel_ChannelKickoutApi">
+
+`love.forte.simbot.kook.api.channel.ChannelKickoutApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/channel#踢出语音频道中的用户">踢出语音频道中的用户</a>
+
+踢出语音频道中的用户，只能踢出在语音频道中的用户
+
+
+
+</def>
+
+<def title="ChannelMoveUserApi" id="love_forte_simbot_kook_api_channel_ChannelMoveUserApi">
+
+`love.forte.simbot.kook.api.channel.ChannelMoveUserApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/channel#语音频道之间移动用户">语音频道之间移动用户</a>
+
+语音频道之间移动用户，只能在语音频道之间移动，用户也必须在其他语音频道在线才能够移动到目标频道。
+
+
+
+
+</def>
+
+<def title="VoiceJoinApi" id="love_forte_simbot_kook_api_voice_VoiceJoinApi">
+
+`love.forte.simbot.kook.api.voice.VoiceJoinApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/voice#加入语音频道">加入语音频道</a>
+
+加入某个语音频道，获取推流地址和相关配置信息
+
+
+
+</def>
+
+<def title="VoiceLeaveApi" id="love_forte_simbot_kook_api_voice_VoiceLeaveApi">
+
+`love.forte.simbot.kook.api.voice.VoiceLeaveApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/voice#离开语音频道">离开语音频道</a>
+
+机器人主动离开语音频道，释放推流资源
+
+
+
+</def>
+
+<def title="VoiceKeepAliveApi" id="love_forte_simbot_kook_api_voice_VoiceKeepAliveApi">
+
+`love.forte.simbot.kook.api.voice.VoiceKeepAliveApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/voice#保持语音连接活跃">保持语音连接活跃</a>
+
+保持语音连接活跃。正常如果长时间断流，系统会回收端口等资源，如果不希望系统回收，
+可以每隔45s，调用该接口，保持端口活跃，这样系统不会回收该端口资源
+
+
+
+</def>
+
+<def title="GetVoiceListApi" id="love_forte_simbot_kook_api_voice_GetVoiceListApi">
+
+`love.forte.simbot.kook.api.voice.GetVoiceListApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/voice#获取频道列表">获取频道列表</a>
+
+获取机器人加入的语音频道列表
+
+
+
+</def>
+
+<def title="DeleteBlacklistApi" id="love_forte_simbot_kook_api_blacklist_DeleteBlacklistApi">
+
+`love.forte.simbot.kook.api.blacklist.DeleteBlacklistApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/blacklist#%E7%A7%BB%E9%99%A4%E9%BB%91%E5%90%8D%E5%8D%95">移除黑名单</a>
+
+
+
+
+</def>
+
+<def title="CreateBlacklistApi" id="love_forte_simbot_kook_api_blacklist_CreateBlacklistApi">
+
+`love.forte.simbot.kook.api.blacklist.CreateBlacklistApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/blacklist#%E5%8A%A0%E5%85%A5%E9%BB%91%E5%90%8D%E5%8D%95">加入黑名单</a>
+
+
+
+
+</def>
+
+<def title="GetBlacklistListApi" id="love_forte_simbot_kook_api_blacklist_GetBlacklistListApi">
+
+`love.forte.simbot.kook.api.blacklist.GetBlacklistListApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/blacklist#%E8%8E%B7%E5%8F%96%E9%BB%91%E5%90%8D%E5%8D%95%E5%88%97%E8%A1%A8">获取黑名单列表</a>
+
+
+
+
+</def>
+
+<def title="ReplyThreadApi" id="love_forte_simbot_kook_api_thread_ReplyThreadApi">
+
+`love.forte.simbot.kook.api.thread.ReplyThreadApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/thread#%E8%AF%84%E8%AE%BA%2F%E5%9B%9E%E5%A4%8D">评论/回复</a>
+
+
+
+</def>
+
+<def title="DeleteThreadApi" id="love_forte_simbot_kook_api_thread_DeleteThreadApi">
+
+`love.forte.simbot.kook.api.thread.DeleteThreadApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/thread#%E5%B8%96%E5%AD%90%2F%E8%AF%84%E8%AE%BA%2F%E5%9B%9E%E5%A4%8D%E5%88%A0%E9%99%A4">帖子/评论/回复删除</a>
+
+
+
+</def>
+
+<def title="GetThreadListApi" id="love_forte_simbot_kook_api_thread_GetThreadListApi">
+
+`love.forte.simbot.kook.api.thread.GetThreadListApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/thread#%E5%B8%96%E5%AD%90%E5%88%97%E8%A1%A8">帖子列表</a>
+
+
+
+</def>
+
+<def title="CreateThreadApi" id="love_forte_simbot_kook_api_thread_CreateThreadApi">
+
+`love.forte.simbot.kook.api.thread.CreateThreadApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/thread#%E5%88%9B%E5%BB%BA%E5%B8%96%E5%AD%90">创建帖子</a>
+
+
+
+</def>
+
+<def title="GetThreadPostApi" id="love_forte_simbot_kook_api_thread_GetThreadPostApi">
+
+`love.forte.simbot.kook.api.thread.GetThreadPostApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/thread#%E5%9B%9E%E5%A4%8D%E5%88%97%E8%A1%A8">回复列表</a>
+
+
+
+</def>
+
+<def title="GetThreadViewApi" id="love_forte_simbot_kook_api_thread_GetThreadViewApi">
+
+`love.forte.simbot.kook.api.thread.GetThreadViewApi`
+
+<a ignore-vars="true" href="https://developer.kookapp.cn/doc/http/thread#%E5%B8%96%E5%AD%90%E8%AF%A6%E6%83%85">帖子详情</a>
+
 
 
 </def>

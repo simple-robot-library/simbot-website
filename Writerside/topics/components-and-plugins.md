@@ -7,7 +7,7 @@
 
 在文档中, 常说的
 <tooltip term="组件"><control>组件</control></tooltip>
-就是是对一组一个或多个 
+是对一个或多个
 <tooltip term="组件标识"><control>组件标识</control></tooltip> 和 
 <tooltip term="插件"><control>插件</control></tooltip>
 的统称。

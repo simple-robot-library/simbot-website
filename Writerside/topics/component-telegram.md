@@ -14,11 +14,13 @@
 </category>
 </seealso>
 
-<tip>
+<note>
 
-已经发布了早期可用的尝鲜版本，欢迎体验与**反馈**~
+已发布的 `%tg-version%` 基于 simbot 4.7.0 和 Ktor 2.3.12。
+使用本手册中的 simbot 5.x 与 Ktor 3 时，请留意依赖与二进制兼容性，
+并关注 [Telegram 组件仓库](https://github.com/simple-robot/simbot-component-telegram)的版本更新。
 
-</tip>
+</note>
 
 <warning title="协助希望🙏">
 
@@ -110,7 +112,8 @@ Telegram组件使用 [Ktor](https://ktor.io) 作为 HTTP 客户端实现，
 
 因此，你需要选择并使用一个 Ktor Client 引擎实现。
 
-<include from="refers.md" element-id="engine-choose"/>
+Telegram 组件 `%tg-version%` 使用 Ktor 2.3.12，请选择相同版本的引擎。
+可参考 [Ktor 客户端引擎文档](https://ktor.io/docs/client-engines.html)。
 </step>
 
 </procedure>

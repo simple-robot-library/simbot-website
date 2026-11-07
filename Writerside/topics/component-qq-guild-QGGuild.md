@@ -91,15 +91,13 @@ event.getContentAsync()
 
 ```Java
 QGGuildCreateEvent event = ...
-var guild = event.getContentBlocking() 
+var guild = event.getContent();
 ```
 {switcher-key='%jb%'}
 
 ```Java
 QGGuildCreateEvent event = ...
-event.getContentReserve()
-        // 例如转为 Reactor 的 `Mono`
-        .transform(SuspendReserves.mono())
+Mono.from(event.getContentReactive())
         .subscribe(guild -> { ... })
 ```
 {switcher-key='%jr%'}
@@ -221,19 +219,13 @@ QGGuild guild = ...
 // 假设这是某个子频道的ID
 var id = Identifies.of(1234L);
 
-guild.getChannelReserve(id)
-        // 假设转化为 Reactor 的 `Mono`
-        .transform(SuspendReserves.mono())
+Mono.from(guild.channelReactive(id))
         .subscribe(channel -> {});
 
-guild.getChatChannelReserve(id)
-        // 假设转化为 Reactor 的 `Mono`
-        .transform(SuspendReserves.mono())
+Mono.from(guild.chatChannelReactive(id))
         .subscribe(channel -> {});
 
-guild.getForumReserve(id)
-        // 假设转化为 Reactor 的 `Mono`
-        .transform(SuspendReserves.mono())
+Mono.from(guild.forumReactive(id))
         .subscribe(channel -> {});
 ```
 {switcher-key='%jr%'}
@@ -255,7 +247,7 @@ Collectables.collectAsync(chatChannelsCollectable, Collectors.toList())
 
 // 可以直接使用 Collectable的扩展
 var forumsCollectable = guild.getForums();
-Collectables.toListAsync(forumsCollectable);
+Collectables.toListAsync(forumsCollectable)
         .thenAccept(forum -> {...});
 ```
 {switcher-key='%ja%'}
@@ -358,9 +350,7 @@ QGGuild guild = ...
 // 假设这是某个成员的ID
 var id = Identifies.of(1234L);
 
-guild.getMemberReserve(id)
-        // 假设转化为 Reactor 的 `Mono`
-        .transform(SuspendReserves.mono())
+Mono.from(guild.memberReactive(id))
         .subscribe(member -> {});
 ```
 {switcher-key='%jr%'}
@@ -450,8 +440,7 @@ var permissions = guild.getPermissions();
 ```Java
 QGGuild guild = ...
 
-guild.getPermissionsReserve()
-        .transform(SuspendReserves.mono())
+Mono.from(guild.getPermissionsReactive())
         .subscribe(permissions -> {  });
 ```
 {switcher-key='%jr%'}
@@ -605,8 +594,7 @@ creator.setHoist(false);
 creator.setColor(0);
 
 // 请求API创建一个新角色
-creator.createReserve()
-        .transform(SuspendReserves.mono())
+Mono.from(creator.createReactive())
         .subscribe(role -> {});
 ```
 {switcher-key='%jr%'}

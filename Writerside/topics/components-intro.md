@@ -32,8 +32,8 @@
 
 <note>
 
-官方组件通常按独立仓库发版，
-所以这里也按 <code>api</code> / <code>stdlib</code> / <code>core</code> 这类边界来组织。
+QQ、KOOK 和 OneBot 组件自 5.0 起在主仓库中统一发版。
+它们通常按类似 <code>api</code> / <code>stdlib</code> / <code>core</code> 的模块边界形式进行组织。
 
 </note>
 

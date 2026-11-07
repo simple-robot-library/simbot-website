@@ -98,15 +98,14 @@ event.getContentAsync()
 ```Java
 FooEvent event = ...;
 
-var content = event.getContentBlocking();
+var content = event.getContent();
 ```
 {switcher-key="%jb%"}
 
 ```Java
 FooEvent event = ...;
 
-event.getContentReserve()
-        .transform(SuspendReserves.mono())
+Mono.from(event.getContentReactive())
         .subscribe(content -> { });
 ```
 {switcher-key="%jr%"}

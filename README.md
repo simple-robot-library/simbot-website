@@ -45,7 +45,7 @@ docker run --rm \
   -v /tmp/simbot-writerside-output:/opt/output \
   -e SOURCE_DIR=/opt/sources \
   -e MODULE_INSTANCE=Writerside/s4 \
-  -e OUTPUT_DIR=/opt/output \
+  -e OUTPUT_DIR=/opt/output/build \
   -e RUNNER=other \
   jetbrains/writerside-builder:2026.10.0423
 ```

@@ -345,12 +345,9 @@ public class CallbackHandler {
                 )
         );
 
-        targetBot.joinReserve().transform(SuspendReserves.mono())
-
         // 以响应式的方式推送事件
-        final var mono = targetBot
-                .emitEventReserve(payload, options)
-                .transform(SuspendReserves.mono());
+        final var mono = Mono.from(targetBot
+                .emitEventReactive(payload, options));
 
         // 得到处理结果，并返回body
         // 如果没有需要返回的body，也可以是null
@@ -540,7 +537,7 @@ options.setEd25519SignatureVerification(
 bot.emitEventXxx(payload, options);
 // emitEventBlocking(...);
 // emitEventAsync(...);
-// emitEventReserve(...);
+// emitEventReactive(...);
 ```
 
 </tab>

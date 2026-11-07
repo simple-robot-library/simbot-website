@@ -578,8 +578,7 @@ public class MyHandles {
         System.out.println(messageContent.getMessages());
     
         // 事件主体，这里是‘聊天群消息事件’中的‘聊天群’
-        event.getContentReserve()
-                .transform(SuspendReserves.mono())
+        Mono.from(event.getContentReactive())
                 // 异步中处理
                 .subscribe(group -> {
                     System.out.println(group.getId());
@@ -653,7 +652,7 @@ public class MyHandles {
 
 
 ```Java
-import static love.forte.simbot.suspendrunner.reserve.SuspendReserves.mono;
+import reactor.core.publisher.Mono;
 
 @Component
 public class MyHandles {
@@ -662,13 +661,10 @@ public class MyHandles {
     public Mono<Void> onEvent(ChatGroupMessageEvent event) {
         // 回复"你也好"成功后，
         // 再向群内直接发送"你好呀"
-        return event.replyReserve("你也好")
-                .transform(mono())
-                .then(event.getContentReserve()
-                        .transform(mono())
+        return Mono.from(event.replyReactive("你也好"))
+                .then(Mono.from(event.getContentReactive())
                         .flatMap(group ->
-                                group.sendReserve("你好呀")
-                                        .transform(mono())
+                                Mono.from(group.sendReactive("你好呀"))
                         )
                 ).then();
     }

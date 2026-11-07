@@ -14,7 +14,7 @@ OneBot组件的OneBot11模块选择使用
 
 #### 反向 HTTP
 
-如果你真的想要通过反向HTTP来接收事件推送，那么你需要自行搭建 HTTP 服务端，然后使用 `OneBotBot.push` 手动推送原始事件的JSON字符串。
+如果希望通过反向 HTTP 接收事件推送，需要自行搭建 HTTP 服务端，然后使用 `OneBotBot.push` 手动推送原始事件的 JSON 字符串。`push` 返回的 Flow 需要收集才能处理事件，也可以使用 `pushAndLaunch` 启动处理。
 你可以前往参考
 `OneBotBot` 的
 <a href="component-onebot-v11-OneBotBot.md#外部事件" /> 。

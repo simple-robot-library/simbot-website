@@ -58,7 +58,7 @@ val uuid = UUID.random()
 </tab>
 <tab  title="Java" group-key="Java">
 
-在 Java 中, 你可以使用 `xxx.ID` 来构建对应类型的 `ID` 实例。
+在 Java 中，你可以使用 `Identifies` 的工厂方法构建对应类型的 `ID` 实例。
 
 ```Java
 var intID = Identifies.of(1);

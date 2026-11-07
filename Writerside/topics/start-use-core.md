@@ -88,7 +88,7 @@ var applicationAsync = Applications.launchApplicationAsync(Simple.INSTANCE, appC
     });
 
 Mono.fromFuture(applicationAsync.asFuture())
-        .flatMap(app -> app.joinReserve().transform(SuspendReserves.mono()))
+        .flatMap(app -> Mono.from(app.joinReactive()))
         .block();
 ```
 {switcher-key="%jr%"}

@@ -63,6 +63,7 @@
 - `getContent()`
 - `getContentAsync()`
 - `getContentReserve()`
+- `getContentReactive()`
 
 ## 消息发送
 
@@ -75,11 +76,12 @@
 - `OneBotFriend.send(...)`、`OneBotGroup.send(...)`、`OneBotMember.send(...)`
 
 如果这些 API 是挂起函数，通常还会通过 `@ST` / `@STP`
-自动生成 Java 友好的三桥接形式：
+自动生成 Java 友好的桥接形式：
 
 - `xxxAsync(...)`
 - `xxxBlocking(...)`
 - `xxxReserve(...)`
+- `xxxReactive(...)`（实验性，返回 `Publisher`）
 
 因此，实现组件消息发送 API 时，建议优先从“挂起主接口 + 自动桥接”这个模式出发。
 
@@ -116,8 +118,7 @@ var receipt = chat.sendBlocking(message);
 ```Java
 MyChat chat = ...;
 
-chat.sendReserve(message)
-        .transform(SuspendReserves.mono())
+Mono.from(chat.sendReactive(message))
         .subscribe(receipt -> { });
 ```
 {switcher-key="%jr%"}

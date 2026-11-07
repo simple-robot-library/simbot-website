@@ -66,21 +66,18 @@ friend.sendBlocking(messageContent);
 
 ```Java
 OneBotFriend friend = ...;
-friend.sendReserve("text")
-    .transform(SuspendReserves.mono())
+Mono.from(friend.sendReactive("text"))
     .subscribe();
 
-friend.sendReserve(
+Mono.from(friend.sendReactive(
     Messages.builder()
             .add("text")
             .add(new Face(Identifies.of(123)))
     .build()
-    )
-        .transform(SuspendReserves.mono())
+    ))
     .subscribe();
 
-friend.sendReserve(messageContent)
-    .transform(SuspendReserves.mono())
+Mono.from(friend.sendReactive(messageContent))
     .subscribe();
 ```
 {switcher-key=%jr%}
@@ -121,8 +118,7 @@ var stranger = friend.toStrangerBlocking();
 
 ```Java
 OneBotFriend friend = ...;
-friend.toStrangerReserve()
-        .transform(SuspendReserves.mono())
+Mono.from(friend.toStrangerReactive())
         .subscribe(stranger -> {
             // ... 
         });
@@ -134,9 +130,9 @@ friend.toStrangerReserve()
 
 ## 更多能力
 
-### SendLinkSupport
+### SendLikeSupport {id="sendlinksupport"}
 
-`OneBotFriend` 实现 `SendLinkSupport` 接口，
+`OneBotFriend` 实现 `SendLikeSupport` 接口，
 支持使用 `sendLike(Int)` 来点赞用户。
 
 参数代表次数，一般来说一人一天最多共计10次赞，
@@ -155,20 +151,19 @@ friend.sendLike(5)
 
 ```Java
 OneBotFriend friend = ...;
-friend.sendLinkAsync(5);
+friend.sendLikeAsync(5);
 ```
 {switcher-key=%ja%}
 
 ```Java
 OneBotFriend friend = ...;
-friend.sendLinkBlocking(5);
+friend.sendLikeBlocking(5);
 ```
 {switcher-key=%jb%}
 
 ```Java
 OneBotFriend friend = ...;
-friend.sendLinkReserve(5)
-        .transform(SuspendReserves.mono())
+Mono.from(friend.sendLikeReactive(5))
         .subscribe();
 ```
 {switcher-key=%jr%}

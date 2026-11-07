@@ -51,8 +51,8 @@ KOOK 与 OneBot v11 的核心模块也提供 `wasm-js` 目标。
 Java是重要的伙伴, Kotlin天生与Java具有极强的兼容性。
 
 simbot 基于 **Java11**, 为运行时模块提供 JVM 平台实现以及相应的 **模块化(JPMS)** 信息、
-提供 **Spring Boot** 的 starter 快速快发实现、
-以及异步、阻塞、预处理桥接器（可用于转化为响应式类型）的多种风格的挂起函数桥接API。
+提供 **Spring Boot** 的 starter 快速开发实现，
+以及异步、阻塞、响应式等多种风格的挂起函数桥接 API。
 
 有关其中的部分详细信息, 可前往参考 
 <a href="java-friendly.md" /> 。

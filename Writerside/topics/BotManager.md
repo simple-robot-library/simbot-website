@@ -93,7 +93,7 @@ public interface AutoConfigurableBotPlugin : BotPlugin {
 ```Kotlin
 val config = FooBotConfiguration()
 // 配置...
-val bot = botManger.register(config)
+val bot = botManager.register(config)
 ```
 
 </tab>
@@ -102,7 +102,7 @@ val bot = botManger.register(config)
 ```Java
 var config = new FooBotConfiguration();
 // 配置...
-var bot = botManger.register(config);
+var bot = botManager.register(config);
 ```
 
 </tab>
@@ -125,14 +125,14 @@ QQ频道组件中的 `QQGuildBotManager` 便提供了针对 **QQ频道 Bot** 的
 <tab title="Kotlin" group-key="Kotlin">
 
 ```Kotlin
-val bot = qqGuildBotManger.register("appid", "secret", "token")
+val bot = qqGuildBotManager.register("appid", "secret", "token")
 ```
 
 </tab>
 <tab title="Java" group-key="Java">
 
 ```Java
-var bot = qqGuildBotManger.register("appid", "secret", "token");
+var bot = qqGuildBotManager.register("appid", "secret", "token");
 ```
 
 </tab>
@@ -144,7 +144,7 @@ var bot = qqGuildBotManger.register("appid", "secret", "token");
 <tab title="Kotlin" group-key="Kotlin">
 
 ```Kotlin
-val bot = qqGuildBotManger.register("appid", "secret", "token") {
+val bot = qqGuildBotManager.register("appid", "secret", "token") {
                 // 一些非必须的配置...
         }
 ```
@@ -153,7 +153,7 @@ val bot = qqGuildBotManger.register("appid", "secret", "token") {
 <tab title="Java" group-key="Java">
 
 ```Java
-var bot = qqGuildBotManger.register("appid", "secret", "token", conf -> {
+var bot = qqGuildBotManager.register("appid", "secret", "token", conf -> {
                 // 一些非必须的配置...
         });
 ```

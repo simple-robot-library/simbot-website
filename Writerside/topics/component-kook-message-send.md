@@ -121,8 +121,7 @@ var api = SendChannelMessageApi.create(
         "Hello KOOK"
 );
 
-ApiRequests.requestDataReserve(api, client, authorization)
-        .transform(SuspendReserves.mono())
+Mono.fromFuture(() -> ApiRequests.requestDataAsync(api, client, authorization))
         .block();
 ```
 {switcher-key="%jr%"}
@@ -191,8 +190,7 @@ var api = SendChannelMessageApi.create(
         "Hello KOOK"
 );
 
-BotRequests.requestDataByReserve(api, bot)
-        .transform(SuspendReserves.mono())
+Mono.fromFuture(() -> BotRequests.requestDataByAsync(api, bot))
         .block();
 ```
 {switcher-key="%jr%"}
@@ -261,8 +259,7 @@ var receipt = channel.sendBlocking("hello from kook core");
 ```Java
 KookChatCapableChannel channel = ...;
 
-channel.sendReserve("hello from kook core")
-        .transform(SuspendReserves.mono())
+Mono.from(channel.sendReactive("hello from kook core"))
         .subscribe(receipt -> { });
 ```
 {switcher-key="%jr%"}

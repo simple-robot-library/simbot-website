@@ -53,8 +53,8 @@ Bot配置文件通常情况下是配合Spring Boot starter的时候用的。
         // 注意！这无法影响直接使用 [OneBotImage] 的情况。
         // defaultImageAdditionalParams 默认为 `null`。
         "defaultImageAdditionalParams": {
-            // default: null
-            "localFileToBase64": null,
+            // default: false
+            "localFileToBase64": false,
             "type": null,
             "cache": null,
             "proxy": null,
@@ -125,7 +125,7 @@ HTTP API 服务地址。
 <def title="eventServerHost">
 
 正向 WebSocket 事件地址。
-如果为 `null`，则不会建立 ws 连接，也不会接收推送事件。
+如果为 `null`，则不会建立正向 WebSocket 连接。仍可通过 `OneBotBot.push` 接入外部事件。
 
 </def>
 <def title="accessToken">
@@ -178,7 +178,7 @@ HTTP API 服务地址。
 
 可选子项：
 
-- `localFileToBase64`
+- `localFileToBase64`：布尔值，默认 `false`
 - `type`
 - `cache`
 - `proxy`

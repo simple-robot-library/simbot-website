@@ -2,6 +2,8 @@
 
 <primary-label ref="doc-wip" />
 
+此配置对应 Telegram 组件 `%tg-version%`，版本兼容性说明参见 [](component-telegram.md)。
+
 <include from="refers.md" element-id="doc-TODO"></include>
 
 > 注释实际上是不支持的，
