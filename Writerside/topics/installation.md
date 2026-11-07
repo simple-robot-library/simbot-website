@@ -75,6 +75,7 @@ dependencies {
     implementation("要添加的依赖:name:xxx-SNAPSHOT")
 }
 ```
+{diff-lines="+7-12 +18"}
 
 </tab>
 <tab title="Gradle(Groovy)" group-key="groovy">
@@ -100,6 +101,7 @@ dependencies {
     implementation '要添加的依赖:name:xxx-SNAPSHOT'
 }
 ```
+{diff-lines="+7-12 +18"}
 
 </tab>
 <tab title="Maven" group-key="maven">
@@ -126,6 +128,7 @@ dependencies {
     <version>xxx-SNAPSHOT</version>
 </dependency>
 ```
+{diff-lines="+4-13 +19"}
 
 </tab>
 </tabs>

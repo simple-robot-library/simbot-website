@@ -39,6 +39,13 @@ bot.subscribe<GuildMemberAdd> {
 </tab>
 <tab title="Java" group-key="Java">
 
+<tip switcher-key="%jr%">
+
+此处的标准库事件处理器提供阻塞和 `CompletionStage` 形式，下面使用异步处理器。
+
+</tip>
+
+
 ```Java
 bot.subscribe(EventProcessors.async(GuildMemberAdd.class, (event, raw) -> {
     var member = event.getData();
@@ -47,6 +54,15 @@ bot.subscribe(EventProcessors.async(GuildMemberAdd.class, (event, raw) -> {
 }));
 ```
 {switcher-key="%ja%"}
+
+```Java
+bot.subscribe(EventProcessors.async(GuildMemberAdd.class, (event, raw) -> {
+    var member = event.getData();
+    // ...
+    return CompletableFuture.completedFuture(null);
+}));
+```
+{switcher-key="%jr%"}
 
 ```Java
 bot.subscribe(EventProcessors.block(GuildMemberAdd.class, (event, raw) -> {
@@ -65,9 +81,9 @@ bot.subscribe(EventProcessors.block(GuildMemberAdd.class, (event, raw) -> {
 ## 组件库中的频道成员 {id="component-members"}
 
 组件中 `QGMember` 类型实现了simbot标准API中的 `Member` 类型，并提供与频道成员相关的功能。
-如果你想要获取一个 `QGChannel`，你可以在 `QGBot`、`QGGuild` 或一个与子频道相关的事件中获取。
+如果你想要获取一个 `QGMember`，你可以在 `QGGuild` 或一个与频道成员相关的事件中获取。
 
-在 `QGBot` 中获取子频道你可以前往参考
+在 `QGBot` 中获取频道你可以前往参考
 <a href="component-qq-guild-QGBot.md#qgbot-guild" />。
 
 在 `QGGuild` 中获取频道成员你可以前往参考
@@ -107,7 +123,7 @@ var member = event.getMember();
 {switcher-key='%jb%'}
 
 ```Java
-QGChannelCreateEvent event = ...
+QGMemberAddEvent event = ...
 Mono.from(event.getMemberReactive())
         .subscribe(member -> { ... })
 ```
@@ -161,7 +177,7 @@ member.sendBlocking(Messages.of(
 <tab title="Java" group-key="Java" switcher-key="%jr%">
 
 ```Java
-QGTextChannel member = ...
+QGMember member = ...
 
 Mono.from(member.sendReactive("消息内容"))
         .subscribe(receipt -> { ... });

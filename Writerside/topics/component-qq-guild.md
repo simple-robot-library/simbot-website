@@ -93,7 +93,7 @@ QQ机器人组件最初只支持 QQ 频道，因此使用 `simbot-component-qq-g
 目前，这两种接入路径都有对应实现或示例：
 
 - 如果你要接入 `webhook` 回调，前往 [](component-qq-guild-Webhook.md)
-- 如果你要使用 `websocket` 收事件，则继续参考本页与 [](component-qq-guild-start-using.md)
+- 如果你要使用 `websocket` 接收事件，参考阅读 [](component-qq-guild-first-bot.md) ，或参考 [](component-qq-guild-start-using.md)
 
 你可以在机器人后台中查看、配置自己的回调地址与订阅范围。
 

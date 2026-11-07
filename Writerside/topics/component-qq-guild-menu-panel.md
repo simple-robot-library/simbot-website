@@ -85,7 +85,11 @@ Mono.from(manager.getReactive())
 ```
 {switcher-key="%jr%"}
 
+<if switcher-key="%jr%">
+
 响应式示例使用 Reactor `Mono`，生成的 Publisher 入口属于实验性 API，详见 [](java-friendly.md#reactive-bridging)。
+
+</if>
 
 ### 自定义菜单互动
 

@@ -61,6 +61,13 @@ botManager.register("..", "..", "..", qgBotConfig -> {
 });
 ```
 
+
+<tip switcher-key="%jr%">
+
+响应式示例使用 Reactor，依赖与桥接方式参考 [](java-friendly.md#reactive-bridging)。
+
+</tip>
+
 </tab>
 </tabs>
 
@@ -247,9 +254,6 @@ suspend fun Application.configure() {
             // - 频道成员相关事件
             // - 公域消息相关事件
             intents += EventIntents.GroupAndC2CEvent.intents
-            // 如果要使用 [[[Webhook|component-qq-guild-Webhook.md]]] 的订阅方式，
-            // 通过此属性取消 ws 的连接
-            disableWs = true
             // 其他...
         }
         // 外层是独属于组件类型的某些配置
@@ -323,9 +327,6 @@ public static void configure(Application application) {
                             botConfig.getIntentsValue() | EventIntents.GroupAndC2CEvent.INSTANCE.getIntentsValue()
                     );
                     
-                    // 如果要使用 [[[Webhook|component-qq-guild-Webhook.md]]] 的订阅方式，
-                    // 通过此属性取消 ws 的连接
-                    botConfig.setDisableWs(true);
                 });
 
                 // 外层是独属于组件类型的某些配置

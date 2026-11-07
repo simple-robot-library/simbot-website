@@ -1,3 +1,7 @@
+---
+switcher-label: JavaAPI风格
+---
+
 # 第一次处理事件
 
 本页通过一个本地测试事件，体验 simbot 的事件处理流程。完成后，程序会在控制台打印“收到测试事件”并退出。
@@ -57,6 +61,22 @@ application {
     mainClass = "Main"
 }
 ```
+
+<if switcher-key="%jr%">
+
+响应式示例使用 Reactor，在上面的 `dependencies` 中添加标记的依赖：
+
+```kotlin
+dependencies {
+    implementation("love.forte.simbot:simbot-core-jvm:%version%")
+    implementation("love.forte.simbot:simbot-test-jvm:%version%")
+    implementation("io.projectreactor:reactor-core:%reactor-version%")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:%coroutines-version%")
+}
+```
+{diff-lines="+4-5"}
+
+</if>
 
 </tab>
 </tabs>
@@ -123,6 +143,58 @@ public class Main {
     }
 }
 ```
+{switcher-key="%jb%"}
+
+```java
+import love.forte.simbot.application.Applications;
+import love.forte.simbot.core.application.Simple;
+import love.forte.simbot.event.EventListeners;
+import love.forte.simbot.event.EventProcessors;
+import love.forte.simbot.event.EventResult;
+import love.forte.simbot.test.event.TestEvent;
+import java.util.concurrent.CompletableFuture;
+
+public class Main {
+    public static void main(String[] args) {
+        var app = Applications.launchApplicationBlocking(Simple.INSTANCE);
+        try {
+            app.getEventDispatcher().register(EventListeners.async(TestEvent.class, (context, event) -> {
+                System.out.println("收到测试事件");
+                return CompletableFuture.completedFuture(EventResult.empty());
+            }));
+            EventProcessors.pushAndCollectToListAsync(app.getEventDispatcher(), new TestEvent(), app).join();
+        } finally {
+            app.cancel();
+        }
+    }
+}
+```
+{switcher-key="%ja%"}
+
+```java
+import love.forte.simbot.application.Applications;
+import love.forte.simbot.core.application.Simple;
+import love.forte.simbot.event.EventListeners;
+import love.forte.simbot.event.EventProcessors;
+import love.forte.simbot.event.EventResult;
+import love.forte.simbot.test.event.TestEvent;
+
+public class Main {
+    public static void main(String[] args) {
+        var app = Applications.launchApplicationBlocking(Simple.INSTANCE);
+        try {
+            app.getEventDispatcher().register(EventListeners.nonBlock(TestEvent.class, (context, event) -> {
+                System.out.println("收到测试事件");
+                return EventResult.empty();
+            }));
+            EventProcessors.pushAndAsFlux(app.getEventDispatcher(), new TestEvent()).blockLast();
+        } finally {
+            app.cancel();
+        }
+    }
+}
+```
+{switcher-key="%jr%"}
 
 </tab>
 </tabs>
@@ -137,7 +209,7 @@ public class Main {
 
 如果还看到 SLF4J 没有日志实现的提示，示例仍可运行。项目需要输出日志时，可以按所用环境配置日志实现。
 
-`Application` 持有事件调度器，监听器负责处理匹配的事件。Kotlin 的 `push` 返回 `Flow`，在收集时执行。Java 示例使用阻塞方式推送并收集结果。两种示例结束时都调用 `cancel()` 关闭应用。
+`Application` 持有事件调度器，监听器负责处理匹配的事件。Kotlin 的 `push` 返回 `Flow`，在收集时执行。Java 示例分别展示阻塞、异步和响应式方式。两种示例结束时都调用 `cancel()` 关闭应用。
 这里的 `TestEvent` 来自测试模块，实际接入平台时，事件由组件接收并推送。
 
 ## 下一步

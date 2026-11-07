@@ -201,8 +201,19 @@ Mono.from(bot.startReactive()).block();
 
 本文和其他章节中的响应式 Java 示例使用 Reactor，需要添加 `io.projectreactor:reactor-core` 依赖，
 并导入 `reactor.core.publisher.Mono`。将 `Collectable` 转为 `Flux` 的示例还需要
-`org.jetbrains.kotlinx:kotlinx-coroutines-reactor` 依赖。通过 `Mono.from` 接入生成的 Publisher，
-使用 `then` 等待前一个操作完成后执行下一个操作：
+`org.jetbrains.kotlinx:kotlinx-coroutines-reactor` 依赖。
+
+例如，在 Gradle Kotlin DSL 中为文档里的响应式示例添加依赖：
+
+```kotlin
+dependencies {
+    implementation("io.projectreactor:reactor-core:%reactor-version%")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:%coroutines-version%")
+}
+```
+{diff-lines="+2-3"}
+
+通过 `Mono.from` 接入生成的 Publisher，使用 `then` 等待前一个操作完成后执行下一个操作：
 
 ```Java
 Mono.from(bot.startReactive())

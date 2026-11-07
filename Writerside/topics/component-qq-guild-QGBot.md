@@ -203,6 +203,13 @@ bot.subscribe<AtMessageCreate> {
 </tab>
 <tab title="Java" group-key="Java">
 
+<tip switcher-key="%jr%">
+
+此处的标准库事件处理器提供阻塞和 `CompletionStage` 形式，下面使用异步处理器。
+
+</tip>
+
+
 **订阅全部事件**
 
 使用 `subscribe` 注册一个普通的事件处理器，此处理器会接收并处理所有类型的事件。
@@ -220,6 +227,20 @@ bot.subscribe(EventProcessors.async((event, raw) -> {
 }));
 ```
 {switcher-key="%ja%"}
+
+```Java
+bot.subscribe(EventProcessors.async((event, raw) -> {
+    // raw 代表事件的原始JSON字符串
+    // event: Signal.Dispatch, 也就是解析出来的事件结构体
+    System.out.println("event: " + event);
+    System.out.println("event.data: " + event.getData());
+    System.out.println("raw: " + raw);
+
+    // 异步处理器必须返回 CompletableFuture
+    return CompletableFuture.completedFuture(null);
+}));
+```
+{switcher-key="%jr%"}
 
 ```Java
 bot.subscribe(EventProcessors.block((event, raw) -> {
@@ -251,6 +272,18 @@ bot.subscribe(EventProcessors.async(AtMessageCreate.class, (event, raw) -> {
 }));
 ```
 {switcher-key="%ja%"}
+
+```Java
+bot.subscribe(EventProcessors.async(AtMessageCreate.class, (event, raw) -> {
+    if (event.getData().getContent().contains("stop")) {
+        // 终止 bot
+        bot.cancel();
+    }
+
+    return CompletableFuture.completedFuture(null);
+}));
+```
+{switcher-key="%jr%"}
 
 ```Java
 bot.subscribe(EventProcessors.block(AtMessageCreate.class, (event, raw) -> {
@@ -300,6 +333,13 @@ bot.startBlocking();
 bot.joinBlocking();
 ```
 {switcher-key="%jb%"}
+
+```Java
+Mono.from(bot.startReactive())
+        .then(Mono.from(bot.joinReactive()))
+        .block();
+```
+{switcher-key="%jr%"}
 
 </tab>
 </tabs>
@@ -762,13 +802,13 @@ final var guildRelation = bot.getGuildRelation();
 // 寻找指定ID的频道服务器
 guildRelation.getGuildAsync(Identifies.of(1234L))
         .thenAccept(guild -> { ... });
-// 获取全部 QGGuild 的流
-Collectables.asFlux(guildRelation.getGuilds())
-        .subscribe(guild -> { ... });
+// 异步收集全部 QGGuild
+Collectables.toListAsync(guildRelation.getGuilds())
+        .thenAccept(guilds -> { ... });
 
 // 额外提供可以指定批次数量和 lastId 的API
-Collectables.asFlux(guildRelation.guilds(null, 100))
-        .subscribe(guild -> { ... });
+Collectables.toListAsync(guildRelation.guilds(null, 100))
+        .thenAccept(guilds -> { ... });
 
 // 额外提供了一些直接查询子频道的API
 // 寻找指定ID的子频道
@@ -808,6 +848,23 @@ var chatChannel = guildRelation.getChatChannel(Identifies.of(1234L))
 var forumChannel = guildRelation.getForumChannel(Identifies.of(1234L))
 ```
 {switcher-key='%jb%'}
+
+```Java
+var guildRelation = bot.getGuildRelation();
+
+// 查询指定频道服务器
+Mono.from(guildRelation.guildReactive(Identifies.of(1234L)))
+        .subscribe(guild -> { ... });
+
+// 收集频道服务器列表
+Collectables.asFlux(guildRelation.getGuilds())
+        .subscribe(guild -> { ... });
+
+// 查询指定子频道
+Mono.from(guildRelation.channelReactive(Identifies.of(1234L)))
+        .subscribe(channel -> { ... });
+```
+{switcher-key='%jr%'}
 
 </tab>
 </tabs>
@@ -886,6 +943,21 @@ bot.sendToBlocking(Identifies.of("channel id"), Messages.of(
         Text.of("文本消息"),
         At.of(Identifies.of("user id"))
 ));
+```
+
+</if>
+
+<if switcher-key="%jr%">
+
+```Java
+QGBot bot = ...;
+
+Mono.from(bot.sendToReactive(Identifies.of("channel id"), "消息内容"))
+        .then(Mono.from(bot.sendToReactive(Identifies.of("channel id"), Messages.of(
+                Text.of("文本消息"),
+                At.of(Identifies.of("user id"))
+        ))))
+        .subscribe(ignored -> {}, Throwable::printStackTrace);
 ```
 
 </if>

@@ -95,6 +95,13 @@ Mono.fromFuture(applicationAsync.asFuture())
 ```
 {switcher-key="%jr%"}
 
+
+<tip switcher-key="%jr%">
+
+响应式示例使用 Reactor，依赖与桥接方式参考 [](java-friendly.md#reactive-bridging)。
+
+</tip>
+
 </tab>
 </tabs>
 

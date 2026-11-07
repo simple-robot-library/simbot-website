@@ -1,3 +1,7 @@
+---
+switcher-label: JavaAPI风格
+---
+
 # 第一个 KOOK 机器人
 
 本页通过 WebSocket 连接 KOOK，在文字频道中接收“你好”并回复“你也好”。
@@ -8,9 +12,12 @@
 
 ## 创建项目
 
-本示例使用 Kotlin/JVM、Gradle、JDK 11 或更高版本和核心库 `simbot-core`。如果已经有项目，可以将依赖和配置合并到现有项目中。
+本示例使用 Kotlin 或 Java、Gradle、JDK 11 或更高版本和核心库 `simbot-core`。如果已经有项目，可以将依赖和配置合并到现有项目中。
 
 在项目目录创建 `build.gradle.kts`：
+
+<tabs group="code">
+<tab title="Kotlin" group-key="Kotlin">
 
 ```kotlin
 plugins {
@@ -34,7 +41,58 @@ application {
 }
 ```
 
-`ktor-client-cio` 提供 JVM HTTP 客户端引擎，`slf4j-simple` 用于输出日志。`MainKt` 对应下方无包名的 `Main.kt`。
+`MainKt` 对应下方无包名的顶层 `main` 函数。
+
+</tab>
+<tab title="Java" group-key="Java">
+
+```kotlin
+plugins {
+    java
+    application
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("love.forte.simbot:simbot-core-jvm:%version%")
+    implementation("love.forte.simbot.component:simbot-component-kook-core-jvm:%kook-version%")
+    runtimeOnly("io.ktor:ktor-client-cio:%ktor-version%")
+    runtimeOnly("org.slf4j:slf4j-simple:%slf4j-version%")
+}
+
+application {
+    mainClass = "Main"
+}
+```
+
+<if switcher-key="%jr%">
+
+响应式示例使用 Reactor，在上面的 `dependencies` 中添加标记的依赖：
+
+```kotlin
+dependencies {
+    implementation("love.forte.simbot:simbot-core-jvm:%version%")
+    implementation("love.forte.simbot.component:simbot-component-kook-core-jvm:%kook-version%")
+    implementation("io.projectreactor:reactor-core:%reactor-version%")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:%coroutines-version%")
+    runtimeOnly("io.ktor:ktor-client-cio:%ktor-version%")
+    runtimeOnly("org.slf4j:slf4j-simple:%slf4j-version%")
+}
+```
+{diff-lines="+4-5"}
+
+</if>
+
+</tab>
+</tabs>
+
+`ktor-client-cio` 提供 JVM HTTP 和 WebSocket 客户端引擎，`slf4j-simple` 用于输出日志。
+
+<tabs group="code">
+<tab title="Kotlin" group-key="Kotlin">
 
 创建 `src/main/kotlin/Main.kt`：
 
@@ -68,6 +126,154 @@ suspend fun main() {
     }
 }
 ```
+
+</tab>
+<tab title="Java" group-key="Java">
+
+创建 `src/main/java/Main.java`。在页面顶部选择 Java API 风格。示例统一以阻塞方式创建应用，使用所选风格启动 Bot、处理事件并等待应用结束：
+
+```java
+import love.forte.simbot.application.Applications;
+import love.forte.simbot.core.application.Simple;
+import love.forte.simbot.event.EventListeners;
+import love.forte.simbot.event.EventResult;
+import love.forte.simbot.component.kook.KookComponent;
+import love.forte.simbot.component.kook.KookBotManagersKt;
+import love.forte.simbot.component.kook.bot.KookBotManager;
+import love.forte.simbot.component.kook.event.KookChannelMessageEvent;
+import kotlin.Unit;
+
+public class Main {
+    private static String required(String name) {
+        String value = System.getenv(name);
+        if (value == null || value.isBlank()) throw new IllegalArgumentException("请设置 " + name);
+        return value;
+    }
+
+    public static void main(String[] args) {
+        var app = Applications.launchApplicationBlocking(Simple.INSTANCE, config -> {
+            config.install(KookComponent.Factory);
+            config.install(KookBotManager.Factory);
+        });
+        try {
+            app.getEventDispatcher().register(EventListeners.block(KookChannelMessageEvent.class, (context, event) -> {
+                var text = event.getMessageContent().getPlainText();
+                if (text == null || !text.trim().equals("你好")) {
+                    return EventResult.empty();
+                }
+                System.out.println("收到频道消息：你好");
+                event.replyBlocking("你也好");
+                return EventResult.empty();
+            }));
+            var bot = KookBotManagersKt.firstKookBotManager(app.getBotManagers())
+                .registerWs(required("KOOK_CLIENT_ID"), required("KOOK_TOKEN"), config -> Unit.INSTANCE);
+            bot.startBlocking();
+            System.out.println("Bot 已启动，等待频道消息");
+            app.joinBlocking();
+        } finally {
+            app.cancel();
+        }
+    }
+}
+```
+{switcher-key="%jb%"}
+
+```java
+import love.forte.simbot.application.Applications;
+import love.forte.simbot.core.application.Simple;
+import love.forte.simbot.event.EventListeners;
+import love.forte.simbot.event.EventResult;
+import love.forte.simbot.component.kook.KookComponent;
+import love.forte.simbot.component.kook.KookBotManagersKt;
+import love.forte.simbot.component.kook.bot.KookBotManager;
+import love.forte.simbot.component.kook.event.KookChannelMessageEvent;
+import kotlin.Unit;
+import java.util.concurrent.CompletableFuture;
+
+public class Main {
+    private static String required(String name) {
+        String value = System.getenv(name);
+        if (value == null || value.isBlank()) throw new IllegalArgumentException("请设置 " + name);
+        return value;
+    }
+
+    public static void main(String[] args) {
+        var app = Applications.launchApplicationBlocking(Simple.INSTANCE, config -> {
+            config.install(KookComponent.Factory);
+            config.install(KookBotManager.Factory);
+        });
+        try {
+            app.getEventDispatcher().register(EventListeners.async(KookChannelMessageEvent.class, (context, event) -> {
+                var text = event.getMessageContent().getPlainText();
+                if (text == null || !text.trim().equals("你好")) {
+                    return CompletableFuture.completedFuture(EventResult.empty());
+                }
+                System.out.println("收到频道消息：你好");
+                return event.replyAsync("你也好").thenApply(ignored -> EventResult.empty());
+            }));
+            var bot = KookBotManagersKt.firstKookBotManager(app.getBotManagers())
+                .registerWs(required("KOOK_CLIENT_ID"), required("KOOK_TOKEN"), config -> Unit.INSTANCE);
+            bot.startAsync()
+                .thenRun(() -> System.out.println("Bot 已启动，等待频道消息"))
+                .thenCompose(ignored -> app.asFuture())
+                .join();
+        } finally {
+            app.cancel();
+        }
+    }
+}
+```
+{switcher-key="%ja%"}
+
+```java
+import love.forte.simbot.application.Applications;
+import love.forte.simbot.core.application.Simple;
+import love.forte.simbot.event.EventListeners;
+import love.forte.simbot.event.EventResult;
+import love.forte.simbot.component.kook.KookComponent;
+import love.forte.simbot.component.kook.KookBotManagersKt;
+import love.forte.simbot.component.kook.bot.KookBotManager;
+import love.forte.simbot.component.kook.event.KookChannelMessageEvent;
+import kotlin.Unit;
+import reactor.core.publisher.Mono;
+
+public class Main {
+    private static String required(String name) {
+        String value = System.getenv(name);
+        if (value == null || value.isBlank()) throw new IllegalArgumentException("请设置 " + name);
+        return value;
+    }
+
+    public static void main(String[] args) {
+        var app = Applications.launchApplicationBlocking(Simple.INSTANCE, config -> {
+            config.install(KookComponent.Factory);
+            config.install(KookBotManager.Factory);
+        });
+        try {
+            app.getEventDispatcher().register(EventListeners.nonBlock(KookChannelMessageEvent.class, (context, event) -> {
+                var text = event.getMessageContent().getPlainText();
+                if (text == null || !text.trim().equals("你好")) {
+                    return EventResult.empty();
+                }
+                System.out.println("收到频道消息：你好");
+                return EventResult.of(Mono.from(event.replyReactive("你也好")));
+            }));
+            var bot = KookBotManagersKt.firstKookBotManager(app.getBotManagers())
+                .registerWs(required("KOOK_CLIENT_ID"), required("KOOK_TOKEN"), config -> Unit.INSTANCE);
+            Mono.from(bot.startReactive())
+                .doOnSuccess(ignored -> System.out.println("Bot 已启动，等待频道消息"))
+                .then(Mono.from(app.joinReactive()))
+                .block();
+        } finally {
+            app.cancel();
+        }
+    }
+}
+```
+{switcher-key="%jr%"}
+
+</tab>
+</tabs>
 
 监听器在 Bot 启动前注册，示例只处理普通成员的频道消息。
 

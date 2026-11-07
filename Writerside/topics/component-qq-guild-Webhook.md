@@ -8,13 +8,9 @@
 
 </tip>
 
-根据官方文档的说法：
+QQ 机器人支持 WebSocket 和 Webhook 两种事件接收方式。本章节介绍如何在 QQ 机器人组件中使用 Webhook 接收事件。
 
-![QQ机器人-websocket不再维护.png](QQ机器人-websocket不再维护.png)
-
-因此后续应该就只剩下 webhook 一种事件订阅方式了，也就是客户端作为被动接受事件的一方。
-
-本章节简单介绍下在QQ机器人组件中如何使用 webhook 的方式接收事件。
+如果希望通过 WebSocket 连接平台，可以从 [](component-qq-guild-first-bot.md) 开始。
 
 ## 禁用Websocket
 
@@ -27,14 +23,15 @@
 
 ```json
 {
+  "component": "simbot.qqguild",
   "ticket": {
     "appId": "...",
     "secret": "...",
-    "secret": "...",
+    "token": ""
   },
- "config": {
-   "disableWs"：true
- } 
+  "config": {
+    "disableWs": true
+  }
 }
 ```
 

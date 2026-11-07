@@ -45,6 +45,13 @@ bot.subscribe<ChannelCreate> {
 </tab>
 <tab title="Java" group-key="Java">
 
+<tip switcher-key="%jr%">
+
+此处的标准库事件处理器提供阻塞和 `CompletionStage` 形式，下面使用异步处理器。
+
+</tip>
+
+
 ```Java
 bot.subscribe(EventProcessors.async(ChannelCreate.class, (event, raw) -> {
     var channel = event.getData();
@@ -53,6 +60,15 @@ bot.subscribe(EventProcessors.async(ChannelCreate.class, (event, raw) -> {
 }));
 ```
 {switcher-key="%ja%"}
+
+```Java
+bot.subscribe(EventProcessors.async(ChannelCreate.class, (event, raw) -> {
+    var channel = event.getData();
+    // ...
+    return CompletableFuture.completedFuture(null);
+}));
+```
+{switcher-key="%jr%"}
 
 ```Java
 bot.subscribe(EventProcessors.block(ChannelCreate.class, (event, raw) -> {

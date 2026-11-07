@@ -27,6 +27,13 @@ var app = ...;
 var eventDispatcher = app.getEventDispatcher(); // 获取事件调度器
 ```
 
+
+<tip switcher-key="%jr%">
+
+响应式示例使用 Reactor，依赖与桥接方式参考 [](java-friendly.md#reactive-bridging)。
+
+</tip>
+
 </tab>
 </tabs>
 
@@ -95,7 +102,7 @@ app.listeners { // this: EventListenerRegistrar
 处理所有类型的事件：
 
 ```Java
-var eventDispatcher = ...;
+var dispatcher = ...;
 dispatcher.register(EventListeners.async(context -> {
     // 处理事件...
     
@@ -106,7 +113,7 @@ dispatcher.register(EventListeners.async(context -> {
 {switcher-key="%ja%"}
 
 ```Java
-var eventDispatcher = ...;
+var dispatcher = ...;
 dispatcher.register(EventListeners.block(context -> {
     // 处理事件...
     
@@ -116,10 +123,19 @@ dispatcher.register(EventListeners.block(context -> {
 
 {switcher-key="%jb%"}
 
+```Java
+var dispatcher = ...;
+dispatcher.register(EventListeners.nonBlock(context -> {
+    // 处理事件，返回可收集的异步结果
+    return EventResult.of(Mono.fromRunnable(() -> System.out.println(context.getEvent())));
+}));
+```
+{switcher-key="%jr%"}
+
 处理特定类型的事件：
 
 ```Java
-var eventDispatcher = ...;
+var dispatcher = ...;
 dispatcher.register(EventListeners.async(Event.class, (context, event) -> {
     // 处理事件...
     
@@ -130,7 +146,7 @@ dispatcher.register(EventListeners.async(Event.class, (context, event) -> {
 {switcher-key="%ja%"}
 
 ```Java
-var eventDispatcher = ...;
+var dispatcher = ...;
 dispatcher.register(EventListeners.block(Event.class, (context, event) -> {
     // 处理事件...
     
@@ -139,6 +155,14 @@ dispatcher.register(EventListeners.block(Event.class, (context, event) -> {
 ```
 
 {switcher-key="%jb%"}
+
+```Java
+var dispatcher = ...;
+dispatcher.register(EventListeners.nonBlock(Event.class, (context, event) -> {
+    return EventResult.of(Mono.fromRunnable(() -> System.out.println(event)));
+}));
+```
+{switcher-key="%jr%"}
 </tab>
 </tabs>
 
@@ -264,6 +288,23 @@ dispatcher.register(
 ```
 
 {switcher-key="%jb%"}
+
+<if switcher-key="%jr%">
+
+拦截器可以使用异步形式，事件处理器返回响应式结果：
+
+```Java
+var dispatcher = ...;
+dispatcher.register(
+        properties -> {
+            properties.setPriority(-1);
+            properties.addInterceptor(EventInterceptors.async(context -> context.invoke()));
+        },
+        EventListeners.nonBlock(context ->
+                EventResult.of(Mono.fromRunnable(() -> System.out.println(context.getEvent())))));
+```
+
+</if>
 
 </tab>
 </tabs>
@@ -567,6 +608,10 @@ var asyncTypeCountingFuture = EventProcessors.pushAndCollectToAsync(
                 ));
 ```
 
+</if>
+
+<if switcher-key="%jr%">
+
 你也可以将结果转化为响应式的 `reactor.core.publisher.Flux`。
 
 ```Java
@@ -599,9 +644,6 @@ stream.forEach(result -> {
 });
 
 // 推送事件、并阻塞地收集结果。
-// 其中第三个参数 `application` 是用于执行异步任务的 `CoroutineScope` 类型, 
-// 你可以使用 `Application` （继承了 `CoroutineScope`）, 
-// 或者使用 Kotlin 的 `GlobalScope` （有关它的注意事项参见其文档注释）
 var list = EventProcessors.pushAndCollectToBlocking(dispatcher, event, new ArrayList<>());
 
 // 如果希望收集为 List, 也有简写形式
@@ -651,7 +693,7 @@ flow.take(2) // 取前两个元素
 </tab>
 <tab title="Java" group-key="Java">
 
-<if switcher-key="%ja%">
+<if switcher-key="%jr%">
 
 ```Java
 var flux = EventProcessors.pushAndAsFlux(dispatcher, event);
@@ -663,6 +705,12 @@ flux.take(2) // 取前两个结果
 
 </if>
 
+
+<if switcher-key="%ja%">
+
+`pushAndCollectToListAsync` 会收集完整的结果列表。需要在前两个结果后停止事件处理时，可以选择响应式流或阻塞流。
+
+</if>
 
 <if switcher-key="%jb%">
 
@@ -678,7 +726,7 @@ stream.limit(2) // 取前两个结果
 </tab>
 </tabs>
 
-在示例中, 我们在获取到结果流时只取了**前两个**结果。此时, 在消费结果时真正处理了事件的事件处理器也**只有前两个**, 
+在上面的流示例中, 我们在获取到结果流时只取了**前两个**结果。此时, 在消费结果时真正处理了事件的事件处理器也**只有前两个**,
 因为我们得到的流是冷流, 每一次结果都是一次“实时”的事件处理。
 
 你可以依据这些类型的特性来自由决定结果流的处理形式, 例如在收集前指定调度器, 

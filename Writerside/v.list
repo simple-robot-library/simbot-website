@@ -29,6 +29,8 @@
     <var name="kt-version" value="2.4.21" />
     <var name="ktor-version" value="3.3.3" />
     <var name="slf4j-version" value="2.0.18" />
+    <var name="reactor-version" value="3.8.6" />
+    <var name="coroutines-version" value="1.11.0" />
     <!-- 组件版本 -->
     <var name="ob-version" value="5.0.0-Alpha2" />
     <var name="qg-version" value="5.0.0-Alpha2" />
